@@ -13,15 +13,17 @@ export default async function handler(
             body: JSON.stringify({ email, password })
         })
         if (!response.ok) {
-            throw { type: 'CredentialsSignin' }
+            const json = await response.json()
+            console.log(json)
+            throw { type: 'SignUpError', detail: json.detail }
         }
 
         const { access_token } = await response.json()
         setAuthorizationCookie(res, access_token)
         res.status(200).json({ "message": "Signup successful" })
     } catch (error: any) {
-        if (error.type === 'CredentialsSignin') {
-            res.status(401).json({ error: 'Invalid credentials.' })
+        if (error.type === 'SignUpError') {
+            res.status(401).json({ error: error.detail })
         } else {
             res.status(500).json({ error: 'Something went wrong.' })
         }

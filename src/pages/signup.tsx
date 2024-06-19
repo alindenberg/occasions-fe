@@ -1,8 +1,9 @@
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 
 export default function LoginPage() {
     const router = useRouter()
+    const [error, setError] = useState(null)
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -20,7 +21,8 @@ export default function LoginPage() {
         if (response.ok) {
             router.push('/')
         } else {
-            // Handle errors
+            const errorData = await response.json()
+            setError(errorData.error)
         }
     }
 
@@ -29,6 +31,7 @@ export default function LoginPage() {
             <input type="email" name="email" placeholder="Email" required />
             <input type="password" name="password" placeholder="Password" required />
             <button type="submit">Sign Up</button>
+            {error && <p>{error}</p>}
         </form>
     )
 }
