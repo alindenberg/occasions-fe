@@ -1,5 +1,5 @@
-import { setAuthorizationCookie } from '@/utils/utils'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { setAuthorizationCookie } from '@/utils/utils'
 
 export default async function handler(
     req: NextApiRequest,
@@ -7,12 +7,10 @@ export default async function handler(
 ) {
     try {
         const { email, password } = req.body
-        const body = new FormData()
-        body.append('username', email)
-        body.append('password', password)
-        const response = await fetch(`${process.env.SERVER_URL}/login`, {
+        const response = await fetch(`${process.env.SERVER_URL}/signup`, {
             method: 'POST',
-            body: body
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
         })
         if (!response.ok) {
             throw { type: 'CredentialsSignin' }
@@ -20,7 +18,7 @@ export default async function handler(
 
         const { access_token } = await response.json()
         setAuthorizationCookie(res, access_token)
-        res.status(200).json({ "message": "Login successful" })
+        res.status(200).json({ "message": "Signup successful" })
     } catch (error: any) {
         if (error.type === 'CredentialsSignin') {
             res.status(401).json({ error: 'Invalid credentials.' })
