@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 
-export default function LoginPage() {
+export default function SignupPage() {
     const router = useRouter()
     const [error, setError] = useState(null)
 
