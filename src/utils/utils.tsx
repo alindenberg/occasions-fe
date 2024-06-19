@@ -1,9 +1,9 @@
 import { serialize } from 'cookie';
 import { NextApiResponse } from 'next';
 
-export const setAuthorizationCookie = (res: NextApiResponse, access_token: string) => {
+export const setAuthorizationCookie = (res: NextApiResponse, accessToken: string) => {
     const cookie = serialize(
-        'Authorization', `Bearer ${access_token}`,
+        'Authorization', `Bearer ${accessToken}`,
         {
             httpOnly: true,
             path: '/',
@@ -11,4 +11,12 @@ export const setAuthorizationCookie = (res: NextApiResponse, access_token: strin
         }
     );
     res.setHeader('Set-Cookie', cookie)
+}
+
+export const getAuthHeaderForToken = (accessToken?: string) => {
+    if (!accessToken) {
+        return {}
+    }
+
+    return { 'Authorization': accessToken }
 }

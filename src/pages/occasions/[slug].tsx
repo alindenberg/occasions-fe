@@ -1,3 +1,8 @@
 export default function OccasionsPage() {
-    return <div>Specific Occasions Page</div>
+    return (
+        <main
+            className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+        >
+        </main>
+    )
 }

@@ -14,7 +14,6 @@ export default async function handler(
         })
         if (!response.ok) {
             const json = await response.json()
-            console.log(json)
             throw { type: 'SignUpError', detail: json.detail }
         }
 
