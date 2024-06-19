@@ -22,7 +22,6 @@ export default async function handler(
 
         res.status(200).json(await response.json())
     } catch (error: any) {
-        console.log("error ", error)
         if (error.type === 'CredentialsSignin') {
             res.status(401).json({ error: 'Invalid credentials.' })
         } else {
