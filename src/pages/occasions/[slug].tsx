@@ -1,8 +1,9 @@
 export default function OccasionsPage() {
     return (
         <main
-            className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+            className="flex min-h-screen flex-col items-center justify-between p-24"
         >
+            Hi! I'm the occasions page.
         </main>
     )
 }

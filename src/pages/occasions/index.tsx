@@ -2,6 +2,8 @@ import { useRouter } from 'next/router'
 import { Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
 
+import OccasionTile from '@/components/occasions/Tile'
+
 export default function OccasionsPage({ occasions, isAuthenticated }: { occasions: Occasion[], isAuthenticated: boolean }) {
     const router = useRouter()
 
@@ -26,24 +28,30 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
             className="flex min-h-screen flex-col items-center p-24"
         >
             <h1>Your upcoming occasions</h1>
-            {occasions?.length && (
-                <div className="flex flex-grow flex-col justify-center">
-                    {occasions.map((occasion) => (
-                        <div key={occasion.id} className='border-2 border-red-500'>
-                            <h2>{occasion.type}</h2>
-                            <p>{occasion.date}</p>
-                        </div>
-                    ))}
-                </div>
-            )}
-            {occasions?.length < 3 && (
-                <button
-                    onClick={() => router.push('/occasions/new')}
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                    Add an occasion
-                </button>
-            )}
+            <div className="flex flex-grow flex-col justify-center border-2 border-red-500">
+                {!!occasions?.length && (
+                    <div>
+                        {occasions.map((occasion) => (
+                            <OccasionTile key={occasion.id} occasion={occasion} />
+
+                        ))}
+                    </div>
+                )}
+                {!occasions?.length && (
+                    <div className="text-center">
+                        <p>Well that's bizarre, you don't have any upcoming occasions.</p>
+                        <p>Let's fix that...</p>
+                    </div>
+                )}
+                {occasions?.length < 3 && (
+                    <button
+                        onClick={() => router.push('/occasions/new')}
+                        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                    >
+                        Add an occasion
+                    </button>
+                )}
+            </div>
         </main>
     )
 }
