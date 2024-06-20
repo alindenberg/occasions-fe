@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { Occasion } from '@/types/occasions';
+import { getLocalizedDateInputValue } from '@/utils/utils';
 import ModifyOccasionComponent from '@/components/occasions/Edit';
 
 export default function ModifyOccasionPage() {
@@ -20,6 +21,9 @@ export default function ModifyOccasionPage() {
                     return;
                 }
                 const data = await res.json();
+                data.date = new Date(`${data.date}Z`);
+                data.date = getLocalizedDateInputValue(data.date);
+                console.log(data);
                 setOccasion(data);
                 setIsLoading(false);
             };

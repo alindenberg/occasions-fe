@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Occasion } from "@/types/occasions";
 
+import { getLocalizedDateInputValue } from '@/utils/utils';
+
 function getDefaultDateTime() {
     const now = new Date();
     now.setMinutes(0, 0, 0); // Set to the top of the current hour
     now.setHours(now.getHours() + 2); // Move to the second next top of the hour
-    return now.toISOString().slice(0, 16); // Format as 'YYYY-MM-DDTHH:MM'
+    return getLocalizedDateInputValue(now); // Format as 'YYYY-MM-DDTHH:MM'
 }
 
 export default function EditOccasionComponent({ occasion, formSubmitFunction }: { occasion?: Occasion, formSubmitFunction: Function }) {
-    const [label, setLabel] = useState(occasion?.type || '');
+    const [label, setLabel] = useState(occasion?.label || '');
     const [type, setType] = useState(occasion?.type || 'birthday');
     const [date, setDate] = useState(occasion?.date || getDefaultDateTime());
     const [customInput, setCustomInput] = useState(occasion?.custom_input || '');
@@ -19,11 +21,10 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
         const selectedDate = new Date(date);
         const minDate = new Date()
         if (selectedDate < minDate) {
-            console.error('Date must be in the future');
+            alert('Date must be in the future')
             return;
         }
-
-        formSubmitFunction({ label, type, date, customInput });
+        formSubmitFunction({ label, type, date: selectedDate, customInput });
     };
 
     return (

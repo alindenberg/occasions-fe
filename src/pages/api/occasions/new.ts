@@ -6,10 +6,11 @@ export default async function handler(
 ) {
     try {
         const { label, type, date, customInput } = req.body
+        console.log(JSON.stringify({ label, type, date, customInput }))
         const response = await fetch(`${process.env.SERVER_URL}/occasions/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': req?.cookies?.Authorization || 'None' },
-            body: JSON.stringify({ label, type, date, customInput })
+            body: JSON.stringify({ type, date, custom_input: customInput })
         })
         const json = await response.json()
         console.log(json)

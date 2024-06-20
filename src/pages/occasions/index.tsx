@@ -39,8 +39,9 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
                 )}
                 {!occasions?.length && (
                     <div className="text-center">
-                        <p>Well that's bizarre, you don't have any upcoming occasions.</p>
-                        <p>Let's fix that...</p>
+                        <p>Well, that's bizarre.</p>
+                        <p className="pt-2">You don't have any upcoming occasions.</p>
+                        <p className="pt-2">Surely there's something to celebrate.</p>
                     </div>
                 )}
                 {occasions?.length < 3 && (
@@ -59,7 +60,7 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
 // This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
     // Fetch data from external API
-    const authCookie = context.req.cookies['Authorization'];
+    const authCookie = context.req.cookies.Authorization;
     if (!authCookie) {
         return { props: { occasions: [], isAuthenticated: false } }
     }
