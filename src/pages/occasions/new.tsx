@@ -13,7 +13,6 @@ export default function NewOccasionPage() {
         });
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('Error creating occasion:', errorData.error);
             return;
         }
 

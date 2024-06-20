@@ -23,7 +23,6 @@ export default function ModifyOccasionPage() {
                 const data = await res.json();
                 data.date = new Date(`${data.date}Z`);
                 data.date = getLocalizedDateInputValue(data.date);
-                console.log(data);
                 setOccasion(data);
                 setIsLoading(false);
             };
