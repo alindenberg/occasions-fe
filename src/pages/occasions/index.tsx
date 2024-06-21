@@ -42,16 +42,15 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
 
     return (
         <main
-            className="flex min-h-screen flex-col items-center border-2 border-blue-500"
+            className="flex min-h-screen flex-col items-center mt-4"
         >
-            <h1 className="text-2xl bold underline py-4">Your upcoming occasions</h1>
-            <div className="flex flex-grow w-full flex-col items-center justify-start border-2 border-red-500">
+            <h1 className="text-2xl bold underline py-4 bg-orange-300 p-4">Your upcoming occasions</h1>
+            <div className="flex flex-grow w-full flex-col items-center justify-start">
                 {!!occasionsList?.length && (
                     <div className="w-full sm:w-3/4 lg:w-1/3">
                         {occasionsList.map((occasion) => (
-                            <div className="pt-4">
+                            <div className="pt-4" key={occasion.id}>
                                 <OccasionTile
-                                    key={occasion.id}
                                     occasion={occasion}
                                     modifyHandler={modifyHandler}
                                     deletionHandler={deletionHandler}
