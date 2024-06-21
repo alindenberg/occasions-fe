@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRouter } from 'next/router'
 import { Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
@@ -7,6 +8,18 @@ import OccasionTile from '@/components/occasions/Tile'
 export default function OccasionsPage({ occasions, isAuthenticated }: { occasions: Occasion[], isAuthenticated: boolean }) {
     const router = useRouter()
 
+
+    const [occasionsList, setOccasionsList] = useState(occasions);
+
+    async function deletionHandler(occasion_id: number) {
+        const response = await fetch(`/api/occasions/${occasion_id}/delete`);
+        if (!response.ok) {
+            throw new Error('Failed to delete occasion');
+        }
+        const updatedOccasions = occasionsList.filter(occasion => occasion.id !== occasion_id);
+        console.log("setting updated occasions ", updatedOccasions)
+        setOccasionsList(updatedOccasions);
+    }
     if (!isAuthenticated) {
         return (
             <main
@@ -25,26 +38,26 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
 
     return (
         <main
-            className="flex min-h-screen flex-col items-center p-24"
+            className="flex min-h-screen flex-col items-center p-24 border-2 border-blue-500"
         >
             <h1>Your upcoming occasions</h1>
             <div className="flex flex-grow flex-col justify-center border-2 border-red-500">
-                {!!occasions?.length && (
+                {!!occasionsList?.length && (
                     <div>
-                        {occasions.map((occasion) => (
-                            <OccasionTile key={occasion.id} occasion={occasion} />
+                        {occasionsList.map((occasion) => (
+                            <OccasionTile key={occasion.id} occasion={occasion} deletionHandler={deletionHandler} />
 
                         ))}
                     </div>
                 )}
-                {!occasions?.length && (
+                {!occasionsList?.length && (
                     <div className="text-center">
                         <p>Well, that's bizarre.</p>
                         <p className="pt-2">You don't have any upcoming occasions.</p>
                         <p className="pt-2">Surely there's something to celebrate.</p>
                     </div>
                 )}
-                {occasions?.length < 3 && (
+                {occasionsList?.length < 3 && (
                     <button
                         onClick={() => router.push('/occasions/new')}
                         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
