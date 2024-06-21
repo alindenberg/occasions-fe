@@ -1,26 +1,35 @@
 import { Occasion } from "@/types/occasions";
 
-export default function OccasionTile({ occasion, deletionHandler }: { occasion: Occasion, deletionHandler: Function }) {
+interface OccasionTileProps {
+    occasion: Occasion;
+    modifyHandler: Function;
+    deletionHandler: Function;
+}
+
+export default function OccasionTile({ occasion, modifyHandler, deletionHandler }: OccasionTileProps) {
     const handleDelete = async () => {
         await deletionHandler(occasion.id);
     }
 
+    const handleModify = async () => {
+        await modifyHandler(occasion.id);
+    }
+
     return (
-        <div className='border-2 border-red-500 sm:m-2 m-1'>
-            <h2>{occasion?.label ?? 'Label'}</h2>
-            <h2>Type: {occasion.type}</h2>
-            <h2>Date: {new Date(occasion.date).toLocaleString()}</h2>
-            <label>Input: </label>
-            <div>
-                {occasion?.custom_input}
-            </div>
-            <div className="flex flex-col items-center w-full">
-                <div className="flex flex-col sm:flex-row w-1/5 sm:w-full justify-center space-y-2 sm:space-y-0 sm:space-x-2">
-                    <a href={`/occasions/${occasion.id}/modify`} className="px-4 py-2 bg-blue-500 text-white rounded">Modify</a>
-                    {/* <button onClick={handleDelete} className="mt-1 px-4 py-2 bg-blue-500 text-white rounded">Modify</button> */}
-                    <button onClick={handleDelete} className="mt-1 px-4 py-2 bg-red-500 text-white rounded">Delete</button>
+        <div className='bg-gray-100 border border-gray-300 sm:m-4 m-2 shadow-xl rounded-lg overflow-hidden'>
+            <div className='p-6'>
+                <h2 className='font-bold text-2xl mb-2'>{occasion?.label ?? 'Label'}</h2>
+                <hr className='border-gray-400 mb-4' />
+                <h2 className='text-gray-700'>Type: {occasion.type}</h2>
+                <h2 className='text-gray-700'>Date: {new Date(occasion.date).toLocaleString()}</h2>
+                <div className='text-gray-700'>
+                    Notes: {occasion?.custom_input}
                 </div>
             </div>
-        </div >
+            <div className="flex flex-row items-center justify-center p-4 border-t border-gray-200">
+                <button onClick={handleModify} className="px-4 py-2 bg-blue-500 m-1 text-white rounded hover:bg-blue-700">Modify</button>
+                <button onClick={handleDelete} className="px-4 py-2 bg-red-500 m-1 text-white rounded hover:bg-red-700">Delete</button>
+            </div>
+        </div>
     )
 }

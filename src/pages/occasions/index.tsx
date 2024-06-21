@@ -21,6 +21,9 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
         setOccasionsList(updatedOccasions);
     }
 
+    async function modifyHandler(occasion_id: number) {
+        router.push(`/occasions/${occasion_id}/modify`);
+    }
     if (!isAuthenticated) {
         return (
             <main
@@ -44,10 +47,15 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
             <h1 className="text-2xl bold underline py-4">Your upcoming occasions</h1>
             <div className="flex flex-grow w-full flex-col items-center justify-start border-2 border-red-500">
                 {!!occasionsList?.length && (
-                    <div className="w-full sm:w-3/4 lg:w-1/2">
+                    <div className="w-full sm:w-3/4 lg:w-1/3">
                         {occasionsList.map((occasion) => (
                             <div className="pt-4">
-                                <OccasionTile key={occasion.id} occasion={occasion} deletionHandler={deletionHandler} />
+                                <OccasionTile
+                                    key={occasion.id}
+                                    occasion={occasion}
+                                    modifyHandler={modifyHandler}
+                                    deletionHandler={deletionHandler}
+                                />
                             </div>
                         ))}
                     </div>
