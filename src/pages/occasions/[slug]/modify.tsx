@@ -32,7 +32,19 @@ export default function ModifyOccasionPage() {
 
     function onModifyFormSubmit({ label, type, date, customInput }: any) {
         // Implement the function logic here
-        console.log('Occasion modified with:', { label, type, date, customInput });
+        const modifyOccasion = async () => {
+            const response = await fetch(`/api/occasions/${slug}/modify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ label, type, date, custom_input: customInput })
+            });
+            const json = await response.json();
+            if (!response.ok) {
+                throw { type: 'OccasionModifyError', detail: json.detail };
+            }
+            router.push('/occasions');
+        };
+        modifyOccasion();
     }
 
     return (
