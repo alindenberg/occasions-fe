@@ -20,6 +20,7 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
         console.log("setting updated occasions ", updatedOccasions)
         setOccasionsList(updatedOccasions);
     }
+
     if (!isAuthenticated) {
         return (
             <main
@@ -38,15 +39,16 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
 
     return (
         <main
-            className="flex min-h-screen flex-col items-center p-24 border-2 border-blue-500"
+            className="flex min-h-screen flex-col items-center border-2 border-blue-500"
         >
-            <h1>Your upcoming occasions</h1>
-            <div className="flex flex-grow flex-col justify-center border-2 border-red-500">
+            <h1 className="text-2xl bold underline py-4">Your upcoming occasions</h1>
+            <div className="flex flex-grow w-full flex-col items-center justify-start border-2 border-red-500">
                 {!!occasionsList?.length && (
-                    <div>
+                    <div className="w-full sm:w-3/4 lg:w-1/2">
                         {occasionsList.map((occasion) => (
-                            <OccasionTile key={occasion.id} occasion={occasion} deletionHandler={deletionHandler} />
-
+                            <div className="pt-4">
+                                <OccasionTile key={occasion.id} occasion={occasion} deletionHandler={deletionHandler} />
+                            </div>
                         ))}
                     </div>
                 )}
