@@ -39,7 +39,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     id="label"
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
-                    className="mt-1 block border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2"
                 />
             </div>
             <div className="mb-4">
@@ -48,7 +48,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     id="type"
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="mt-1 block w-auto border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 border border-gray-300 block w-full bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 appearance-none"
                 >
                     <option value="birthday">Birthday</option>
                     <option value="graduation">Graduation</option>
@@ -56,16 +56,16 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     <option value="other">Other</option>
                 </select>
             </div>
-            <div className="mb-4">
+            <div className="mb-4" onClick={() => document.getElementById('date')?.click()}>
                 <label htmlFor="date" className="block text-sm font-medium text-gray-700 mr-4">Date and Time</label>
                 <input
                     type="datetime-local"
                     id="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transform transition duration-500 ease-in-out hover:scale-105"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 transform transition duration-500 ease-in-out hover:scale-105"
                 />
-                <p className="text-xs text-gray-500 mt-1">Date and time of the occasion</p>
+                <p className="text-xs text-gray-500 mt-1">When you'll be sent the resulting message</p>
             </div>
             <div className="mb-4">
                 <label htmlFor="customInput" className="block text-sm font-medium text-gray-700">Custom Input</label>
@@ -74,12 +74,12 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     value={customInput}
                     onChange={(e) => setCustomInput(e.target.value)}
                     placeholder="Lorem ipsum"
-                    className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pl-1 py-1 pb-24 text-wrap"
+                    className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 pb-20"
                 />
             </div>
             <button
                 type="submit"
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
             >
                 Submit
             </button>
