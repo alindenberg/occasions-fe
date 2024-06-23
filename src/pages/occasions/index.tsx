@@ -5,6 +5,8 @@ import { GetServerSideProps } from 'next'
 
 import LoginPrompt from '@/components/LoginPrompt'
 import OccasionTile from '@/components/occasions/Tile'
+import CreateOccasionPrompt from '@/components/CreateOccasionPrompt';
+import CreateOccasionBtn from '@/components/CreateOccasionBtn';
 
 export default function OccasionsPage({ occasions, isAuthenticated }: { occasions: Occasion[], isAuthenticated: boolean }) {
     const router = useRouter()
@@ -37,7 +39,6 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
             className="flex flex-col items-center mt-4"
         >
             <div className="flex flex-grow w-full flex-col items-center justify-start">
-                { }
                 {!!occasionsList?.length && (
                     <div className="w-full sm:w-3/4 lg:w-1/3">
                         {occasionsList.map((occasion) => (
@@ -49,23 +50,12 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
                                 />
                             </div>
                         ))}
+                        <div className="flex justify-center">
+                            {occasionsList.length < 3 && <CreateOccasionBtn />}
+                        </div>
                     </div>
                 )}
-                {!occasionsList?.length && (
-                    <div className="text-center">
-                        <p>Well, that's bizarre.</p>
-                        <p className="pt-2">You don't have any upcoming occasions.</p>
-                        <p className="pt-2">Surely there's something to celebrate.</p>
-                    </div>
-                )}
-                {occasionsList?.length < 3 && (
-                    <button
-                        onClick={() => router.push('/occasions/new')}
-                        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-                    >
-                        Add an occasion
-                    </button>
-                )}
+                {(!occasionsList?.length) && <div className="vertical-padding"><CreateOccasionPrompt /></div>}
             </div>
         </main>
     )

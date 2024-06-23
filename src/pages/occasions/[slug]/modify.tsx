@@ -48,10 +48,10 @@ export default function ModifyOccasionPage() {
     }
 
     return (
-        <div className='mt-4 sm:mt-8 md:mt-12 mx-4 flex items-center justify-center border-2 border-red-500'>
+        <div className='mt-4 sm:mt-8 md:mt-12 mx-4 flex items-center justify-center'>
             {isLoading && <p>Loading...</p>}
             {!isLoading && occasion &&
-                <div className="w-full">
+                <div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
                     <ModifyOccasionComponent occasion={occasion} formSubmitFunction={onModifyFormSubmit} />
                 </div>
             }

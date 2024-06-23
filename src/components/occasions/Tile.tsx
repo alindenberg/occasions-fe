@@ -16,7 +16,7 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
     }
 
     return (
-        <div className='bg-gray-100 border border-gray-300 sm:m-4 m-2 shadow-xl rounded-lg overflow-hidden'>
+        <div className='bg-gray-100 border border-orange-400 sm:m-4 m-2 shadow-xl rounded-lg overflow-hidden'>
             <div className='p-6'>
                 <h2 className='font-bold text-2xl mb-2'>{occasion?.label ?? 'Label'}</h2>
                 <hr className='border-gray-400 mb-4' />

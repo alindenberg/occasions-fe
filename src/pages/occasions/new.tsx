@@ -9,7 +9,7 @@ export default function NewOccasionPage() {
         const response = await fetch('/api/occasions/new', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ label, type, date, custom_input: customInput })
+            body: JSON.stringify({ label, type, date, customInput })
         });
         if (!response.ok) {
             const errorData = await response.json();
