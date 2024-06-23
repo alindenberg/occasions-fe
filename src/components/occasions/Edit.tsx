@@ -30,7 +30,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
     return (
         <form
             onSubmit={handleSubmit}
-            className="flex flex-col p-6 bg-white shadow-lg rounded-lg border-2 border-yellow-700 mx-auto lg:w-1/3 md:w-1/2 sm:w-3/4"
+            className="flex flex-col p-6 bg-white shadow-lg rounded-lg border-2 border-orange-400"
         >
             <div className="mb-4">
                 <label htmlFor="label" className="block text-sm font-medium text-gray-700">Occasion</label>

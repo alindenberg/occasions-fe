@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { slug } = req.query;
-    const { label, type, date, custom_input } = req.body;
-    console.log(JSON.stringify({ label, type, date, custom_input }));
+    const { label, type, date, customInput } = req.body;
     const response = await fetch(
         `${process.env.SERVER_URL}/occasions/${slug}`,
         {
@@ -12,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 'Authorization': req?.headers?.authorization || 'None',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ label, type, date, custom_input })
+            body: JSON.stringify({ label, type, date, custom_input: customInput })
         });
     const json = await response.json();
     if (!response.ok) {

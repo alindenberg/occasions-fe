@@ -9,7 +9,7 @@ export default function NewOccasionPage() {
         const response = await fetch('/api/occasions/new', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ label, type, date, customInput })
+            body: JSON.stringify({ label, type, date, custom_input: customInput })
         });
         if (!response.ok) {
             const errorData = await response.json();
@@ -20,10 +20,9 @@ export default function NewOccasionPage() {
     }
 
     return (
-        <div className='flex min-h-screen flex-col flex-grow items-center border-2 border-green-500'>
-            <div className="flex flex-col w-full flex-grow border-2 border-orange-500">
-                <h1>New Occasion</h1>
-                <div className="flex-col flex items-center justify-center flex-grow border-2 border-blue-400">
+        <div className='mt-4 md:mt-8 lg:mt-12 flex flex-col flex-grow items-center'>
+            <div className="flex flex-col w-full flex-grow">
+                <div className="flex-col flex items-center justify-center flex-grow">
                     <div className="w-3/4 lg:w-1/3 sm:w-1/2">
                         <CreateOccasionForm formSubmitFunction={createOccasionFunction} />
                     </div>
