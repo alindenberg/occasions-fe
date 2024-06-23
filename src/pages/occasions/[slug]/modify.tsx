@@ -36,13 +36,13 @@ export default function ModifyOccasionPage() {
             const response = await fetch(`/api/occasions/${slug}/modify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ label, type, date, custom_input: customInput })
+                body: JSON.stringify({ label, type, date, customInput })
             });
             const json = await response.json();
             if (!response.ok) {
                 throw { type: 'OccasionModifyError', detail: json.detail };
             }
-            router.push('/occasions');
+            router.push('/');
         };
         modifyOccasion();
     }

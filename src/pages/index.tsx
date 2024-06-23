@@ -78,7 +78,7 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
         {(!occasionsList?.length && !viewingUpcoming) && <div className="vertical-padding p-24 border-2 border-orange-400 bg-gray-100">
           No past occasions to display!
           <div>
-            <button onClick={() => filterOccasions(OCCASION_FILTERS.UPCOMING)} className="px-4 py-2 mt-2 bg-orange-400 m-1 text-white rounded hover:bg-orange-500">View upcoming occasions</button>
+            <button onClick={() => filterOccasions(OCCASION_FILTERS.UPCOMING)} className="px-4 py-2 mt-2 bg-orange-500 m-1 text-white rounded hover:bg-orange-500">View upcoming occasions</button>
           </div>
         </div>}
       </div>
