@@ -8,3 +8,8 @@ export interface Occasion {
     date: string;
     date_processed: string;
 }
+
+export enum OCCASION_FILTERS {
+    UPCOMING = 'upcoming',
+    PAST = 'past'
+}
