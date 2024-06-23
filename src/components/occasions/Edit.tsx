@@ -28,24 +28,27 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col border-2 border-yellow-700">
-            <div>
-                <label htmlFor="label" className="block text-sm font-medium text-gray-700">Label</label>
+        <form
+            onSubmit={handleSubmit}
+            className="flex flex-col p-6 bg-white shadow-lg rounded-lg border-2 border-yellow-700 mx-auto lg:w-1/3 md:w-1/2 sm:w-3/4"
+        >
+            <div className="mb-4">
+                <label htmlFor="label" className="block text-sm font-medium text-gray-700">Occasion</label>
                 <input
                     type="text"
                     id="label"
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 />
             </div>
-            <div>
+            <div className="mb-4">
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type</label>
                 <select
                     id="type"
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-auto border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 >
                     <option value="birthday">Birthday</option>
                     <option value="graduation">Graduation</option>
@@ -53,29 +56,30 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     <option value="other">Other</option>
                 </select>
             </div>
-            <div>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date and Time</label>
+            <div className="mb-4">
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mr-4">Date and Time</label>
                 <input
                     type="datetime-local"
                     id="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transform transition duration-500 ease-in-out hover:scale-105"
                 />
+                <p className="text-xs text-gray-500 mt-1">Date and time of the occasion</p>
             </div>
-            <div>
+            <div className="mb-4">
                 <label htmlFor="customInput" className="block text-sm font-medium text-gray-700">Custom Input</label>
-                <input
-                    type="text"
+                <textarea
                     id="customInput"
                     value={customInput}
                     onChange={(e) => setCustomInput(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    placeholder="Lorem ipsum"
+                    className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 pl-1 py-1 pb-24 text-wrap"
                 />
             </div>
             <button
                 type="submit"
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
                 Submit
             </button>
