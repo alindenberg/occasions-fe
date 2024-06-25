@@ -5,10 +5,10 @@ import { GetServerSideProps } from 'next'
 
 import { OCCASION_FILTERS } from '@/types/occasions'
 import LoginPrompt from '@/components/LoginPrompt'
-import OccasionTile from '@/components/occasions/Tile'
 import CreateOccasionPrompt from '@/components/CreateOccasionPrompt';
-import CreateOccasionBtn from '@/components/CreateOccasionBtn';
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
+import PastOccasionsList from '@/components/occasions/PastOccasionsList';
+import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 
 export default function OccasionsPage({ occasions, isAuthenticated }: { occasions: Occasion[], isAuthenticated: boolean }) {
   const router = useRouter()
@@ -44,7 +44,7 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
 
   if (!isAuthenticated) {
     return (
-      <div className="vertical-padding">
+      <div className="flex-grow flex flex-col justify-center items-center">
         <LoginPrompt />
       </div>
     )
@@ -57,32 +57,11 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
       <div className="flex flex-grow w-full flex-col items-center justify-start">
         <div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
           <OccasionsFilterDropdown onClick={filterOccasions} />
-          {!!occasionsList?.length && (
-            <div className="w-full">
-              {occasionsList.map((occasion, index) => (
-                <div className="pt-4" key={occasion.id}>
-                  <OccasionTile
-                    occasion={occasion}
-                    modifyHandler={modifyHandler}
-                    deletionHandler={deletionHandler}
-                  />
-                </div>
-              ))}
-              <div className="flex justify-center pt-2">
-                {occasionsList.length < 3 && <CreateOccasionBtn />}
-              </div>
-            </div>
-          )}
+          {viewingUpcoming && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
+          {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
         </div>
-        {(!occasionsList?.length && viewingUpcoming) && <div className="vertical-padding"><CreateOccasionPrompt /></div>}
-        {(!occasionsList?.length && !viewingUpcoming) && <div className="vertical-padding p-24 border-2 border-orange-400 bg-gray-100">
-          No past occasions to display!
-          <div>
-            <button onClick={() => filterOccasions(OCCASION_FILTERS.UPCOMING)} className="px-4 py-2 mt-2 bg-orange-500 m-1 text-white rounded hover:bg-orange-500">View upcoming occasions</button>
-          </div>
-        </div>}
-      </div>
-    </main>
+      </div >
+    </main >
   )
 }
 

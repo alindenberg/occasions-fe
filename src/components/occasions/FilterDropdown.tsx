@@ -33,7 +33,7 @@ export default function OccasionsFilterDropdown({ onClick }: { onClick: Function
             <button
                 className="py-2 px-4 bg-gray-200 border border-orange-400 bg-white rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent flex items-center"
             >
-                <span className="text-xl font-bold">{viewingUpcoming ? 'Upcoming occasions' : 'Past occasions'}</span>
+                <span className="md:text-xl font-bold">{viewingUpcoming ? 'Upcoming occasions' : 'Past occasions'}</span>
                 <FontAwesomeIcon className="ml-2 self-center" icon={faCaretDown} />
             </button>
             {isOpen && (
