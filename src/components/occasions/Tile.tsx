@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Occasion } from "@/types/occasions";
 
 interface OccasionTileProps {
@@ -23,6 +24,12 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
         await modifyHandler(occasion.id);
     }
 
+    const [isSummaryExpanded, setisSummaryExpanded] = useState(false);
+
+    const handleExpandClick = () => {
+        setisSummaryExpanded(!isSummaryExpanded);
+    };
+
     return (
         <div className='bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden'>
             <div className='p-6'>
@@ -33,6 +40,24 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
                 <div className='text-gray-700'>
                     Notes: {occasion?.custom_input}
                 </div>
+                {occasion.summary &&
+                    <div className='text-gray-700'>
+                        <span>Summary: </span>
+                        {
+                            occasion.summary.length < 20 ?
+                                <span>
+                                    {occasion.summary}
+                                </span>
+                                :
+                                <span>
+                                    {isSummaryExpanded ? occasion.summary : occasion.summary.substring(0, 15) + "..."}
+                                    <a href="#" onClick={handleExpandClick} style={{ textDecoration: 'none', color: 'blue' }}>
+                                        {isSummaryExpanded ? ' show less' : ' show more'}
+                                    </a>
+                                </span>
+                        }
+                    </div>
+                }
             </div>
             <div className="flex flex-row items-center justify-center p-4 border-t border-gray-200">
                 {modifyHandler && <button onClick={handleModify} className="px-4 py-2 bg-blue-500 m-1 text-white rounded hover:bg-blue-700">Modify</button>}

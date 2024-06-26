@@ -1,6 +1,7 @@
 export interface Occasion {
     id: number;
     type: string;
+    summary: string;
     label: string;
     user_id: string;
     email: string;

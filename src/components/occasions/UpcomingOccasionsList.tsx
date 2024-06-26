@@ -11,7 +11,7 @@ interface Props {
 export default function UpcomingOccasionsList({ occasions, deletionHandler, modifyHandler }: Props) {
     return (
         occasions?.length ?
-            <div>
+            <div className="py-4">
                 {occasions.map((occasion, index) => (
                     <div className="pt-4" key={occasion.id}>
                         <OccasionTile
@@ -21,7 +21,8 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
                         />
                     </div>
                 ))}
-                {occasions?.length < 3 && <div className="flex justify-center pt-2"><CreateOccasionBtn /></div>}
+                <div className="flex justify-center pt-2"><CreateOccasionBtn disabled={occasions?.length >= 3} /></div>
+                {/* {occasions?.length >= 3 && <small>You may only have up to 3 pending occasions.</small>} */}
             </div>
             :
             <div className="text-center p-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
