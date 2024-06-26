@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 import { Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
@@ -14,6 +14,11 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
 
   const [occasionsList, setOccasionsList] = useState(occasions);
   const [viewingUpcoming, setViewingUpcoming] = useState(true);
+
+  useEffect(() => {
+    // todo: refactor api call for and separate list of occasions
+    Promise.any([filterOccasions(OCCASION_FILTERS.UPCOMING)])
+  }, [])
 
   async function deletionHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/delete`);
