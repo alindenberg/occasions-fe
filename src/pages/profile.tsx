@@ -3,13 +3,11 @@ import { User } from "@/types/users";
 
 export default function ProfilePage({ user, isAuthenticated }: { user: User, isAuthenticated: boolean }) {
     return (
-        <div className="flex flex-col items-center justify-center vertical-padding">
-            <div className="bg-gray-100">
-                <div className="flex flex-col items-center justify-center p-4">
-                    <div className="text-3xl font-bold">Profile</div>
-                    <div className="text-lg">Welcome, User!</div>
-                    {user && user.email && <div className="text-lg">Email: {user.email}</div>}
-                </div>
+        <div className="flex flex-grow border-8 border-red-500 items-center justify-center">
+            <div className="p-10 bg-gray-100 border-2 border-orange-400">
+                <div className="text-3xl font-bold pb-4">Profile</div>
+                <div className="text-lg pb-4">Welcome, User!</div>
+                {user && user.email && <div className="text-lg">Email: {user.email}</div>}
             </div>
         </div>
     )
