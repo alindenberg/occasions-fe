@@ -21,8 +21,6 @@ export default function ModifyOccasionPage() {
                     return;
                 }
                 const data = await res.json();
-                data.date = new Date(`${data.date}Z`);
-                data.date = getLocalizedDateInputValue(data.date);
                 setOccasion(data);
                 setIsLoading(false);
             };

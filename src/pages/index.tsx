@@ -5,7 +5,6 @@ import { GetServerSideProps } from 'next'
 
 import { OCCASION_FILTERS } from '@/types/occasions'
 import LoginPrompt from '@/components/LoginPrompt'
-import CreateOccasionPrompt from '@/components/CreateOccasionPrompt';
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
@@ -52,15 +51,16 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
 
   return (
     <main
-      className="flex flex-col items-center mt-4"
+      className="flex flex-grow flex-col items-center mt-4"
     >
-      <div className="flex flex-grow w-full flex-col items-center justify-start">
-        <div className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
-          <OccasionsFilterDropdown onClick={filterOccasions} />
+      <div className="flex flex-col flex-grow w-full md:w-1/2 lg:w-1/3">
+        <OccasionsFilterDropdown onClick={filterOccasions} />
+        <div className="pt-2">
           {viewingUpcoming && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
-          {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
+          {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} />}
         </div>
-      </div >
+      </div>
+      {/* </div > */}
     </main >
   )
 }

@@ -17,11 +17,9 @@ export default function OccasionsFilterDropdown({ onClick }: { onClick: Function
 
     const handleSelect = (option: string) => {
         if (option === 'upcoming') {
-            console.log('upcoming')
             onClick(OCCASION_FILTERS.UPCOMING)
             setViewingUpcoming(true);
         } else if (option === 'past') {
-            console.log('past')
             onClick(OCCASION_FILTERS.PAST)
             setViewingUpcoming(false);
         }

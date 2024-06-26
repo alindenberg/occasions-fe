@@ -3,23 +3,25 @@ import OccasionTile from '@/components/occasions/Tile'
 
 interface Props {
     occasions: Occasion[]
-    deletionHandler: (occasion_id: number) => void
-    modifyHandler: (occasion_id: number) => void
 }
 
-export default function PastOccasionsList({ occasions, deletionHandler, modifyHandler }: Props) {
-    return (
-        <div className="p-24">
-            {occasions.map((occasion, index) => (
-                <div className="pt-4" key={occasion.id}>
-                    <OccasionTile
-                        occasion={occasion}
-                        modifyHandler={modifyHandler}
-                        deletionHandler={deletionHandler}
-                    />
-                </div>
-            ))}
+export default function PastOccasionsList({ occasions }: Props) {
+    return occasions.length ?
+        (
+            <div>
+                {occasions.map((occasion, index) => (
+                    <div className="pt-4" key={occasion.id}>
+                        <OccasionTile occasion={occasion} modifyHandler={null} deletionHandler={null} />
+                    </div>
+                ))}
 
-        </div>
-    )
+            </div>
+        )
+        :
+        (
+            <div className="text-center p-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
+                <p>No past occasions to display... :(</p>
+                {/* <div className="flex justify-center pt-2"><CreateOccasionBtn /></div> */}
+            </div>
+        )
 }

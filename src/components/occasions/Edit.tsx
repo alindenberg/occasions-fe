@@ -10,10 +10,17 @@ function getDefaultDateTime() {
     return getLocalizedDateInputValue(now); // Format as 'YYYY-MM-DDTHH:MM'
 }
 
+function formatDate(dateString?: string) {
+    if (!dateString) {
+        return getDefaultDateTime();
+    }
+    return getLocalizedDateInputValue(new Date(dateString));
+}
+
 export default function EditOccasionComponent({ occasion, formSubmitFunction }: { occasion?: Occasion, formSubmitFunction: Function }) {
     const [label, setLabel] = useState(occasion?.label || '');
     const [type, setType] = useState(occasion?.type || 'birthday');
-    const [date, setDate] = useState(occasion?.date || getDefaultDateTime());
+    const [date, setDate] = useState(formatDate(occasion?.date) || getDefaultDateTime());
     const [customInput, setCustomInput] = useState(occasion?.custom_input || '');
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -24,7 +31,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
             alert('Date must be in the future')
             return;
         }
-        formSubmitFunction({ label, type, date: selectedDate, customInput });
+        formSubmitFunction({ label, type, date: selectedDate.toISOString(), customInput });
     };
 
     return (
