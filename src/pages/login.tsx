@@ -17,9 +17,9 @@ export default function LoginPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
         });
-
         if (response.ok) {
-            router.push('/');
+            const redirectUrl = router.query.redirect ? String(router.query.redirect) : '/';
+            router.push(redirectUrl);
         } else {
             // Handle errors
         }

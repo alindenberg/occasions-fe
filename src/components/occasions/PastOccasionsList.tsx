@@ -14,7 +14,6 @@ export default function PastOccasionsList({ occasions }: Props) {
                         <OccasionTile occasion={occasion} modifyHandler={null} deletionHandler={null} />
                     </div>
                 ))}
-
             </div>
         )
         :
