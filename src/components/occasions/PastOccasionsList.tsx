@@ -10,7 +10,7 @@ export default function PastOccasionsList({ occasions }: Props) {
         (
             <div>
                 {occasions.map((occasion, index) => (
-                    <div className="pt-4" key={occasion.id}>
+                    <div className="py-4" key={occasion.id}>
                         <OccasionTile occasion={occasion} modifyHandler={null} deletionHandler={null} />
                     </div>
                 ))}
@@ -19,9 +19,10 @@ export default function PastOccasionsList({ occasions }: Props) {
         )
         :
         (
-            <div className="text-center p-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
-                <p>No past occasions to display... :(</p>
-                {/* <div className="flex justify-center pt-2"><CreateOccasionBtn /></div> */}
+            <div className="py-4">
+                <div className="text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
+                    <p>No past occasions to display... :(</p>
+                </div>
             </div>
         )
 }

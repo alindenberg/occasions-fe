@@ -37,20 +37,22 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
                 <hr className='border-gray-400 mb-4' />
                 <h2 className='text-gray-700'>Type: {occasion.type}</h2>
                 <h2 className='text-gray-700'>Date: {new Date(occasion.date).toLocaleString()}</h2>
+                <br></br>
                 <div className='text-gray-700'>
                     Notes: {occasion?.custom_input}
                 </div>
                 {occasion.summary &&
                     <div className='text-gray-700'>
+                        <br></br>
                         <span>Summary: </span>
                         {
-                            occasion.summary.length < 20 ?
-                                <span>
+                            occasion.summary.length < 40 ?
+                                <span className="italic">
                                     {occasion.summary}
                                 </span>
                                 :
-                                <span>
-                                    {isSummaryExpanded ? occasion.summary : occasion.summary.substring(0, 15) + "..."}
+                                <span className="italic">
+                                    {isSummaryExpanded ? occasion.summary : occasion.summary.substring(0, 35) + "..."}
                                     <a href="#" onClick={handleExpandClick} style={{ textDecoration: 'none', color: 'blue' }}>
                                         {isSummaryExpanded ? ' show less' : ' show more'}
                                     </a>
