@@ -8,7 +8,7 @@ export default function HowItWorksPage({ user, isAuthenticated }: { user: User, 
 
   return (
     <div className="flex flex-grow items-center justify-center">
-      <div className="p-10 bg-gray-100 border-2 border-orange-400">
+      <div className="m-2 p-10 bg-gray-100 border-2 border-orange-400">
         <div className="text-3xl font-bold pb-4">Welcome to Occasions!</div>
         <div className="text-xl underline">Here's how it works:</div>
         <div className="pt-2 text-lg">
@@ -18,7 +18,7 @@ export default function HowItWorksPage({ user, isAuthenticated }: { user: User, 
                 <li>Provide a label for the occasion.</li>
                 <li>Provide a type for the occasion.</li>
                 <li>Provide a date for the occasion.</li>
-                <li>Provide any additional notes for the occasion.</li>
+                <li>Provide additional details for context.</li>
               </ul>
             </li>
             <li>Receive an email with a pre-generated message for the occasion.</li>

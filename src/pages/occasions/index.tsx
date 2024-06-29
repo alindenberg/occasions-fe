@@ -58,7 +58,7 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
         <main
             className="flex flex-grow flex-col items-center mt-4"
         >
-            <div className="flex flex-col flex-grow w-full md:w-1/2 lg:w-1/3">
+            <div className="flex flex-col flex-grow w-full md:w-3/4 lg:w-1/2 p-2">
                 <OccasionsFilterDropdown onClick={filterOccasions} />
                 {viewingUpcoming && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
                 {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} />}
