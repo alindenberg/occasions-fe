@@ -3,7 +3,7 @@ export default function OccasionsPage() {
         <main
             className="flex min-h-screen flex-col items-center justify-between p-24"
         >
-            Hi! I'm the occasions page.
+            Hi! I&apos;m the occasions page.
         </main>
     )
 }

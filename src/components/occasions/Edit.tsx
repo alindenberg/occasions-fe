@@ -72,7 +72,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     onChange={(e) => setDate(e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 transform transition duration-500 ease-in-out hover:scale-105"
                 />
-                <p className="text-xs text-gray-500 mt-1">When you'll be sent the resulting message</p>
+                <p className="text-xs text-gray-500 mt-1">When you&apos;ll be sent the resulting message</p>
             </div>
             <div className="mb-4">
                 <label htmlFor="customInput" className="block text-sm font-medium text-gray-700">Custom Input</label>

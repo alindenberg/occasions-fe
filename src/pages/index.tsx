@@ -10,7 +10,7 @@ export default function HowItWorksPage({ user, isAuthenticated }: { user: User, 
     <div className="flex flex-grow items-center justify-center">
       <div className="m-2 p-10 bg-gray-100 border-2 border-orange-400">
         <div className="text-3xl font-bold pb-4">Welcome to Occasions!</div>
-        <div className="text-xl underline">Here's how it works:</div>
+        <div className="text-xl underline">Here&apos;s how it works:</div>
         <div className="pt-2 text-lg">
           <ul className="list-decimal list-inside">
             <li>Create an occasion object for an upcoming occasion.
