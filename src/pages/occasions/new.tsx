@@ -6,7 +6,7 @@ export default function NewOccasionPage() {
     const router = useRouter();
     const createOccasionFunction = async ({ label, type, date, customInput }: any) => {
         // Implement the function logic here
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/occasions/new`, {
+        const response = await fetch('/api/occasions/new', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ label, type, date, customInput })
