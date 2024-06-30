@@ -27,37 +27,39 @@ export default function OccasionsFilterDropdown({ onClick }: { onClick: Function
     };
 
     return (
-        <div className="relative" onMouseEnter={handleOpenDropdown} onMouseLeave={handleCloseDropdown}>
-            <button
-                className="py-2 px-4 bg-gray-200 border border-orange-400 bg-white rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent flex items-center"
-            >
-                <span className="md:text-xl font-bold">{viewingUpcoming ? 'Upcoming occasions' : 'Past occasions'}</span>
-                <FontAwesomeIcon className="ml-2 self-center" icon={faCaretDown} />
-            </button>
-            {isOpen && (
-                <div
-                    className="absolute z-10 pt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-                    onMouseLeave={handleCloseDropdown}
+        <div className="relative">
+            <div className="inline-block" onMouseEnter={handleOpenDropdown} onMouseLeave={handleCloseDropdown}>
+                <button
+                    className="py-2 px-4 bg-gray-200 border border-orange-400 bg-white rounded-md shadow-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent flex items-center"
                 >
-                    <button
-                        onClick={() => handleSelect('upcoming')}
-                        className={`block w-full text-left px-4 py-2 text-sm text-gray-700 ${viewingUpcoming ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-100'
-                            }`}
-                        disabled={viewingUpcoming}
+                    <span className="md:text-xl font-bold">{viewingUpcoming ? 'Upcoming occasions' : 'Past occasions'}</span>
+                    <FontAwesomeIcon className="ml-2 self-center" icon={faCaretDown} />
+                </button>
+                {isOpen && (
+                    <div
+                        className="absolute z-10 pt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                        onMouseLeave={handleCloseDropdown}
                     >
-                        Upcoming occasions
-                    </button>
-                    <button
-                        onClick={() => handleSelect('past')}
-                        className={`block w-full text-left px-4 py-2 text-sm text-gray-700 ${!viewingUpcoming ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-100'
-                            }`}
-                        disabled={!viewingUpcoming}
-                    >
-                        Past occasions
-                    </button>
-                </div>
-            )
-            }
+                        <button
+                            onClick={() => handleSelect('upcoming')}
+                            className={`block w-full text-left px-4 py-2 text-gray-700 ${viewingUpcoming ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-100'
+                                }`}
+                            disabled={viewingUpcoming}
+                        >
+                            Upcoming occasions
+                        </button>
+                        <button
+                            onClick={() => handleSelect('past')}
+                            className={`block w-full text-left px-4 py-2 text-gray-700 ${!viewingUpcoming ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-100'
+                                }`}
+                            disabled={!viewingUpcoming}
+                        >
+                            Past occasions
+                        </button>
+                    </div>
+                )
+                }
+            </div>
         </div >
     );
 }

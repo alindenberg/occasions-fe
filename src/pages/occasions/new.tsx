@@ -16,7 +16,7 @@ export default function NewOccasionPage() {
             return;
         }
 
-        router.push('/');
+        router.push('/occasions');
     }
 
     return (
