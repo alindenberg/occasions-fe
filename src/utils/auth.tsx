@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 
 export const getAuthServerSideProps: GetServerSideProps = async (context) => {
-    const res = await fetch('http://localhost:3000/api/auth/session', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/session`, {
         method: 'GET',
         headers: {
             'Authorization': context.req.cookies.Authorization || '',
