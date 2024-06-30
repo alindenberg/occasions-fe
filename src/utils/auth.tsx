@@ -8,7 +8,6 @@ export const getAuthServerSideProps: GetServerSideProps = async (context) => {
         },
     });
 
-    const data = await res.json();
     if (!res.ok) {
         return {
             props: {
@@ -17,6 +16,8 @@ export const getAuthServerSideProps: GetServerSideProps = async (context) => {
             }
         }
     }
+
+    const data = await res.json();
     return {
         props: {
             user: data,
