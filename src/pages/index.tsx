@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { User } from '@/types/users/index';
 import { getAuthServerSideProps } from '@/utils/auth';
 
-export default function HowItWorksPage({ user, isAuthenticated }: { user: User, isAuthenticated: boolean }) {
+export default function HowItWorksPage({ user }: { user: User, isAuthenticated: boolean }) {
   const router = useRouter();
 
   return (
@@ -25,7 +25,7 @@ export default function HowItWorksPage({ user, isAuthenticated }: { user: User, 
           </ul>
         </div>
         <div className="flex flex-grow justify-center">
-          {isAuthenticated ? (
+          {!!user ? (
             <button
               className="mt-4 bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded"
               onClick={() => router.push('/occasions')}

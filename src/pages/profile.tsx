@@ -1,8 +1,8 @@
 import { User } from "@/types/users";
 import { getAuthServerSideProps } from "@/utils/auth";
 
-export default function ProfilePage({ user, isAuthenticated }: { user: User, isAuthenticated: boolean }) {
-    return (
+export default function ProfilePage({ user }: { user: User, isAuthenticated: boolean }) {
+    return (!!user &&
         <div className="flex flex-grow items-center justify-center">
             <div className="p-10 bg-gray-100 border-2 border-orange-400">
                 <div className="text-3xl font-bold pb-4">Profile</div>

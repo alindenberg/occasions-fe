@@ -10,9 +10,9 @@ export const getAuthServerSideProps: GetServerSideProps = async (context) => {
 
     if (!res.ok) {
         return {
-            props: {
-                user: null,
-                isAuthenticated: false
+            redirect: {
+                destination: `/login?redirect=${context.req.url}`,
+                permanent: false
             }
         }
     }
@@ -20,8 +20,7 @@ export const getAuthServerSideProps: GetServerSideProps = async (context) => {
     const data = await res.json();
     return {
         props: {
-            user: data,
-            isAuthenticated: true
+            user: data
         }
     }
 }

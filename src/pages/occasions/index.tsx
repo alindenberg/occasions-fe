@@ -9,7 +9,7 @@ import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 
-export default function OccasionsPage({ occasions, isAuthenticated }: { occasions: Occasion[], isAuthenticated: boolean }) {
+export default function OccasionsPage({ occasions }: { occasions: Occasion[], isAuthenticated: boolean }) {
     const router = useRouter()
 
     const [occasionsList, setOccasionsList] = useState(occasions);
@@ -46,14 +46,6 @@ export default function OccasionsPage({ occasions, isAuthenticated }: { occasion
         }
     }
 
-    if (!isAuthenticated) {
-        return (
-            <div className="flex-grow flex flex-col justify-center items-center">
-                <LoginPrompt />
-            </div>
-        )
-    }
-
     return (
         <main
             className="flex flex-grow flex-col items-center mt-4"
@@ -81,11 +73,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             'Authorization': authCookie
         }
     });
-    if (res.status === 401) {
-        return { props: { occasions: [], isAuthenticated: false } }
+    if (!res.ok) {
+        return {
+            redirect: {
+                destination: `/login?redirect=${context.req.url}`,
+                permanent: false
+            }
+        }
     }
     const occasions = await res.json()
 
     // Pass data to the page via props
-    return { props: { occasions, isAuthenticated: true } }
+    return { props: { occasions, user: true } }
 }

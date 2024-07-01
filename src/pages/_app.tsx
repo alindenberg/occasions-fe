@@ -7,7 +7,7 @@ import { getAuthServerSideProps } from "@/utils/auth";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar isAuthenticated={pageProps.isAuthenticated} />
+      <Navbar isAuthenticated={!!pageProps.user} />
       <Component {...pageProps} />
     </div>
   )
