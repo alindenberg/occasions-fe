@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { Occasion } from '@/types/occasions';
-import { getLocalizedDateInputValue } from '@/utils/utils';
 import ModifyOccasionComponent from '@/components/occasions/Edit';
 
 export default function ModifyOccasionPage() {
