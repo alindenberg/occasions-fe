@@ -39,7 +39,7 @@ export default function ModifyOccasionPage() {
             if (!response.ok) {
                 throw { type: 'OccasionModifyError', detail: json.detail };
             }
-            router.push('/');
+            router.push('/occasions');
         };
         modifyOccasion();
     }
