@@ -1,9 +1,12 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
 
+import UserContext from '@/context/userContext';
 
-export default function Navbar({ isAuthenticated }: { isAuthenticated: boolean }) {
+export default function Navbar() {
+    const user = useContext(UserContext);
+    const isAuthenticated = !!user;
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
 
@@ -20,7 +23,6 @@ export default function Navbar({ isAuthenticated }: { isAuthenticated: boolean }
         <nav className="bg-orange-500 p-4">
             <div className="mx-auto flex items-center justify-between">
                 <div className="text-white text-xl font-semibold">
-                    <div>{isAuthenticated}</div>
                     < Link href={isAuthenticated ? "/occasions" : "/"}>Occasions</Link>
                 </div>
                 <div className="hidden md:flex space-x-4">

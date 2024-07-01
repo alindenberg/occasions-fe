@@ -12,7 +12,7 @@ export default async function handler(
             throw { type: 'CredentialsSignin' }
         }
 
-        const response = await fetch(`${process.env.SERVER_URL}/users/me/`, { headers: authHeaders });
+        const response = await fetch(`${process.env.SERVER_URL}/users/me`, { headers: authHeaders });
         if (!response.ok) {
             throw { type: 'CredentialsSignin' }
         }
