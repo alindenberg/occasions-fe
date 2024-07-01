@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 
-import { User } from '@/types/users/index';
-import { getAuthServerSideProps } from '@/utils/auth';
+import { useContext } from 'react';
+import UserContext from '@/context/userContext';
 
-export default function HowItWorksPage({ user }: { user: User, isAuthenticated: boolean }) {
+export default function HowItWorksPage() {
   const router = useRouter();
+  const user = useContext(UserContext);
 
   return (
     <div className="flex flex-grow items-center justify-center">
@@ -45,4 +46,3 @@ export default function HowItWorksPage({ user }: { user: User, isAuthenticated: 
     </div >
   )
 }
-export const getServerSideProps = getAuthServerSideProps;

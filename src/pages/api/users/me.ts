@@ -1,5 +1,4 @@
-import { getAuthHeaderForToken } from '@/utils/utils';
-import { serialize } from 'cookie'
+import { getAuthHeaders } from '@/utils/utils';
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -7,12 +6,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        const authHeaders = getAuthHeaderForToken(req.cookies['Authorization']);
-        if (!authHeaders?.Authorization) {
-            throw { type: 'CredentialsSignin' }
-        }
-
-        const response = await fetch(`${process.env.SERVER_URL}/users/me`, { headers: authHeaders });
+        const response = await fetch(`${process.env.SERVER_URL}/users/me`, { headers: getAuthHeaders(req) });
         if (!response.ok) {
             throw { type: 'CredentialsSignin' }
         }

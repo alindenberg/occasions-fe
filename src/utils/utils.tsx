@@ -1,5 +1,5 @@
 import { serialize } from 'cookie';
-import { NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export const setAuthorizationCookie = (res: NextApiResponse, accessToken: string) => {
     const cookie = serialize(
@@ -13,12 +13,13 @@ export const setAuthorizationCookie = (res: NextApiResponse, accessToken: string
     res.setHeader('Set-Cookie', cookie)
 }
 
-export const getAuthHeaderForToken = (accessToken?: string) => {
-    if (!accessToken) {
-        return {}
-    }
-
-    return { 'Authorization': accessToken }
+export const getAuthHeaders = (req: NextApiRequest) => {
+    return {
+        'Authorization':
+            req.cookies?.['Authorization']
+            || req.headers?.['authorization']
+            || ''
+    };
 }
 
 export function getLocalizedDateInputValue(date: Date) {

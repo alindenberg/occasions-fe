@@ -1,6 +1,12 @@
+import { User } from '@/types/users';
 import { createContext, useState, useEffect } from 'react';
 
-const UserContext = createContext(null);
+interface UserContextType {
+    user: User | null;
+    setUser: any;
+}
+
+const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: any) => {
     const [user, setUser] = useState(null);
@@ -14,12 +20,15 @@ export const UserProvider = ({ children }: any) => {
         // Fetch user data from your API
         const response = await fetch('/api/auth/session', { credentials: 'include' });
         const data = await response.json();
+        if (!response.ok) {
+            return setUser(null);
+        }
 
         setUser(data);
     };
 
     return (
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={{ user, setUser }}>
             {children}
         </UserContext.Provider>
     );
