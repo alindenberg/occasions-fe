@@ -5,8 +5,8 @@ import Link from 'next/link';
 import UserContext from '@/context/userContext';
 
 export default function Navbar() {
-    const user = useContext(UserContext);
-    const isAuthenticated = !!user;
+    const userCtx = useContext(UserContext);
+    const isAuthenticated = !!userCtx?.user;
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
 
