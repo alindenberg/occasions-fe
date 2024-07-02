@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
             }).join(''));
             const { sub, exp } = JSON.parse(jsonPayload);
             if (exp > Date.now() / 1000) {
-                console.log('Token expired');
+                // todo: fetch user data from the session
                 currentUser = true
             }
 
@@ -25,17 +25,14 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    console.log('currentUser', currentUser)
-    console.log('request.nextUrl.pathname', request.nextUrl.pathname === '/profile')
-    console.log('request.nextUrl.pathname in ["/profile"]', request.nextUrl.pathname in ['/profile'])
     if (!currentUser && ['/profile', '/occasions'].includes(request.nextUrl.pathname)) {
         console.log('Redirecting to login');
         const loginUrl = new URL('/login', request.url);
         loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
-        return Response.redirect(loginUrl.toString());
+        return NextResponse.redirect(loginUrl.toString());
     }
 }
 
 export const config = {
-    matcher: ['/profile', '/occasions'],
+    matcher: ['/(occasions|profile)'],
 }
