@@ -1,11 +1,13 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 export default function LoginPage() {
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        setErrorMessage(null);
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
@@ -21,7 +23,7 @@ export default function LoginPage() {
             const redirectUrl = router.query.redirect ? String(router.query.redirect) : '/';
             router.push(redirectUrl);
         } else {
-            // Handle errors
+            setErrorMessage('Incorrect email or password');
         }
     }
 
@@ -29,6 +31,9 @@ export default function LoginPage() {
         <div className="vertical-padding flex items-center justify-center">
             <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login</h2>
+                {errorMessage && (
+                    <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+                )}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>

@@ -31,6 +31,9 @@ export default function SignupPage() {
         <div className="vertical-padding flex items-center justify-center">
             <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Sign Up</h2>
+                {error && (
+                    <p className="text-red-500 text-center mb-4">{error}</p>
+                )}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -62,7 +65,6 @@ export default function SignupPage() {
                             Sign Up
                         </button>
                     </div>
-                    {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
                 </form>
                 <p className="mt-4 text-center text-sm text-gray-600">
                     Already have an account?{' '}

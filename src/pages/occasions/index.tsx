@@ -4,7 +4,6 @@ import { Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
 
 import { OCCASION_FILTERS } from '@/types/occasions'
-import LoginPrompt from '@/components/LoginPrompt'
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
