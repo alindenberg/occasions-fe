@@ -14,17 +14,20 @@ export const UserProvider = ({ children }: any) => {
     useEffect(() => {
         // Fetch user data here and set it to the state
         fetchUserData();
-    }, []);
+    }, [children]);
 
     const fetchUserData = async () => {
-        // Fetch user data from your API
-        const response = await fetch('/api/auth/session', { credentials: 'include' });
-        const data = await response.json();
-        if (!response.ok) {
-            return setUser(null);
-        }
+        try {
+            // Fetch user data from your API
+            const response = await fetch('/api/auth/session', { credentials: 'include' });
+            const data = await response.json();
+            if (!response.ok) throw new Error('Failed to fetch user data');
 
-        setUser(data);
+            setUser(data);
+        } catch (error) {
+            console.error(error);
+            setUser(null);
+        }
     };
 
     return (

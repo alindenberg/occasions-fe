@@ -5,7 +5,8 @@ import UserContext from '@/context/userContext';
 
 export default function HowItWorksPage() {
   const router = useRouter();
-  const user = useContext(UserContext);
+  const userCtx = useContext(UserContext);
+  const user = userCtx?.user;
 
   return (
     <div className="flex flex-grow items-center justify-center">
