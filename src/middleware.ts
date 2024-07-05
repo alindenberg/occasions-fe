@@ -24,9 +24,9 @@ export function middleware(request: NextRequest) {
             console.error('Error decoding token:', error);
         }
     }
+    console.log("current user ", currentUser)
 
-    if (!currentUser && ['/profile', '/occasions'].includes(request.nextUrl.pathname)) {
-        console.log('Redirecting to login');
+    if (!currentUser && ['/profile', '/occasions', '/occasions/new'].includes(request.nextUrl.pathname)) {
         const loginUrl = new URL('/login', request.url);
         loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
         return NextResponse.redirect(loginUrl.toString());
@@ -34,5 +34,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/(occasions|profile)'],
+    matcher: ['/occasions/:path*', '/profile'],
 }
