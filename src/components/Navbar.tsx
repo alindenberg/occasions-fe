@@ -24,13 +24,13 @@ export default function Navbar() {
         <nav className="bg-orange-500 p-4">
             <div className="mx-auto flex items-center justify-between">
                 <div className="text-white text-xl font-semibold">
-                    < Link href="/">Occasions</Link>
+                    <Link href="/">Occasions</Link>
                 </div>
                 <div className="hidden md:flex space-x-4">
                     {isAuthenticated ? (
                         <>
                             <Link href="/profile" className={styles.link}>Profile</Link>
-                            < Link href="/how-it-works" className={styles.link}>How It Works</Link>
+                            <Link href="/how-it-works" className={styles.link}>How It Works</Link>
                             <button
                                 onClick={handleLogout}
                                 className={styles.link}
@@ -40,7 +40,7 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            < Link href="/how-it-works" className={styles.link}>How It Works</Link>
+                            <Link href="/how-it-works" className={styles.link}>How It Works</Link>
                             <Link href="/login" className={styles.link}>Login</Link>
                         </>
                     )}
