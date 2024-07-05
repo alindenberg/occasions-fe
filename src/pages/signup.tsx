@@ -5,9 +5,11 @@ import { useRouter } from 'next/router';
 export default function SignupPage() {
     const router = useRouter();
     const [error, setError] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        setIsSubmitting(true);
 
         const formData = new FormData(event.currentTarget);
         const email = formData.get('email');
@@ -25,6 +27,7 @@ export default function SignupPage() {
             const errorData = await response.json();
             setError(errorData.error);
         }
+        setIsSubmitting(false);
     }
 
     return (
@@ -61,8 +64,9 @@ export default function SignupPage() {
                         <button
                             type="submit"
                             className="w-full py-2 px-4 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-500 transition duration-300"
+                            disabled={isSubmitting}
                         >
-                            Sign Up
+                            {isSubmitting ? 'Signing Up...' : 'Sign Up'}
                         </button>
                     </div>
                 </form>

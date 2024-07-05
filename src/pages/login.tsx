@@ -5,9 +5,11 @@ import Link from 'next/link';
 export default function LoginPage() {
     const router = useRouter();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         setErrorMessage(null);
+        setIsSubmitting(true);
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
@@ -25,6 +27,7 @@ export default function LoginPage() {
         } else {
             setErrorMessage('Incorrect email or password');
         }
+        setIsSubmitting(false);
     }
 
     return (
@@ -61,8 +64,9 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             className="w-full py-2 px-4 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition duration-300"
+                            disabled={isSubmitting}
                         >
-                            Login
+                            {isSubmitting ? 'Logging in...' : 'Login'}
                         </button>
                     </div>
                 </form>
