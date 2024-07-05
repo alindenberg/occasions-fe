@@ -64,7 +64,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Fetch data from external API
     const authCookie = context.req.cookies.Authorization;
     if (!authCookie) {
-        return { props: { occasions: [], isAuthenticated: false } }
+        return { props: { occasions: [], user: false } }
     }
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/occasions/`, {
