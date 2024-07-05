@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import Link from 'next/link';
 
+import styles from './Navbar.module.css';
 import UserContext from '@/context/userContext';
 
 export default function Navbar() {
@@ -23,23 +24,23 @@ export default function Navbar() {
         <nav className="bg-orange-500 p-4">
             <div className="mx-auto flex items-center justify-between">
                 <div className="text-white text-xl font-semibold">
-                    < Link href={isAuthenticated ? "/occasions" : "/"}>Occasions</Link>
+                    < Link href="/">Occasions</Link>
                 </div>
                 <div className="hidden md:flex space-x-4">
-                    {isAuthenticated && (
+                    {isAuthenticated ? (
                         <>
-                            <Link href="/profile" className="text-white hover:text-gray-200">Profile</Link>
+                            {isAuthenticated && < Link href="/occasions" className={styles.link}>My Occasions</Link>}
+                            <Link href="/profile" className={styles.link}>Profile</Link>
                             <button
                                 onClick={handleLogout}
-                                className="text-white hover:text-gray-200"
+                                className={styles.link}
                             >
                                 Logout
                             </button>
                         </>
-                    )}
-                    {!isAuthenticated && (
+                    ) : (
                         <>
-                            <Link href="/login" className="text-white hover:text-gray-200">Login</Link>
+                            <Link href="/login" className={styles.link}>Login</Link>
                         </>
                     )}
                 </div>

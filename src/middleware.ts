@@ -24,8 +24,6 @@ export function middleware(request: NextRequest) {
             console.error('Error decoding token:', error);
         }
     }
-    console.log("current user ", currentUser)
-
     if (!currentUser && ['/profile', '/occasions', '/occasions/new'].includes(request.nextUrl.pathname)) {
         const loginUrl = new URL('/login', request.url);
         loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
