@@ -29,8 +29,8 @@ export default function Navbar() {
                 <div className="hidden md:flex space-x-4">
                     {isAuthenticated ? (
                         <>
-                            {isAuthenticated && < Link href="/occasions" className={styles.link}>My Occasions</Link>}
                             <Link href="/profile" className={styles.link}>Profile</Link>
+                            < Link href="/how-it-works" className={styles.link}>How It Works</Link>
                             <button
                                 onClick={handleLogout}
                                 className={styles.link}
@@ -40,6 +40,7 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
+                            < Link href="/how-it-works" className={styles.link}>How It Works</Link>
                             <Link href="/login" className={styles.link}>Login</Link>
                         </>
                     )}
@@ -59,20 +60,18 @@ export default function Navbar() {
             {
                 isOpen && (
                     <div className="md:hidden">
-                        {isAuthenticated && (
+                        {isAuthenticated ? (
                             <>
-                                <Link href="/profile" className="block px-4 py-2 text-white hover:text-gray-200">Profile</Link>
-                                <button
-                                    onClick={handleLogout}
-                                    className="block px-4 py-2 text-white hover:text-gray-200"
-                                >
+                                <Link href="/profile" className={`block px-4 py-2 ${styles.link}`}>Profile</Link>
+                                <Link href="/how-it-works" className={`block px-4 py-2 ${styles.link}`}>How It Works</Link>
+                                <button onClick={handleLogout} className={`block px-4 py-2 ${styles.link}`}>
                                     Logout
                                 </button>
                             </>
-                        )}
-                        {!isAuthenticated && (
+                        ) : (
                             <>
-                                <Link href="/login" className="block px-4 py-2 text-white hover:text-gray-200">Login</Link>
+                                <Link href="/how-it-works" className={`block px-4 py-2 ${styles.link}`}>How It Works</Link>
+                                <Link href="/login" className={`block px-4 py-2 ${styles.link}`}>Login</Link>
                             </>
                         )}
                     </div>
