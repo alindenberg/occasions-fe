@@ -21,7 +21,7 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
                         />
                     </div>
                 ))}
-                <div className="flex justify-center pt-2"><CreateOccasionBtn disabled={occasions?.length >= 3} /></div>
+                <div className="flex justify-center py-6"><CreateOccasionBtn disabled={occasions?.length >= 3} /></div>
             </div>
             :
             <div className="py-4">
