@@ -73,10 +73,7 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[], is
               </div>
             </div>
           )}
-        )
-
       </div>
-      {/* </div > */}
     </main >
   )
 }

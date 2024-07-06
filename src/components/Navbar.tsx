@@ -11,6 +11,10 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
 
+    function handleClick() {
+        setIsOpen(false);
+    }
+
     async function handleLogout() {
         await fetch('/api/auth/logout', {
             method: 'POST',
@@ -40,8 +44,8 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Link href="/how-it-works" className={styles.link}>How It Works</Link>
-                            <Link href="/login" className={styles.link}>Login</Link>
+                            <Link onClick={handleClick} href="/how-it-works" className={styles.link}>How It Works</Link>
+                            <Link onClick={handleClick} href="/login" className={styles.link}>Login</Link>
                         </>
                     )}
                 </div>
@@ -62,16 +66,16 @@ export default function Navbar() {
                     <div className="md:hidden">
                         {isAuthenticated ? (
                             <>
-                                <Link href="/profile" className={`block px-4 py-2 ${styles.link}`}>Profile</Link>
-                                <Link href="/how-it-works" className={`block px-4 py-2 ${styles.link}`}>How It Works</Link>
+                                <Link onClick={handleClick} href="/profile" className={`block px-4 py-2 ${styles.link}`}>Profile</Link>
+                                <Link onClick={handleClick} href="/how-it-works" className={`block px-4 py-2 ${styles.link}`}>How It Works</Link>
                                 <button onClick={handleLogout} className={`block px-4 py-2 ${styles.link}`}>
                                     Logout
                                 </button>
                             </>
                         ) : (
                             <>
-                                <Link href="/how-it-works" className={`block px-4 py-2 ${styles.link}`}>How It Works</Link>
-                                <Link href="/login" className={`block px-4 py-2 ${styles.link}`}>Login</Link>
+                                <Link onClick={handleClick} href="/how-it-works" className={`block px-4 py-2 ${styles.link}`}>How It Works</Link>
+                                <Link onClick={handleClick} href="/login" className={`block px-4 py-2 ${styles.link}`}>Login</Link>
                             </>
                         )}
                     </div>
