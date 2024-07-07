@@ -19,6 +19,7 @@ export default function Navbar() {
         await fetch('/api/auth/logout', {
             method: 'POST',
         }).then(() => {
+            handleClick();
             router.push('/');
         }).catch((error) => {
             console.error('Error:', error);
