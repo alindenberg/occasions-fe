@@ -33,7 +33,7 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
     return (
         <div className='bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden'>
             <div className='p-6'>
-                <h2 className='font-bold text-2xl mb-2'>{occasion?.label ?? 'Label'}</h2>
+                <h2 className='dark:text-black font-bold text-2xl mb-2'>{occasion?.label ?? 'Label'}</h2>
                 <hr className='border-gray-400 mb-4' />
                 <h2 className='text-gray-700'>Type: {occasion.type.charAt(0).toUpperCase() + occasion.type.slice(1)}</h2>
                 <h2 className='text-gray-700'>Date: {new Date(occasion.date).toLocaleString()}</h2>

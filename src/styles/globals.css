@@ -49,3 +49,9 @@ body {
     margin-top: 10rem;
   }
 }
+
+@media(prefers-color-scheme: dark) {
+  input {
+    color: black;
+  }
+}

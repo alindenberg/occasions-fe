@@ -9,7 +9,7 @@ export default function HowItWorksPage() {
     const user = userCtx?.user;
 
     return (
-        <div className="flex flex-grow items-center justify-center">
+        <div className="dark:text-black flex flex-grow items-center justify-center">
             <div className="m-2 p-10 bg-gray-100 border-2 border-orange-400">
                 <div className="text-3xl font-bold pb-4">Welcome to Occasions!</div>
                 <div className="text-xl underline">Here&apos;s how it works:</div>
