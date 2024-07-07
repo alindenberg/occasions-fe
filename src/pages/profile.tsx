@@ -7,7 +7,7 @@ export default function ProfilePage() {
     const user = context?.user;
 
     return (
-        <div className="flex flex-grow items-center justify-center">
+        <div className="dark:text-black flex flex-grow items-center justify-center">
             <div className="p-10 bg-gray-100 border-2 border-orange-400">
                 <div className="text-3xl font-bold pb-4">Profile</div>
                 <div className="text-lg pb-4">Welcome, User!</div>
