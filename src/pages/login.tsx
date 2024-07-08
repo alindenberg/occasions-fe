@@ -8,9 +8,9 @@ export default function LoginPage() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         setErrorMessage(null);
         setIsSubmitting(true);
-        event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
         const email = formData.get('email');

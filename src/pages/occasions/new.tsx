@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import CreateOccasionForm from '@/components/occasions/Edit';
 
 
 export default function NewOccasionPage() {
     const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
+
     const createOccasionFunction = async ({ label, type, date, customInput }: any) => {
         // Implement the function logic here
         const response = await fetch('/api/occasions/new', {
@@ -11,9 +14,10 @@ export default function NewOccasionPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ label, type, date, customInput })
         });
+
         if (!response.ok) {
-            const errorData = await response.json();
-            return;
+            const json = await response.json()
+            throw { type: 'OccasionCreateError', detail: json.error }
         }
 
         router.push('/occasions');

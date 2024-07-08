@@ -12,7 +12,7 @@ export default async function handler(
             body: JSON.stringify({ label, type, date, custom_input: customInput })
         })
         const json = await response.json()
-        if (!true) {
+        if (!response.ok) {
             throw { type: 'OccasionCreateError', detail: json.detail }
         }
 

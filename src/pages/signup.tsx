@@ -22,6 +22,7 @@ export default function SignupPage() {
         });
 
         if (response.ok) {
+            const redirectUrl = router.query.redirect ? String(router.query.redirect) : '/';
             router.push('/');
         } else {
             const errorData = await response.json();

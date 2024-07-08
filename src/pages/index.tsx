@@ -60,8 +60,8 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[], is
               {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} />}
             </>
           ) : (
-            <div className="dark:text-black bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
-              <div className="p-6 flex flex-col items-center">
+            <div className="dark:text-black shadow-xl rounded-lg overflow-hidden justify-center items-center flex flex-grow">
+              <div className="p-8 flex flex-col items-center bg-gray-100 border border-orange-400">
                 <h2 className="text-2xl font-bold">Welcome to Occasions!</h2>
                 <p className="text-lg">Please log in to view your occasions.</p>
                 <button
@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!res.ok) {
     return {
       redirect: {
-        destination: `/login?redirect=${context.req.url}`,
+        destination: `/login`,
         permanent: false
       }
     }

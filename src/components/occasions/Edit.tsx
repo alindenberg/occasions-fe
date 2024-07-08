@@ -21,6 +21,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
     const [label, setLabel] = useState(occasion?.label || '');
     const [type, setType] = useState(occasion?.type || 'birthday');
     const [date, setDate] = useState(formatDate(occasion?.date) || getDefaultDateTime());
+    const [error, setError] = useState<string | null>(null);
     const [customInput, setCustomInput] = useState(occasion?.custom_input || '');
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -31,7 +32,11 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
             alert('Date must be in the future')
             return;
         }
-        formSubmitFunction({ label, type, date: selectedDate.toISOString(), customInput });
+        try {
+            await formSubmitFunction({ label, type, date: selectedDate.toISOString(), customInput });
+        } catch (error: any) {
+            setError(error.detail || 'Something went wrong.')
+        }
     };
 
     return (
@@ -39,6 +44,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
             onSubmit={handleSubmit}
             className="flex flex-col p-6 bg-white shadow-lg rounded-lg border-2 border-orange-400"
         >
+            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
             <div className="mb-4">
                 <label htmlFor="label" className="block text-sm font-medium text-gray-700">Occasion</label>
                 <input
