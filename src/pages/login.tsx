@@ -32,7 +32,7 @@ export default function LoginPage() {
 
     return (
         <div className="vertical-padding flex items-center justify-center">
-            <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+            <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md border-2 border-orange-400">
                 <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login</h2>
                 {errorMessage && (
                     <p className="text-red-500 text-center mb-4">{errorMessage}</p>
