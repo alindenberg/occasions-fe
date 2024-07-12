@@ -4,9 +4,16 @@ import { createContext, useState, useEffect } from 'react';
 interface UserContextType {
     user: User | null;
     setUser: any;
+    purchaseCredits: (quantity: number) => void;
 }
 
-const UserContext = createContext<UserContextType | null>(null);
+const UserContext = createContext<UserContextType | null>({
+    user: null,
+    setUser: () => { },
+    purchaseCredits: (quantity: number) => {
+        return null;
+    }
+});
 
 export const UserProvider = ({ children }: any) => {
     const [user, setUser] = useState(null);
@@ -30,8 +37,15 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
+    const purchaseCredits = (quantity: number) => {
+        // Implement the logic to purchase credits
+        console.log(`Purchasing ${quantity} credits for user ${user?.email}`);
+        // Example: Call an API to purchase credits
+        // fetch('/api/purchase-credits', { method: 'POST', body: JSON.stringify({ userId: user?.id, quantity }) });
+    };
+
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, purchaseCredits }}>
             {children}
         </UserContext.Provider>
     );
