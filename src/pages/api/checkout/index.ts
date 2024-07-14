@@ -7,7 +7,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case "POST":
             try {
                 // Create Checkout Sessions from body params.
-                console.log("req body is ", req.body)
                 const response = await fetch(`${process.env.SERVER_URL}/checkout`, {
                     method: 'POST',
                     headers: {
