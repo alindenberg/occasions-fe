@@ -15,12 +15,12 @@ export default function ProfilePage() {
                     <h1 className="text-3xl font-bold underline pb-4">Profile</h1>
                     <p className="text-lg pb-4">Welcome, User!</p>
                     {user && user?.email && <p className="text-lg">Email: {user.email}</p>}
-                    {user && user?.credits || true && (
-                        <div>
+                    {user && user?.credits && (
+                        <div className="flex flex-row items-center justify-between py-4">
                             <p className="text-lg">Credits: {user?.credits || 10}</p>
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-                                onClick={router.push('/credits')}>
+                                className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-2 rounded"
+                                onClick={() => router.push('/credits')}>
                                 Purchase more
                             </button>
                         </div>
