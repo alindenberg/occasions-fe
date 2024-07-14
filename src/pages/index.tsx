@@ -86,6 +86,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { props: { occasions: [], user: false } }
   }
 
+  console.log("auth cooke is ", authCookie)
+  console.log("context req cookies are ", context.req.cookies)
+  console.log("context req headers are ", context.req.headers)
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/occasions/`, {
     headers: {
       'Authorization': authCookie

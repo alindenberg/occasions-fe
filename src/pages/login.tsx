@@ -21,10 +21,8 @@ export default function LoginPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
         });
-        console.log("login response is ok ? ", response.ok)
         if (response.ok) {
             const redirectUrl = router.query.redirect ? String(router.query.redirect) : '/';
-            console.log("redirectUrl is ", redirectUrl)
             router.push(redirectUrl);
         } else {
             setErrorMessage('Incorrect email or password');

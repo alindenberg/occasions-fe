@@ -15,7 +15,7 @@ export default function ProfilePage() {
                     <h1 className="text-3xl font-bold underline pb-4">Profile</h1>
                     <p className="text-lg pb-4">Welcome, User!</p>
                     {user && user?.email && <p className="text-lg">Email: {user.email}</p>}
-                    {user && user?.credits && (
+                    {user && user?.credits != undefined && (
                         <div className="flex flex-row items-center justify-between py-4">
                             <p className="text-lg">Credits: {user?.credits || 10}</p>
                             <button
