@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
             break;
         default:
-            res.setHeader('Allow', req.method);
+            res.setHeader('Allow', req.method!!);
             res.status(405).end('Method Not Allowed');
     }
 }
