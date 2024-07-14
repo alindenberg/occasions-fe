@@ -17,7 +17,7 @@ export default function ProfilePage() {
                     {user && user?.email && <p className="text-lg">Email: {user.email}</p>}
                     {user && user?.credits != undefined && (
                         <div className="flex flex-row items-center justify-between py-4">
-                            <p className="text-lg">Credits: {user?.credits || 10}</p>
+                            <p className="text-lg">Credits: {user?.credits || 0}</p>
                             <button
                                 className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-2 rounded"
                                 onClick={() => router.push('/credits')}>
