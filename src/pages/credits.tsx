@@ -30,26 +30,28 @@ export default function CheckoutPage() {
             <div className="md:w-2/3 w-3/4">
 
                 {!isCheckingOut &&
-                    <div className="dark:text-black text-center bg-gray-100 border-2 border-orange-400">
+                    <div className="dark:text-black text-center bg-gray-100 border-2 border-orange-400 p-4">
                         <h1 className="text-xl">Purchase Credits</h1>
                         <p className="text-lg">Select the quantity of credits you would like to purchase</p>
-                        <select
-                            value={quantity}
-                            onChange={(e) => {
-                                const quantity = parseInt(e.target.value);
-                                setQuantity(quantity)
-                            }}
-                            className="w-1/4 p-2"
-                        >
-                            {Array.from(Array(10).keys()).map(i => (
-                                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                            ))}
-                        </select>
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-                            onClick={() => setIsCheckingOut(true)}>
-                            Checkout
-                        </button>
+                        <div className="flex flex-row justify-evenly items-center justify-center py-4">
+                            <select
+                                value={quantity}
+                                onChange={(e) => {
+                                    const quantity = parseInt(e.target.value);
+                                    setQuantity(quantity)
+                                }}
+                                className="w-1/4 p-2"
+                            >
+                                {Array.from(Array(10).keys()).map(i => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </select>
+                            <button
+                                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => setIsCheckingOut(true)}>
+                                Checkout
+                            </button>
+                        </div>
                     </div>
                 }
                 {isCheckingOut && <div id="checkout">
