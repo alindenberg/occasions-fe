@@ -26,21 +26,21 @@ export default function CheckoutPage() {
     const options = { fetchClientSecret };
 
     return (
-        <div className="flex flex-grow justify-center p-4">
-            <div className="md:w-2/3 w-3/4">
+        <div className="flex flex-grow justify-center p-4 items-center">
+            <div className="md:w-1/2 w-2/3">
 
                 {!isCheckingOut &&
                     <div className="dark:text-black text-center bg-gray-100 border-2 border-orange-400 p-4">
                         <h1 className="text-xl">Purchase Credits</h1>
                         <p className="text-lg">Select the quantity of credits you would like to purchase</p>
-                        <div className="flex flex-row justify-evenly items-center justify-center py-4">
+                        <div className="flex flex-row justify-evenly items-center py-4">
                             <select
                                 value={quantity}
                                 onChange={(e) => {
                                     const quantity = parseInt(e.target.value);
                                     setQuantity(quantity)
                                 }}
-                                className="w-1/4 p-2"
+                                className="w-1/4 p-2 border-2 border-orange-400"
                             >
                                 {Array.from(Array(10).keys()).map(i => (
                                     <option key={i + 1} value={i + 1}>{i + 1}</option>
