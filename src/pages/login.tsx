@@ -76,6 +76,12 @@ export default function LoginPage() {
                         Sign up
                     </Link>
                 </p>
+                <p className="mt-4 text-center text-sm text-gray-600">
+                    Forgot your password?{' '}
+                    <Link href="/account/password-reset" className="text-orange-500 hover:underline">
+                        Reset Password
+                    </Link>
+                </p>
             </div>
         </div>
     );

@@ -30,7 +30,7 @@ export default function Return() {
     if (status === 'complete') {
         return (
             <div className="flex flex-grow h-full w-full text-center items-center justify-center">
-                <div className="dark:text-black bg-gray-200 border-2 border-orange-400 w-1/2 p-6">
+                <div className="dark:text-black bg-gray-100 border-2 border-orange-400 w-1/2 p-6">
                     <p>
                         We appreciate your business! A confirmation email will be sent to {customerEmail}.
                     </p>
