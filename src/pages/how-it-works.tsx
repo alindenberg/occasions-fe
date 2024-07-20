@@ -28,7 +28,7 @@ export default function HowItWorksPage() {
                     </ul>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center mt-8">
+                {/* <div className="flex flex-col sm:flex-row items-center justify-center mt-8">
                     <div className="relative">
                         <Image src="/occasions/OccasionSetup.png" alt="Step 1: Create the Occasion" width={400} height={400} />
                         <div className="hidden sm:block absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2">
@@ -48,7 +48,7 @@ export default function HowItWorksPage() {
                     <div className="mt-4 sm:mt-0 sm:ml-4">
                         <Image src="/occasions/OccasionEmail.png" alt="Step 3: Receive the email on the Occasion's date" width={400} height={400} />
                     </div>
-                </div>
+                </div> */}
 
                 <div className="flex flex-grow justify-center">
                     {!!user ? (
