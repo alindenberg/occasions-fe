@@ -3,12 +3,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { slug } = req.query;
     const { label, type, date, customInput } = req.body;
+    const authHeader = req?.headers?.authorization || req?.cookies?.Authorization || 'None';
     const response = await fetch(
         `${process.env.SERVER_URL}/occasions/${slug}`,
         {
             method: 'PUT',
             headers: {
-                'Authorization': req?.headers?.authorization || 'None',
+                'Authorization': authHeader,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ label, type, date, custom_input: customInput })
