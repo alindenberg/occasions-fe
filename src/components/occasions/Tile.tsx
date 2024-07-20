@@ -62,7 +62,7 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
                 }
             </div>
             <div className="flex flex-row items-center justify-center p-4 border-t border-gray-200">
-                {modifyHandler && <button onClick={handleModify} className="px-4 py-2 bg-orange-400 m-1 text-white rounded hover:bg-orange-500">Modify</button>}
+                {modifyHandler && <button onClick={handleModify} className="px-4 py-2 bg-orange-500 hover:bg-orange-700 m-1 text-white rounded">Modify</button>}
                 {deletionHandler && <button onClick={handleDelete} className="px-4 py-2 bg-gray-400 m-1 text-white rounded hover:bg-red-700">Delete</button>}
             </div>
         </div>

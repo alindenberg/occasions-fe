@@ -29,14 +29,14 @@ export default function HowItWorksPage() {
                 <div className="flex flex-grow justify-center">
                     {!!user ? (
                         <button
-                            className="mt-4 bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded"
+                            className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => router.push('/occasions')}
                         >
                             View My Occasions
                         </button>
                     ) : (
                         <button
-                            className="mt-4 bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded"
+                            className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => router.push('/login?redirect=/occasions')}
                         >
                             Get Started

@@ -19,7 +19,7 @@ export default function ProfilePage() {
                         <div className="flex flex-row items-center justify-between py-4">
                             <p className="text-lg">Credits: {user?.credits || 0}</p>
                             <button
-                                className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-2 rounded"
+                                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-2 rounded"
                                 onClick={() => router.push('/credits')}>
                                 Purchase more
                             </button>

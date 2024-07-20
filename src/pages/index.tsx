@@ -65,7 +65,7 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[], is
                 <h2 className="text-2xl font-bold">Welcome to Occasions!</h2>
                 <p className="text-lg">Please log in to view your occasions.</p>
                 <button
-                  className="mt-4 bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded"
+                  className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
                   onClick={() => router.push('/login')}
                 >
                   Log In

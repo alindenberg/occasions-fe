@@ -42,7 +42,7 @@ export default function CheckoutPage() {
                                     const quantity = parseInt(e.target.value);
                                     setQuantity(quantity)
                                 }}
-                                className="p-2 border-2 border-orange-200"
+                                className="p-2 ml-2 border-2 border-orange-400"
                             >
                                 {Array.from(Array(10).keys()).map(i => (
                                     <option key={i + 1} value={i + 1}>{i + 1}</option>
