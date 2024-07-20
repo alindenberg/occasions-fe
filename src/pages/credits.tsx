@@ -31,27 +31,32 @@ export default function CheckoutPage() {
 
                 {!isCheckingOut &&
                     <div className="dark:text-black text-center bg-gray-100 border-2 border-orange-400 p-4">
-                        <h1 className="text-xl">Purchase Credits</h1>
-                        <p className="text-lg">Select the quantity of credits you would like to purchase</p>
-                        <div className="flex flex-row justify-evenly items-center py-4">
+                        <h1 className="text-xl underline">Purchase Credits</h1>
+                        <div className="flex flex-row justify-center items-center py-4">
+                            <label htmlFor="quantity">Quantity:</label>
                             <select
+                                id="quantity"
                                 value={quantity}
+                                name="quantity"
                                 onChange={(e) => {
                                     const quantity = parseInt(e.target.value);
                                     setQuantity(quantity)
                                 }}
-                                className="w-1/4 p-2 border-2 border-orange-400"
+                                className="p-2 border-2 border-orange-200"
                             >
                                 {Array.from(Array(10).keys()).map(i => (
                                     <option key={i + 1} value={i + 1}>{i + 1}</option>
                                 ))}
                             </select>
-                            <button
-                                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-                                onClick={() => setIsCheckingOut(true)}>
-                                Checkout
-                            </button>
                         </div>
+                        <div className="p-2">
+                            <p className="text-lg">Total: ${quantity}.00</p>
+                        </div>
+                        <button
+                            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => setIsCheckingOut(true)}>
+                            Checkout
+                        </button>
                     </div>
                 }
                 {isCheckingOut && <div id="checkout">
