@@ -1,11 +1,12 @@
 import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router'
-import { Occasion } from "@/types/occasions"
+import { OCCASION_SORTS, Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
 
 import { OCCASION_FILTERS } from '@/types/occasions'
 import UserContext from '@/context/userContext';
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
+import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 
@@ -48,6 +49,17 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[], is
     }
   }
 
+  async function sortOccasions(sort: string) {
+    if (sort === OCCASION_SORTS.DATE_DESCENDING) {
+      const sortedOccasions = [...occasionsList].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      setOccasionsList(sortedOccasions);
+    }
+    if (sort === OCCASION_SORTS.DATE_ASCENDING) {
+      const sortedOccasions = [...occasionsList].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      setOccasionsList(sortedOccasions);
+    }
+  }
+
   return (
     <main
       className="flex flex-grow flex-col items-center mt-4"
@@ -55,7 +67,11 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[], is
       <div className="flex flex-col flex-grow w-full md:w-3/4 lg:w-1/2 p-2">
         {isAuthenticated ?
           (
-            <><OccasionsFilterDropdown onClick={filterOccasions} />
+            <>
+              <div className='flex flex-row justify-between'>
+                <OccasionsFilterDropdown onClick={filterOccasions} />
+                <OccasionsSortDropdown onClick={sortOccasions} />
+              </div>
               {viewingUpcoming && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
               {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} />}
             </>
