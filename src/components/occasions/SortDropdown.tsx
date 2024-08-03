@@ -6,20 +6,10 @@ import { on } from "events";
 
 export default function OccasionsFilterDropdown({ onClick }: { onClick: Function }) {
     const [viewingDescending, setviewingDescending] = useState(true);
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleOpenDropdown = () => {
-        setIsOpen(true);
-    };
-
-    const handleCloseDropdown = () => {
-        setIsOpen(false);
-    };
 
     const handleSelect = (option: string) => {
         onClick(option);
         setviewingDescending(option === OCCASION_SORTS.DATE_DESCENDING);
-        setIsOpen(false); // Close dropdown after selection
     };
 
     return (
