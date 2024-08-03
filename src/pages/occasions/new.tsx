@@ -20,7 +20,7 @@ export default function NewOccasionPage() {
             throw { type: 'OccasionCreateError', detail: json.error }
         }
 
-        router.push('/occasions');
+        router.push('/');
     }
 
     return (

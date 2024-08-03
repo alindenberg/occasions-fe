@@ -1,8 +1,5 @@
 import { useState } from "react";
-import { OCCASION_FILTERS, OCCASION_SORTS } from "@/types/occasions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
-import { on } from "events";
+import { OCCASION_SORTS } from "@/types/occasions";
 
 export default function OccasionsFilterDropdown({ onClick }: { onClick: Function }) {
     const [viewingDescending, setviewingDescending] = useState(true);

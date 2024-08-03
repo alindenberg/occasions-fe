@@ -54,14 +54,14 @@ export default function HowItWorksPage() {
                     {!!user ? (
                         <button
                             className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => router.push('/occasions')}
+                            onClick={() => router.push('/')}
                         >
                             View My Occasions
                         </button>
                     ) : (
                         <button
                             className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => router.push('/login?redirect=/occasions')}
+                            onClick={() => router.push('/login')}
                         >
                             Get Started
                         </button>

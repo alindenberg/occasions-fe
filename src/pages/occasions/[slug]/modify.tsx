@@ -16,7 +16,7 @@ export default function ModifyOccasionPage() {
                 setIsLoading(true);
                 const res = await fetch(`/api/occasions/${slug}`);
                 if (res.status === 401) {
-                    router.push('/occasions');
+                    router.push('/');
                     return;
                 }
                 const data = await res.json();
@@ -39,7 +39,7 @@ export default function ModifyOccasionPage() {
             if (!response.ok) {
                 throw { type: 'OccasionModifyError', detail: json.detail };
             }
-            router.push('/occasions');
+            router.push('/');
         };
         modifyOccasion();
     }
