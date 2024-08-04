@@ -24,32 +24,9 @@ export default function HowItWorksPage() {
                                 <li>Provide additional details for context.</li>
                             </ul>
                         </li>
-                        <li>Receive an email with a pre-generated message for the occasion.</li>
+                        <li>Receive an email with a pre-generated message for the occasion at the specified time.</li>
                     </ul>
                 </div>
-
-                {/* <div className="flex flex-col sm:flex-row items-center justify-center mt-8">
-                    <div className="relative">
-                        <Image src="/occasions/OccasionSetup.png" alt="Step 1: Create the Occasion" width={400} height={400} />
-                        <div className="hidden sm:block absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2">
-                            <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div className="relative mt-4 sm:mt-0 sm:ml-4">
-                        <Image src="/occasions/CreatedOccasion.png" alt="Step 2: Wait for the Occasion" width={400} height={400} />
-                        <div className="hidden sm:block absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2">
-                            <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div className="mt-4 sm:mt-0 sm:ml-4">
-                        <Image src="/occasions/OccasionEmail.png" alt="Step 3: Receive the email on the Occasion's date" width={400} height={400} />
-                    </div>
-                </div> */}
-
                 <div className="flex flex-grow justify-center">
                     {!!user ? (
                         <button
