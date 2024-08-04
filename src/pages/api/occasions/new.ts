@@ -5,11 +5,11 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        const { label, type, date, customInput } = req.body
+        const { label, type, tone, date, customInput } = req.body
         const response = await fetch(`${process.env.SERVER_URL}/occasions/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': req?.cookies?.Authorization || 'None' },
-            body: JSON.stringify({ label, type, date, custom_input: customInput })
+            body: JSON.stringify({ label, type, tone, date, custom_input: customInput })
         })
         const json = await response.json()
         if (!response.ok) {

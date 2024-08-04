@@ -8,6 +8,7 @@ export interface Occasion {
     custom_input: string;
     date: string;
     date_processed: string;
+    tone: string;
 }
 
 export enum OCCASION_FILTERS {

@@ -5,14 +5,13 @@ import CreateOccasionForm from '@/components/occasions/Edit';
 
 export default function NewOccasionPage() {
     const router = useRouter();
-    const [error, setError] = useState<string | null>(null);
 
-    const createOccasionFunction = async ({ label, type, date, customInput }: any) => {
+    const createOccasionFunction = async ({ label, type, tone, date, customInput }: any) => {
         // Implement the function logic here
         const response = await fetch('/api/occasions/new', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ label, type, date, customInput })
+            body: JSON.stringify({ label, type, tone, date, customInput })
         });
 
         if (!response.ok) {

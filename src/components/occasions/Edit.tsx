@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Occasion } from "@/types/occasions";
+import { OCCASION_TONES, OCCASION_TYPES } from '@/utils/constants';
 
 import { getLocalizedDateInputValue } from '@/utils/utils';
 
@@ -21,6 +22,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
     const [label, setLabel] = useState(occasion?.label || '');
     const [type, setType] = useState(occasion?.type || 'birthday');
     const [date, setDate] = useState(formatDate(occasion?.date) || getDefaultDateTime());
+    const [tone, setTone] = useState(occasion?.tone || 'neutral');
     const [error, setError] = useState<string | null>(null);
     const [customInput, setCustomInput] = useState(occasion?.custom_input || '');
 
@@ -29,11 +31,11 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
         const selectedDate = new Date(date);
         const minDate = new Date()
         if (selectedDate < minDate) {
-            alert('Date must be in the future')
+            setError('Date must be in the future.');
             return;
         }
         try {
-            await formSubmitFunction({ label, type, date: selectedDate.toISOString(), customInput });
+            await formSubmitFunction({ label, type, tone, date: selectedDate.toISOString(), customInput });
         } catch (error: any) {
             setError(error.detail || 'Something went wrong.')
         }
@@ -50,6 +52,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                 <input
                     type="text"
                     id="label"
+                    required
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2"
@@ -57,17 +60,47 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
             </div>
             <div className="mb-4">
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type</label>
-                <select
-                    id="type"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className="mt-1 border border-gray-300 block w-full bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 appearance-none"
-                >
-                    <option value="birthday">Birthday</option>
-                    <option value="graduation">Graduation</option>
-                    <option value="anniversary">Anniversary</option>
-                    <option value="other">Other</option>
-                </select>
+                <div className="relative">
+                    <select
+                        id="type"
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        className="mt-1 border border-gray-300 block w-full bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 appearance-none"
+                    >
+                        {Object.values(OCCASION_TYPES).map((toneValue) => (
+                            <option key={toneValue} value={toneValue}>
+                                {toneValue.charAt(0).toUpperCase() + toneValue.slice(1)}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="tone" className="block text-sm font-medium text-gray-700">Tone</label>
+                <div className="relative">
+                    <select
+                        id="tone"
+                        value={tone}
+                        onChange={(e) => setTone(e.target.value)}
+                        className="mt-1 border border-gray-300 block w-full bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 appearance-none"
+                    >
+                        {Object.values(OCCASION_TONES).map((toneValue) => (
+                            <option key={toneValue} value={toneValue}>
+                                {toneValue.charAt(0).toUpperCase() + toneValue.slice(1)}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
             <div className="mb-4" onClick={() => document.getElementById('date')?.click()}>
                 <label htmlFor="date" className="block text-sm font-medium text-gray-700 mr-4">Date and Time</label>

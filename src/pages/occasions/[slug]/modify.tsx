@@ -27,13 +27,13 @@ export default function ModifyOccasionPage() {
         }
     }, [slug, router]);
 
-    function onModifyFormSubmit({ label, type, date, customInput }: any) {
+    function onModifyFormSubmit({ label, type, tone, date, customInput }: any) {
         // Implement the function logic here
         const modifyOccasion = async () => {
             const response = await fetch(`/api/occasions/${slug}/modify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ label, type, date, customInput })
+                body: JSON.stringify({ label, type, tone, date, customInput })
             });
             const json = await response.json();
             if (!response.ok) {
