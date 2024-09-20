@@ -1,16 +1,22 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { getAccessToken } from "../../../utils/auth";
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const accessToken = await getAccessToken(req, res);
+
+    if (!accessToken) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
     switch (req.method) {
         case "POST":
             try {
-                // Create Checkout Sessions from body params.
                 const response = await fetch(`${process.env.SERVER_URL}/checkout`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': req?.cookies?.Authorization || 'None',
+                        'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json',
                     },
                     body: req.body,

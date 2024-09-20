@@ -1,29 +1,30 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]";
+import { NextApiRequest, NextApiResponse } from "next";
+import { getAccessToken } from "../../../utils/auth";
 
-interface ExtendedSession {
-    accessToken?: string;
-    // Add other custom session properties here
-}
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const accessToken = await getAccessToken(req, res);
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
-    const session = await getServerSession(req, res, authOptions) as ExtendedSession | null;
-    if (!session || !session.accessToken) {
-        res.status(401).json({ error: "Unauthorized" });
-        return;
+    if (!accessToken) {
+        return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const authHeaders = { 'Authorization': `Bearer ${session.accessToken}` };
-    const response = await fetch(`${process.env.SERVER_URL}/users/me`, { headers: authHeaders });
-    const json = await response.json();
-    if (!response.ok) {
-        res.status(401).json({ error: json.detail });
-        return;
+    if (req.method === "GET") {
+        try {
+            const response = await fetch(`${process.env.SERVER_URL}/users/me`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+            const data = await response.json();
+            res.status(200).json(data);
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    } else {
+        res.setHeader('Allow', ['GET']);
+        res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-
-    res.status(200).json(json);
 }

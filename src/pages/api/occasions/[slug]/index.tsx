@@ -1,27 +1,32 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { NextApiRequest, NextApiResponse } from "next";
+import { getAccessToken } from "../../../../utils/auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const session = await getServerSession(req, res, authOptions);
+    const accessToken = await getAccessToken(req, res);
 
-    if (!session) {
-        return res.status(401).json({ error: 'Unauthorized' });
+    if (!accessToken) {
+        return res.status(401).json({ error: "Unauthorized" });
     }
 
     const { slug } = req.query;
-    const response = await fetch(
-        `${process.env.SERVER_URL}/occasions/${slug}`,
-        {
-            headers: {
-                'Authorization': `Bearer ${session.accessToken}`
-            }
-        });
-    const json = await response.json();
-    if (!response.ok) {
-        res.status(response.status).json({ error: json.detail ?? 'Error fetching occasion' });
-        return;
-    }
 
-    res.status(200).json(json);
+    if (req.method === "GET") {
+        try {
+            const response = await fetch(`${process.env.SERVER_URL}/occasions/${slug}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch occasion');
+            }
+            const data = await response.json();
+            res.status(200).json(data);
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    } else {
+        res.setHeader('Allow', ['GET']);
+        res.status(405).end(`Method ${req.method} Not Allowed`);
+    }
 }

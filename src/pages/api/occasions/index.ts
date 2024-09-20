@@ -1,26 +1,30 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from "next";
+import { getAccessToken } from "../../../utils/auth";
 
-import { getAuthHeaders } from '@/utils/utils'
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const accessToken = await getAccessToken(req, res);
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
-    // Fetch data from your database or another API
-    try {
-        const response = await fetch(`${process.env.SERVER_URL}/occasions/`, { headers: getAuthHeaders(req) });
-        if (!response.ok) {
-            if (response.status === 401) {
-                res.status(401).json({ error: 'Not Authenticated.' })
-            } else {
-                res.status(500).json({ error: 'Something went wrong.' })
-            }
-        }
-
-        const occasions = await response.json()
-        res.status(200).json(occasions)
-    } catch (error) {
-        res.status(500).json({ error: 'Something went wrong.' })
+    if (!accessToken) {
+        return res.status(401).json({ error: "Unauthorized" });
     }
 
+    switch (req.method) {
+        case "GET":
+            try {
+                const response = await fetch(`${process.env.SERVER_URL}/occasions`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch occasions');
+                }
+                const data = await response.json();
+                res.status(200).json(data);
+            } catch (error: any) {
+                res.status(500).json({ error: error.message });
+            }
+            break;
+        // ... handle other methods (POST, PUT, DELETE) similarly
+    }
 }

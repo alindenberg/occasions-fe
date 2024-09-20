@@ -36,4 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 package-lock.json
-yarn.lcok
+yarn.lock
+create_commit.sh
