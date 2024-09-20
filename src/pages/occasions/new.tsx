@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 import CreateOccasionForm from '@/components/occasions/Edit';
 
 
 export default function NewOccasionPage() {
     const router = useRouter();
-
     const createOccasionFunction = async ({ label, type, tone, date, customInput }: any) => {
         // Implement the function logic here
         const response = await fetch('/api/occasions/new', {

@@ -1,4 +1,3 @@
-import { setAuthorizationCookie } from '@/utils/utils'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -6,24 +5,27 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        const { email, password } = req.body
-        const body = new FormData()
-        body.append('username', email)
-        body.append('password', password)
-        const response = await fetch(`${process.env.SERVER_URL}/login`, {
+        const { token } = req.body
+        const response = await fetch(`${process.env.SERVER_URL}/google-auth?token=${encodeURIComponent(token)}`, {
             method: 'POST',
-            body: body
+            headers: { 'Content-Type': 'application/json' },
         })
+
         if (!response.ok) {
-            throw { type: 'CredentialsSignin' }
+            const errorText = await response.text()
+            throw new Error(`Server responded with status ${response.status}: ${errorText}`)
+        }
+
+        if (!response.ok) {
+            throw { type: 'GoogleSignin', status: response.status }
         }
 
         const { access_token } = await response.json()
         setAuthorizationCookie(res, access_token)
         res.status(200).json({ "message": "Login successful" })
     } catch (error: any) {
-        if (error.type === 'CredentialsSignin') {
-            res.status(401).json({ error: 'Invalid credentials.' })
+        if (error.type === 'GoogleSignin') {
+            res.status(error.status || 401).json({ error: 'Google authentication failed.' })
         } else {
             res.status(500).json({ error: 'Something went wrong.' })
         }

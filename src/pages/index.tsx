@@ -1,19 +1,21 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 import { OCCASION_SORTS, Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/pages/api/auth/[...nextauth]"
+import { useSession } from "next-auth/react"
 
 import { OCCASION_FILTERS } from '@/types/occasions'
-import UserContext from '@/context/userContext';
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 
-export default function OccasionsPage({ occasions }: { occasions: Occasion[], isAuthenticated: boolean }) {
+export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
   const router = useRouter()
-  const userCtx = useContext(UserContext);
-  const isAuthenticated = !!userCtx?.user;
+  const { data: session } = useSession()
+  const isAuthenticated = !!session
 
   const [occasionsList, setOccasionsList] = useState(occasions);
   const [viewingUpcoming, setViewingUpcoming] = useState(true);
@@ -96,27 +98,22 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[], is
 
 // This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // Fetch data from external API
-  const authCookie = context.req.cookies.Authorization;
-  if (!authCookie) {
-    return { props: { occasions: [], user: false } }
-  }
+  const session = await getServerSession(context.req, context.res, authOptions)
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/occasions/`, {
-    headers: {
-      'Authorization': authCookie
-    }
-  });
-  if (!res.ok) {
-    return {
-      redirect: {
-        destination: `/login`,
-        permanent: false
-      }
+  // Fetch occasions if user is authenticated
+  let occasions: Occasion[] = []
+  if (session) {
+    try {
+      const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${session.accessToken}` } })
+      occasions = await response.json()
+    } catch (error) {
+      console.error("Error fetching occasions:", error)
     }
   }
-  const occasions = await res.json()
 
-  // Pass data to the page via props
-  return { props: { occasions, user: true } }
+  return {
+    props: {
+      occasions,
+    },
+  }
 }

@@ -19,7 +19,7 @@ export default function PastOccasionsList({ occasions }: Props) {
         :
         (
             <div className="py-4">
-                <div className="text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
+                <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
                     <p>No past occasions to display... :(</p>
                 </div>
             </div>

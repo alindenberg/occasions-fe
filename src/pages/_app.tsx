@@ -1,16 +1,17 @@
-import "@/styles/globals.css";
-import Navbar from "@/components/Navbar";
-import type { AppProps } from "next/app";
+import "@/styles/globals.css"
+import { SessionProvider } from "next-auth/react"
+import type { AppProps } from 'next/app'
+import Navbar from "@/components/Navbar"
 
-import { UserProvider } from "@/context/userContext";
-
-export default function App({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <UserProvider>
+    <SessionProvider session={session}>
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <Component {...pageProps} />
       </div>
-    </UserProvider>
+    </SessionProvider>
   )
 }
+
+export default MyApp

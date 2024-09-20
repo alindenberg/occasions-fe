@@ -1,4 +1,3 @@
-import { setAuthorizationCookie } from '@/utils/utils'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(

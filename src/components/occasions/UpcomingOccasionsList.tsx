@@ -1,6 +1,8 @@
 import { Occasion } from '@/types/occasions/index'
 import OccasionTile from '@/components/occasions/Tile'
 import CreateOccasionBtn from '@/components/CreateOccasionBtn'
+import { useAuthSession } from '@/hooks/useAuthSession'
+import { useRouter } from 'next/router'
 
 interface Props {
     occasions: Occasion[]
@@ -9,10 +11,35 @@ interface Props {
 }
 
 export default function UpcomingOccasionsList({ occasions, deletionHandler, modifyHandler }: Props) {
+    const { credits } = useAuthSession()
+    const router = useRouter()
+
+    const renderButton = () => {
+        if (credits === null) {
+            return <div>Loading...</div>
+        }
+        return (
+            <>
+                <CreateOccasionBtn
+                    disabled={occasions?.length >= 3 || credits <= 0}
+                    credits={credits}
+                />
+                {credits <= 0 && (
+                    <button
+                        onClick={() => router.push('/credits')}
+                        className="mt-4 ml-2 px-4 py-2 rounded bg-orange-500 hover:bg-orange-700 text-white"
+                    >
+                        Purchase More Credits
+                    </button>
+                )}
+            </>
+        )
+    }
+
     return (
         occasions?.length ?
             <div>
-                {occasions.map((occasion, index) => (
+                {occasions.map((occasion) => (
                     <div className="pt-4" key={occasion.id}>
                         <OccasionTile
                             occasion={occasion}
@@ -21,14 +48,14 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
                         />
                     </div>
                 ))}
-                <div className="flex justify-center py-6"><CreateOccasionBtn disabled={occasions?.length >= 3} /></div>
+                <div className="flex justify-center py-6">{renderButton()}</div>
             </div>
             :
             <div className="py-4">
                 <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
                     <p>Well that&apos;s bizarre. You have no upcoming occasions.</p>
                     <p>Quick, add them before you forget!</p>
-                    <div className="flex justify-center pt-2"><CreateOccasionBtn /></div>
+                    <div className="flex justify-center pt-2">{renderButton()}</div>
                 </div>
             </div>
     )

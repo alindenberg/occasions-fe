@@ -1,14 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/pages/api/auth/[...nextauth]"
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const session = await getServerSession(req, res, authOptions)
+
+    if (!session) {
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+
     try {
         const { label, type, tone, date, customInput } = req.body
         const response = await fetch(`${process.env.SERVER_URL}/occasions/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': req?.cookies?.Authorization || 'None' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.accessToken}`
+            },
             body: JSON.stringify({ label, type, tone, date, custom_input: customInput })
         })
         const json = await response.json()

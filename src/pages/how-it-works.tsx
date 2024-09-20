@@ -1,13 +1,10 @@
-import Image from 'next/image';
-import { useRouter } from 'next/router';
+import { useSession } from "next-auth/react"
+import { useRouter } from 'next/router'
 
-import { useContext } from 'react';
-import UserContext from '@/context/userContext';
-
-export default function HowItWorksPage() {
-    const router = useRouter();
-    const userCtx = useContext(UserContext);
-    const user = userCtx?.user;
+export default function HowItWorks() {
+    const { data: session } = useSession()
+    const isAuthenticated = !!session
+    const router = useRouter()
 
     return (
         <div className="dark:text-black flex flex-grow items-center justify-center">
@@ -30,7 +27,7 @@ export default function HowItWorksPage() {
                     </ul>
                 </div>
                 <div className="flex flex-grow justify-center">
-                    {!!user ? (
+                    {!!isAuthenticated ? (
                         <button
                             className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => router.push('/')}

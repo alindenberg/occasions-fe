@@ -1,13 +1,14 @@
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
+import { useSession, signOut } from "next-auth/react"
 
 import styles from './Navbar.module.css';
-import UserContext from '@/context/userContext';
 
 export default function Navbar() {
-    const userCtx = useContext(UserContext);
-    const isAuthenticated = !!userCtx?.user;
+    const { data: session, status } = useSession();
+
+    const isAuthenticated = status === 'authenticated';
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
 
@@ -16,15 +17,11 @@ export default function Navbar() {
     }
 
     async function handleLogout() {
-        await fetch('/api/auth/logout', {
-            method: 'POST',
-        }).then(() => {
-            handleClick();
-            router.push('/');
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
+        await signOut({ redirect: false });
+        handleClick();
+        router.push('/');
     }
+
     return (
         <nav className="bg-orange-500 p-4">
             <div className="mx-auto flex items-center justify-between">

@@ -22,7 +22,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
     const [label, setLabel] = useState(occasion?.label || '');
     const [type, setType] = useState(occasion?.type || 'birthday');
     const [date, setDate] = useState(formatDate(occasion?.date) || getDefaultDateTime());
-    const [tone, setTone] = useState(occasion?.tone || 'neutral');
+    const [tone, setTone] = useState(occasion?.tone || 'normal');
     const [error, setError] = useState<string | null>(null);
     const [customInput, setCustomInput] = useState(occasion?.custom_input || '');
 
