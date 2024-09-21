@@ -20,18 +20,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       return session
     },
-  },
-  cookies: {
-    sessionToken: {
-      name: 'next-auth.session-token',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
-  },
+  }
 }
 
 export default NextAuth(authOptions)
