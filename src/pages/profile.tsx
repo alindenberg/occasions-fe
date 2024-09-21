@@ -1,34 +1,17 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 export default function Profile() {
     const router = useRouter()
     const { data: session, status } = useSession()
     const loading = status === "loading"
-    const [credits, setCredits] = useState<number | null>(null)
 
     useEffect(() => {
         if (!loading && !session) {
             router.push('/login')
-        } else if (session) {
-            fetchUserData()
         }
     }, [session, loading, router])
-
-    const fetchUserData = async () => {
-        try {
-            const response = await fetch('/api/users/me')
-            if (response.ok) {
-                const data = await response.json()
-                setCredits(data.credits)
-            } else {
-                console.error('Failed to fetch user data')
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error)
-        }
-    }
 
     if (loading) {
         return <div>Loading...</div>
@@ -54,7 +37,7 @@ export default function Profile() {
                 </div>
                 <div className="mb-4">
                     <p className="text-gray-700 text-sm font-bold mb-2">Credits</p>
-                    <p className="text-gray-700">{credits !== null ? credits : 'Loading...'}</p>
+                    <p className="text-gray-700">{session.user?.credits ?? 'N/A'}</p>
                 </div>
                 <button
                     className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
