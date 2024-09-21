@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 import { OCCASION_SORTS, Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/pages/api/auth/[...nextauth]"
 import { useSession } from "next-auth/react"
 
 import { OCCASION_FILTERS } from '@/types/occasions'
@@ -11,6 +9,7 @@ import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
+import { getAccessToken } from '@/utils/auth';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
   const router = useRouter()
@@ -98,17 +97,18 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
 
 // This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerSession(context.req, context.res, authOptions)
-
   // Fetch occasions if user is authenticated
   let occasions: Occasion[] = []
-  if (session) {
-    try {
-      const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${session.accessToken}` } })
-      occasions = await response.json()
-    } catch (error) {
-      console.error("Error fetching occasions:", error)
+  try {
+    const accessToken = await getAccessToken(context.req, context.res)
+    const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
+    occasions = await response.json()
+  } catch (error) {
+    console.error("Error fetching occasions:", error)
+    occasions = [] // Set to empty array on error
   }
 
   return {
