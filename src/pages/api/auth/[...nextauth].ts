@@ -18,6 +18,24 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     async session({ session, token }) {
+      if (token.accessToken) {
+        try {
+          const response = await fetch(`${process.env.SERVER_URL}/users/me`, {
+            headers: {
+              'Authorization': `Bearer ${token.accessToken}`,
+            },
+          });
+          if (response.ok) {
+            const userData = await response.json();
+            session.user = {
+              ...session.user,
+              ...userData,
+            };
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
       return session
     },
   }
