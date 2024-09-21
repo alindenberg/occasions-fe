@@ -11,15 +11,24 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      console.log("token", token)
-      console.log("account", account)
-      if (account) {
-        token.accessToken = account.id_token
+    async jwt({ token, account, user }) {
+      if (account && user) {
+        return {
+          accessToken: account.id_token,
+          accessTokenExpires: account.expires_at ? account.expires_at * 1000 : Date.now(),
+          refreshToken: account.refresh_token,
+          user,
+        }
       }
-      return token
+
+      if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
+        return token
+      }
+
+      return refreshAccessToken(token)
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
+      session.user = token.user
       if (token.accessToken) {
         try {
           const response = await fetch(`${process.env.SERVER_URL}/users/me`, {
@@ -37,9 +46,48 @@ export const authOptions: NextAuthOptions = {
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
+        return session
       }
-      return session
-    },
+    }
+  }
+}
+
+async function refreshAccessToken(token: any) {
+  try {
+    const url =
+      "https://oauth2.googleapis.com/token?" +
+      new URLSearchParams({
+        client_id: process.env.GOOGLE_CLIENT_ID!,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        grant_type: "refresh_token",
+        refresh_token: token.refreshToken,
+      })
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+    })
+
+    const refreshedTokens = await response.json()
+
+    if (!response.ok) {
+      throw refreshedTokens
+    }
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    }
   }
 }
 

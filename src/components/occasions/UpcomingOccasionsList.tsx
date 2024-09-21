@@ -1,7 +1,7 @@
 import { Occasion } from '@/types/occasions/index'
 import OccasionTile from '@/components/occasions/Tile'
 import CreateOccasionBtn from '@/components/CreateOccasionBtn'
-import { useAuthSession } from '@/hooks/useAuthSession'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 interface Props {
@@ -11,20 +11,20 @@ interface Props {
 }
 
 export default function UpcomingOccasionsList({ occasions, deletionHandler, modifyHandler }: Props) {
-    const { credits } = useAuthSession()
     const router = useRouter()
+    const { data: session, status } = useSession()
 
     const renderButton = () => {
-        if (credits === null) {
+        if (session === null || session.user === undefined) {
             return <div>Loading...</div>
         }
         return (
             <>
                 <CreateOccasionBtn
-                    disabled={occasions?.length >= 3 || credits <= 0}
-                    credits={credits}
+                    disabled={occasions?.length >= 3 || session.user.credits <= 0}
+                    credits={session.user.credits}
                 />
-                {credits <= 0 && (
+                {session.user.credits <= 0 && (
                     <button
                         onClick={() => router.push('/credits')}
                         className="mt-4 ml-2 px-4 py-2 rounded bg-orange-500 hover:bg-orange-700 text-white"
