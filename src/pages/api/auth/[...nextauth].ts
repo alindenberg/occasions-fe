@@ -1,5 +1,4 @@
-import NextAuth from "next-auth"
-import { NextAuthOptions } from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 
 // Configure your authentication providers here
@@ -48,6 +47,29 @@ export const authOptions: NextAuthOptions = {
         }
         return session
       }
+    },
+    async signIn({ user }) {
+      try {
+        const response = await fetch(`${process.env.SERVER_URL}/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email,
+            google_id: user.id
+          }),
+        });
+
+        if (!response.ok) {
+          console.error('Failed to notify backend of sign-in');
+          return false;
+        }
+      } catch (error) {
+        console.error('Error notifying backend of sign-in:', error);
+        return false;
+      }
+      return true;
     }
   }
 }
