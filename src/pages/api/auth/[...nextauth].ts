@@ -20,7 +20,11 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
+      if (
+        token.accessTokenExpires
+        && typeof token.accessTokenExpires === 'number'
+        && Date.now() < token.accessTokenExpires
+      ) {
         return token
       }
 
@@ -105,7 +109,7 @@ async function refreshAccessToken(token: any) {
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return {
       ...token,
       error: "RefreshAccessTokenError",
