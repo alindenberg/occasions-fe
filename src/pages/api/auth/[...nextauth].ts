@@ -2,6 +2,7 @@ import { JWT } from "next-auth/jwt"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 // Configure your authentication providers here
+console.log("NEXT AUTH URL ", process.env.NEXTAUTH_URL)
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
