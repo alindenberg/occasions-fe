@@ -22,8 +22,8 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="vertical-padding flex items-center justify-center">
-            <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md border-2 border-orange-400">
+        <div className="w-full flex items-center justify-center px-4">
+            <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md border-2 border-orange-400">
                 <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login / Sign Up</h2>
                 <button
                     onClick={handleGoogleLogin}

@@ -8,7 +8,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     <SessionProvider session={session}>
       <div className="flex flex-col min-h-screen">
         <Navbar />
-        <Component {...pageProps} />
+        <main className="flex-grow flex items-center justify-center w-full border-2 border-green-400">
+          <Component {...pageProps} />
+        </main>
       </div>
     </SessionProvider>
   )

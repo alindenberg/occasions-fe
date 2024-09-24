@@ -63,7 +63,7 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
 
   return (
     <main
-      className="flex flex-grow flex-col items-center mt-4"
+      className="flex flex-grow flex-col mt-4"
     >
       <div className="flex flex-col flex-grow w-full md:w-3/4 lg:w-1/2 p-2">
         {isAuthenticated ?
