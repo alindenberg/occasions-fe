@@ -18,6 +18,7 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
         if (session === null || session.user === undefined) {
             return <div>Loading...</div>
         }
+
         return (
             <>
                 <CreateOccasionBtn

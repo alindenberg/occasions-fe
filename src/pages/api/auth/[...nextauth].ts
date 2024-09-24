@@ -1,6 +1,6 @@
+import { JWT } from "next-auth/jwt"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-
 // Configure your authentication providers here
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
 
       return refreshAccessToken(token)
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }: { session: any; token: JWT }) {
       session.user = token.user
       if (token.accessToken) {
         try {

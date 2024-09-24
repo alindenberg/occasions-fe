@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { OCCASION_SORTS, Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
 import { useSession } from "next-auth/react"
+import { NextApiRequest, NextApiResponse } from 'next'
 
 import { OCCASION_FILTERS } from '@/types/occasions'
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
@@ -100,7 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch occasions if user is authenticated
   let occasions: Occasion[] = []
   try {
-    const accessToken = await getAccessToken(context.req, context.res)
+    const accessToken = await getAccessToken(context.req as NextApiRequest, context.res as NextApiResponse)
     const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
