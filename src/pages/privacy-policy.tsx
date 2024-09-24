@@ -34,7 +34,7 @@ export default function PrivacyPolicy() {
 
                 <section className="mb-6">
                     <h2 className="text-2xl font-semibold mb-3">4. Third-Party Services</h2>
-                    <p>We use Google OAuth for authentication. Please refer to Google's Privacy Policy for more information on how they handle your data.</p>
+                    <p>We use Google OAuth for authentication. Please refer to Google&apos;s Privacy Policy for more information on how they handle your data.</p>
                 </section>
 
                 <section className="mb-6">
