@@ -10,23 +10,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { slug } = req.query;
 
-    if (req.method === "DELETE") {
-        try {
-            const response = await fetch(`${process.env.SERVER_URL}/occasions/${slug}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to delete occasion');
-            }
-            res.status(204).end();
-        } catch (error: any) {
-            res.status(500).json({ error: error.message });
+    try {
+        const response = await fetch(`${process.env.SERVER_URL}/occasions/${slug}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete occasion');
         }
-    } else {
-        res.setHeader('Allow', ['DELETE']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+        res.status(204).end();
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
     }
 }
