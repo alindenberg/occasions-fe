@@ -56,7 +56,6 @@ export const authOptions: NextAuthOptions = {
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
-        console.log('session', session)
         return session
       }
       return session
