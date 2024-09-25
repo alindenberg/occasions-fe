@@ -26,7 +26,7 @@ export default function Navbar() {
         <nav className="bg-orange-500 p-4">
             <div className="mx-auto flex items-center justify-between">
                 <div className="text-white text-xl font-semibold">
-                    <Link href="/">Occasions</Link>
+                    <Link href="/" onClick={handleClick}>Occasions</Link>
                 </div>
                 <div className="hidden md:flex space-x-4">
                     {isAuthenticated ? (
