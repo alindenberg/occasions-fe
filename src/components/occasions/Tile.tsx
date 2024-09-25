@@ -8,12 +8,16 @@ interface OccasionTileProps {
 }
 
 export default function OccasionTile({ occasion, modifyHandler, deletionHandler }: OccasionTileProps) {
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
+
     const handleDelete = async () => {
         if (!deletionHandler) {
             return;
         }
 
         await deletionHandler(occasion.id);
+        setShowDeleteModal(false);
     }
 
     const handleModify = async () => {
@@ -24,10 +28,8 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
         await modifyHandler(occasion.id);
     }
 
-    const [isSummaryExpanded, setisSummaryExpanded] = useState(false);
-
     const handleExpandClick = () => {
-        setisSummaryExpanded(!isSummaryExpanded);
+        setIsSummaryExpanded(!isSummaryExpanded);
     };
 
     return (
@@ -64,8 +66,20 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
             </div>
             <div className="flex flex-row items-center justify-center p-4 border-t border-gray-200">
                 {modifyHandler && <button onClick={handleModify} className="px-4 py-2 bg-orange-500 hover:bg-orange-700 m-1 text-white rounded">Modify</button>}
-                {deletionHandler && <button onClick={handleDelete} className="px-4 py-2 bg-gray-400 m-1 text-white rounded hover:bg-red-700">Delete</button>}
+                {deletionHandler && <button onClick={() => setShowDeleteModal(true)} className="px-4 py-2 bg-gray-400 m-1 text-white rounded hover:bg-red-700">Delete</button>}
             </div>
+            {showDeleteModal && (
+                <div className="dark:text-black fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg mx-4">
+                        <h2 className="mb-4 text-center text-xl font-bold">Delete {occasion.label}</h2>
+                        <p className="mb-4 text-center px-2">Deleting this occasion will restore the 1 credit that was used to create it.</p>
+                        <div className="flex justify-center">
+                            <button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 bg-gray-300 text-black rounded mr-2">Cancel</button>
+                            <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
