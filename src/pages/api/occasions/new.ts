@@ -16,7 +16,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(req.body),
+                body: JSON.stringify({
+                    label: req.body.label,
+                    type: req.body.type,
+                    tone: req.body.tone,
+                    date: req.body.date,
+                    custom_input: req.body.customInput
+                }),
             });
             if (!response.ok) {
                 throw new Error('Failed to create new occasion');
