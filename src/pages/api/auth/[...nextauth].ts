@@ -7,6 +7,13 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code'
+        },
+      }
     }),
   ],
   callbacks: {
@@ -49,8 +56,10 @@ export const authOptions: NextAuthOptions = {
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
+        console.log('session', session)
         return session
       }
+      return session
     },
     async signIn({ user }) {
       try {

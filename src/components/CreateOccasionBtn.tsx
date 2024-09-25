@@ -15,9 +15,13 @@ export default function CreateOccasionBtn({ disabled, credits }: CreateOccasionB
         return undefined;
     }
 
+    const handleCreateOccasion = () => {
+        router.push('/occasions/new');
+    };
+
     return (
         <button
-            onClick={() => router.push('/occasions/new')}
+            onClick={handleCreateOccasion}
             disabled={disabled}
             className={`mt-4 px-4 py-2 rounded ${disabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-700'} text-white`}
             title={getTitle()}

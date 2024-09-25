@@ -11,10 +11,11 @@ import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 import { getAccessToken } from '@/utils/auth';
+import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
   const router = useRouter()
-  const { data: session } = useSession()
+  const { session, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
 
   const [occasionsList, setOccasionsList] = useState(occasions);
@@ -32,6 +33,7 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
     }
     const updatedOccasions = occasionsList.filter(occasion => occasion.id !== occasion_id);
     setOccasionsList(updatedOccasions);
+    await refreshSession()
   }
 
   async function modifyHandler(occasion_id: number) {

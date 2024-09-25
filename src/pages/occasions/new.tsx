@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
 import CreateOccasionForm from '@/components/occasions/Edit';
-
+import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function NewOccasionPage() {
     const router = useRouter();
+    const { refreshSession } = useAuthSession();
+
     const createOccasionFunction = async ({ label, type, tone, date, customInput }: any) => {
-        // Implement the function logic here
         const response = await fetch('/api/occasions/new', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -17,6 +18,7 @@ export default function NewOccasionPage() {
             throw { type: 'OccasionCreateError', detail: json.error }
         }
 
+        await refreshSession();
         router.push('/');
     }
 
