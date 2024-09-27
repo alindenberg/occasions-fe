@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { XMarkIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/solid';
+import toast from 'react-hot-toast';
 
 const FeedbackWidget: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [feedback, setFeedback] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const widgetRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -21,6 +23,7 @@ const FeedbackWidget: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
         try {
             const response = await fetch('/api/feedback', {
                 method: 'POST',
@@ -30,14 +33,26 @@ const FeedbackWidget: React.FC = () => {
                 body: JSON.stringify({ feedback }),
             });
             if (response.ok) {
-                console.log('Feedback submitted successfully');
+                toast.success('Feedback submitted successfully!', {
+                    className: 'bg-green-500 text-white',
+                    duration: 3000,
+                });
                 setFeedback('');
                 setIsOpen(false);
             } else {
-                console.error('Failed to submit feedback');
+                toast.error('Failed to submit feedback. Please try again.', {
+                    className: 'bg-red-500 text-white',
+                    duration: 3000,
+                });
             }
         } catch (error) {
             console.error('Error submitting feedback:', error);
+            toast.error('An error occurred. Please try again later.', {
+                className: 'bg-red-500 text-white',
+                duration: 3000,
+            });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -46,7 +61,7 @@ const FeedbackWidget: React.FC = () => {
             {isOpen ? (
                 <div className="bg-white rounded-lg shadow-lg p-4 w-80">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold">Feedback</h3>
+                        <h3 className="dark:text-black text-lg font-semibold">Feedback</h3>
                         <button
                             onClick={() => setIsOpen(false)}
                             className="text-gray-500 hover:text-gray-700"
@@ -64,9 +79,10 @@ const FeedbackWidget: React.FC = () => {
                         />
                         <button
                             type="submit"
-                            className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition-colors"
+                            className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isSubmitting}
                         >
-                            Submit Feedback
+                            {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
                         </button>
                     </form>
                 </div>
