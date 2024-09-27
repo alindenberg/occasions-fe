@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAccessToken } from "../../../../utils/auth";
+import { getAccessToken } from "@/utils/auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const accessToken = await getAccessToken(req, res);
