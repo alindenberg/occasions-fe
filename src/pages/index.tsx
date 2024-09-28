@@ -13,25 +13,18 @@ import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList'
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
-export default function OccasionsPage({ initialOccasions }: { initialOccasions: Occasion[] }) {
+export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
   const router = useRouter()
   const { session, refreshSession } = useAuthSession()
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const isAuthenticated = !!session
 
-  const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
+  const [occasionsList, setOccasionsList] = useState(occasions);
   const [viewingUpcoming, setViewingUpcoming] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (session !== undefined) {
-      setIsAuthenticated(!!session);
-      if (!!session) {
-        setOccasionsList(initialOccasions);
-        filterOccasions(OCCASION_FILTERS.UPCOMING);
-      }
-    }
-    setIsLoading(false);
-  }, [session, initialOccasions]);
+    // todo: refactor api call for and separate list of occasions
+    Promise.any([filterOccasions(OCCASION_FILTERS.UPCOMING)])
+  }, [])
 
   async function deletionHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/delete`);
@@ -47,20 +40,20 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     router.push(`/occasions/${occasion_id}/modify`);
   }
 
-  function filterOccasions(filter: string) {
+  async function filterOccasions(filter: string) {
     if (filter === OCCASION_FILTERS.UPCOMING) {
-      const filteredOccasions = occasionsList.filter(occasion => new Date(occasion.date) > new Date());
+      const filteredOccasions = occasions.filter(occasion => new Date(occasion.date) > new Date());
       setOccasionsList(filteredOccasions);
       setViewingUpcoming(true);
     }
     if (filter === OCCASION_FILTERS.PAST) {
-      const filteredOccasions = occasionsList.filter(occasion => new Date(occasion.date) < new Date());
+      const filteredOccasions = occasions.filter(occasion => new Date(occasion.date) < new Date());
       setOccasionsList(filteredOccasions);
       setViewingUpcoming(false);
     }
   }
 
-  function sortOccasions(sort: string) {
+  async function sortOccasions(sort: string) {
     if (sort === OCCASION_SORTS.DATE_DESCENDING) {
       const sortedOccasions = [...occasionsList].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       setOccasionsList(sortedOccasions);
@@ -71,46 +64,45 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     }
   }
 
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <main
-      className="flex flex-grow flex-col items-center justify-center mt-4"
+      className="flex flex-grow flex-col items-center justify-center"
     >
       <div className="flex flex-col flex-grow w-full md:w-3/4 lg:w-1/2 p-2">
-        {isAuthenticated ? (
-          <>
-            <div className='flex flex-row justify-between'>
-              <OccasionsFilterDropdown onClick={filterOccasions} />
-              <OccasionsSortDropdown onClick={sortOccasions} />
-            </div>
-            {viewingUpcoming && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
-            {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} />}
-          </>
-        ) : (
-          <div className="dark:text-black overflow-hidden justify-center items-center flex flex-grow">
-            <div className="flex flex-col items-center">
-              <Detail />
-              <div className="mt-6">
-                <button
-                  className="w-48 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition duration-200 ease-in-out hover:scale-105 text-lg"
-                  onClick={() => router.push('/login')}
-                >
-                  Log In
-                </button>
+        {isAuthenticated ?
+          (
+            <>
+              <div className='flex flex-row justify-between'>
+                <OccasionsFilterDropdown onClick={filterOccasions} />
+                <OccasionsSortDropdown onClick={sortOccasions} />
+              </div>
+              {viewingUpcoming && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
+              {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} />}
+            </>
+          ) : (
+            <div className="dark:text-black overflow-hidden justify-center items-center flex flex-grow">
+              <div className="flex flex-col items-center">
+                <Detail />
+                <div className="mt-6">
+                  <button
+                    className="w-48 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition duration-200 ease-in-out hover:scale-105 text-lg"
+                    onClick={() => router.push('/login')}
+                  >
+                    Log In
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </main >
   )
 }
 
+// This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  let initialOccasions: Occasion[] = []
+  // Fetch occasions if user is authenticated
+  let occasions: Occasion[] = []
   try {
     const accessToken = await getAccessToken(context.req as NextApiRequest, context.res as NextApiResponse)
     if (accessToken) {
@@ -118,16 +110,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      initialOccasions = await response.json()
+      occasions = await response.json()
     }
   } catch (error) {
     console.error("Error fetching occasions:", error)
-    initialOccasions = [] // Set to empty array on error
+    occasions = [] // Set to empty array on error
   }
 
   return {
     props: {
-      initialOccasions,
+      occasions,
     },
   }
 }
