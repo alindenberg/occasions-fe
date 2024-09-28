@@ -8,7 +8,7 @@ export default function HowItWorks() {
     const router = useRouter()
 
     return (
-        <div className="dark:text-black flex flex-grow items-center justify-center">
+        <div className="dark:text-black flex flex-grow items-center justify-center mt-4">
             <div className="flex flex-col items-center">
                 <Detail />
                 <div className="mt-6">
