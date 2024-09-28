@@ -105,11 +105,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let occasions: Occasion[] = []
   try {
     const accessToken = await getAccessToken(context.req as NextApiRequest, context.res as NextApiResponse)
-    const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+    if (accessToken) {
+      const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      occasions = await response.json()
     }
-    occasions = await response.json()
   } catch (error) {
     console.error("Error fetching occasions:", error)
     occasions = [] // Set to empty array on error
