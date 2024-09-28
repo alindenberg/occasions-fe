@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router'
+import Detail from '../components/Detail'
 
 export default function HowItWorks() {
     const { data: session } = useSession()
@@ -8,42 +9,26 @@ export default function HowItWorks() {
 
     return (
         <div className="dark:text-black flex flex-grow items-center justify-center">
-            <div className="m-2 p-10 bg-gray-100 border-2 border-orange-400">
-                <div className="text-center">
-                    <div className="text-3xl font-bold pb-4">Welcome to Occasion Alerts!</div>
-                    <div className="text-xl underline">Here&apos;s how it works:</div>
-                </div>
-                <div className="pt-2 text-lg">
-                    <ul className="list-decimal list-inside">
-                        <li>Create an occasion object for an upcoming occasion.
-                            <ul className="list-disc list-inside pl-5">
-                                <li>Provide a label for the occasion.</li>
-                                <li>Provide a type for the occasion.</li>
-                                <li>Provide a date for the occasion.</li>
-                                <li>Provide additional details for context.</li>
-                            </ul>
-                        </li>
-                        <li>Receive an email with a pre-generated message for the occasion at the specified time.</li>
-                    </ul>
-                </div>
-                <div className="flex flex-grow justify-center">
-                    {!!isAuthenticated ? (
+            <div className="flex flex-col items-center">
+                <Detail />
+                <div className="mt-6">
+                    {isAuthenticated ? (
                         <button
-                            className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+                            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => router.push('/')}
                         >
                             View My Occasions
                         </button>
                     ) : (
                         <button
-                            className="mt-4 bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+                            className="w-48 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition duration-200 ease-in-out hover:scale-105 text-lg"
                             onClick={() => router.push('/login')}
                         >
-                            Get Started
+                            Log In
                         </button>
                     )}
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
