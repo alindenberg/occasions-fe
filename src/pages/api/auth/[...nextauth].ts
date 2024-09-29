@@ -74,7 +74,7 @@ export const authOptions: NextAuthOptions = {
         else if (account.provider === 'credentials') {
           return {
             accessToken: user.accessToken,
-            accessTokenExpires: user.accessTokenExpires || Date.now(),
+            accessTokenExpires: user.accessTokenExpires * 1000,
             refreshToken: user.refreshToken,
             provider: account.provider,
           }
@@ -88,14 +88,16 @@ export const authOptions: NextAuthOptions = {
       ) {
         return token
       }
-
-      if (token.provider === 'credentials') {
-        return refreshAccessToken(token)
-      } else if (token.provider === 'google') {
-        return refreshGoogleAccessToken(token)
+      try {
+        if (token.provider === 'credentials') {
+          return refreshAccessToken(token)
+        } else if (token.provider === 'google') {
+          return refreshGoogleAccessToken(token)
+        }
+      } catch (error) {
+        console.error('Error refreshing token:', error);
       }
-
-      return token
+      return null
     },
     async session({ session, token }: { session: any; token: JWT }) {
       session.user = token.user
@@ -112,13 +114,16 @@ export const authOptions: NextAuthOptions = {
               ...session.user,
               ...userData,
             };
+          } else {
+            throw new Error('Failed to fetch user data');
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
+          // Clear the token to log the user out
+          return null;
         }
-        return session
       }
-      return session
+      return session;
     },
     async signIn({ user, account }) {
       if (account?.provider === 'google') {
@@ -151,72 +156,58 @@ export const authOptions: NextAuthOptions = {
 }
 
 async function refreshGoogleAccessToken(token: any) {
-  try {
-    const url =
-      "https://oauth2.googleapis.com/token?" +
-      new URLSearchParams({
-        client_id: process.env.GOOGLE_CLIENT_ID!,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-        grant_type: "refresh_token",
-        refresh_token: token.refreshToken,
-      })
-
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      method: "POST",
+  const url =
+    "https://oauth2.googleapis.com/token?" +
+    new URLSearchParams({
+      client_id: process.env.GOOGLE_CLIENT_ID!,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+      grant_type: "refresh_token",
+      refresh_token: token.refreshToken,
     })
 
-    const refreshedTokens = await response.json()
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+  })
 
-    if (!response.ok) {
-      throw refreshedTokens
-    }
+  const refreshedTokens = await response.json()
 
-    return {
-      ...token,
-      accessToken: refreshedTokens.id_token,
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
-      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
-    }
-  } catch (error) {
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    }
+  if (!response.ok) {
+    throw refreshedTokens
+  }
+
+  return {
+    ...token,
+    accessToken: refreshedTokens.id_token,
+    accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+    refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
   }
 }
 
 async function refreshAccessToken(token: any) {
-  try {
-    const url = `${process.env.SERVER_URL}/token/refresh`
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ refresh_token: token.refreshToken }),
-    })
+  const url = `${process.env.SERVER_URL}/token/refresh`
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refresh_token: token.refreshToken }),
+  })
 
-    const data = await response.json()
+  const data = await response.json()
 
-    if (!response.ok) {
-      throw data
-    }
-
-    return {
-      ...token,
-      accessToken: data.access_token,
-      accessTokenExpires: data.expires_at,
-      refreshToken: data.refresh_token ?? token.refreshToken,
-    }
-  } catch (error) {
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    }
+  if (!response.ok) {
+    throw data
   }
+
+  const new_token = {
+    ...token,
+    accessToken: data.access_token,
+    accessTokenExpires: data.expires_at,
+    refreshToken: data.refresh_token ?? token.refreshToken,
+  }
+
+  return new_token
 }
 
 export default NextAuth(authOptions)
