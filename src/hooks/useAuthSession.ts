@@ -1,16 +1,20 @@
 import { useSession } from "next-auth/react";
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 export function useAuthSession() {
-    const { data: session, status, update } = useSession();
+    const { data: session, status } = useSession();
+    const [loading, setLoading] = useState(true);
 
-    const refreshSession = useCallback(async () => {
-        await update();
-    }, [update]);
+    useEffect(() => {
+        if (status === 'loading') {
+            setLoading(true);
+        } else {
+            setLoading(false);
+        }
+    }, [status]);
 
     return {
-        session,
-        status,
-        refreshSession,
+        session: session || null,
+        loading,
     };
 }

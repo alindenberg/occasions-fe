@@ -1,10 +1,11 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Profile() {
     const router = useRouter()
     const { data: session, status } = useSession()
+    const [message, setMessage] = useState('');
     const loading = status === "loading"
 
     useEffect(() => {
@@ -12,6 +13,25 @@ export default function Profile() {
             router.push('/login')
         }
     }, [session, loading, router])
+
+    const resendVerificationEmail = async () => {
+        try {
+            const response = await fetch('/api/resend-verification', {
+                method: 'POST',
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage('Verification email sent successfully');
+            } else {
+                setMessage(data.message || 'Failed to send verification email');
+            }
+        } catch (error) {
+            console.error('Error resending verification email:', error);
+            setMessage('An error occurred while sending the verification email');
+        }
+    };
 
     if (loading) {
         return <div>Loading...</div>
@@ -45,6 +65,18 @@ export default function Profile() {
                 >
                     Purchase More Credits
                 </button>
+                {!session.user.is_email_verified && (
+                    <div className="mt-4">
+                        <p className="text-red-500 mb-2 font-semibold">Your email is not verified.</p>
+                        <button
+                            onClick={resendVerificationEmail}
+                            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Resend Verification Email
+                        </button>
+                        {message && <p className="mt-2 text-sm text-gray-600">{message}</p>}
+                    </div>
+                )}
             </div>
         </div>
     )

@@ -42,10 +42,14 @@ export const authOptions: NextAuthOptions = {
           });
 
           const data = await response.json();
-
           if (response.ok) {
-            // Return the user object for successful login/signup
-            return { id: data.id, email: data.email };
+            return {
+              id: data.id,
+              email: email,
+              accessToken: data.access_token,
+              accessTokenExpires: data.expires_at,
+              refreshToken: data.refresh_token,
+            };
           } else {
             // Throw an error for unsuccessful login/signup
             throw new Error(data.detail || 'Authentication failed');
@@ -59,11 +63,21 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account, user }) {
       if (account && user) {
-        return {
-          accessToken: account.id_token || account.access_token,
-          accessTokenExpires: account.expires_at ? account.expires_at * 1000 : Date.now(),
-          refreshToken: account.refresh_token,
-          user,
+        if (account.provider === 'google') {
+          return {
+            accessToken: account.id_token || account.access_token,
+            accessTokenExpires: account.expires_at ? account.expires_at * 1000 : Date.now(),
+            refreshToken: account.refresh_token,
+            user,
+          }
+        }
+        else if (account.provider === 'credentials') {
+          return {
+            accessToken: user.accessToken,
+            accessTokenExpires: user.accessTokenExpires || Date.now(),
+            refreshToken: user.refreshToken,
+            provider: account.provider,
+          }
         }
       }
 
@@ -75,7 +89,13 @@ export const authOptions: NextAuthOptions = {
         return token
       }
 
-      return refreshAccessToken(token)
+      if (token.provider === 'credentials') {
+        return refreshAccessToken(token)
+      } else if (token.provider === 'google') {
+        return refreshGoogleAccessToken(token)
+      }
+
+      return token
     },
     async session({ session, token }: { session: any; token: JWT }) {
       session.user = token.user
@@ -122,13 +142,15 @@ export const authOptions: NextAuthOptions = {
           console.error('Error notifying backend of sign-in:', error);
           return false;
         }
+      } else if (account?.provider === 'credentials') {
+        return true;
       }
-      return true;
+      return false;
     }
   }
 }
 
-async function refreshAccessToken(token: any) {
+async function refreshGoogleAccessToken(token: any) {
   try {
     const url =
       "https://oauth2.googleapis.com/token?" +
@@ -159,7 +181,37 @@ async function refreshAccessToken(token: any) {
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
     }
   } catch (error) {
-    console.error(error)
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    }
+  }
+}
+
+async function refreshAccessToken(token: any) {
+  try {
+    const url = `${process.env.SERVER_URL}/token/refresh`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refresh_token: token.refreshToken }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw data
+    }
+
+    return {
+      ...token,
+      accessToken: data.access_token,
+      accessTokenExpires: data.expires_at,
+      refreshToken: data.refresh_token ?? token.refreshToken,
+    }
+  } catch (error) {
     return {
       ...token,
       error: "RefreshAccessTokenError",
