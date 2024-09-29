@@ -31,8 +31,8 @@ export const authOptions: NextAuthOptions = {
 
         const { email, password, isSignUp } = credentials;
         const apiUrl = isSignUp === 'true'
-          ? `${process.env.API_URL}/auth/signup`
-          : `${process.env.API_URL}/auth/login`;
+          ? `${process.env.SERVER_URL}/signup`
+          : `${process.env.SERVER_URL}/login`;
 
         try {
           const response = await fetch(apiUrl, {
@@ -50,9 +50,8 @@ export const authOptions: NextAuthOptions = {
             // Throw an error for unsuccessful login/signup
             throw new Error(data.detail || 'Authentication failed');
           }
-        } catch (error) {
-          console.error('Authentication error:', error);
-          throw new Error('Authentication failed');
+        } catch (error: any) {
+          throw new Error(error.message || 'Authentication failed');
         }
       },
     })
