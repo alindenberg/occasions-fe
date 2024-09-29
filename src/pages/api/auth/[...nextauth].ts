@@ -20,24 +20,41 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
-        password: { label: "Password", type: "password" }
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+        isSignUp: { label: "Is Sign Up", type: "boolean" },
       },
-      async authorize(credentials, req) {
-        if (!credentials) return null;
-
-        const res = await fetch(`${process.env.SERVER_URL}/login`, {
-          method: 'POST',
-          body: JSON.stringify({ email: credentials.email, password: credentials.password }),
-          headers: { "Content-Type": "application/json" }
-        })
-        const user = await res.json()
-
-        if (res.ok && user) {
-          return user
+      async authorize(credentials) {
+        if (!credentials) {
+          return null;
         }
-        return null
-      }
+
+        const { email, password, isSignUp } = credentials;
+        const apiUrl = isSignUp === 'true'
+          ? `${process.env.API_URL}/auth/signup`
+          : `${process.env.API_URL}/auth/login`;
+
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Return the user object for successful login/signup
+            return { id: data.id, email: data.email };
+          } else {
+            // Throw an error for unsuccessful login/signup
+            throw new Error(data.detail || 'Authentication failed');
+          }
+        } catch (error) {
+          console.error('Authentication error:', error);
+          throw new Error('Authentication failed');
+        }
+      },
     })
   ],
   callbacks: {
