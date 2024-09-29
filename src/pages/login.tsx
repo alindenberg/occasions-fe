@@ -1,11 +1,14 @@
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function LoginPage() {
     const router = useRouter();
     const { data: session, status } = useSession();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (status === 'authenticated') {
@@ -18,6 +21,21 @@ export default function LoginPage() {
         await signIn('google', { callbackUrl: router.query.redirect ? String(router.query.redirect) : '/' });
     };
 
+    const handleCredentialsLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const result = await signIn('credentials', {
+            redirect: false,
+            email,
+            password,
+        });
+        if (result?.error) {
+            setError('Invalid email or password');
+        } else {
+            const redirectUrl = router.query.redirect ? String(router.query.redirect) : '/';
+            router.push(redirectUrl);
+        }
+    };
+
     if (status === 'loading') {
         return <div>Loading...</div>;
     }
@@ -25,7 +43,38 @@ export default function LoginPage() {
     return (
         <div className="w-full flex items-center justify-center px-4">
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md border-2 border-orange-400">
-                <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login / Sign Up</h2>
+                <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login</h2>
+                <form onSubmit={handleCredentialsLogin} className="mb-4">
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-3 py-2 mb-3 border rounded-md"
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-3 py-2 mb-3 border rounded-md"
+                        required
+                    />
+                    {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+                    <button
+                        type="submit"
+                        className="w-full py-2 px-4 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 transition duration-300"
+                    >
+                        Login with Email
+                    </button>
+                </form>
+                <div className="relative mb-4">
+                    <hr className="border-t border-gray-300" />
+                    <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-gray-500 text-sm">
+                        OR
+                    </span>
+                </div>
                 <button
                     onClick={handleGoogleLogin}
                     className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center"
