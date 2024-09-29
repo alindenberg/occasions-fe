@@ -15,7 +15,7 @@ import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
   const router = useRouter()
-  const { session, refreshSession } = useAuthSession()
+  const { session, status, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
 
   const [occasionsList, setOccasionsList] = useState(occasions);
@@ -25,6 +25,10 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
     // todo: refactor api call for and separate list of occasions
     Promise.any([filterOccasions(OCCASION_FILTERS.UPCOMING)])
   }, [])
+
+  if (status === 'loading') {
+    return <div>Loading...</div>
+  }
 
   async function deletionHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/delete`);

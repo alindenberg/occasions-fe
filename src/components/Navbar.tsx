@@ -12,6 +12,10 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const router = useRouter();
 
+    if (status === 'loading') {
+        return <nav className="bg-orange-500 p-4">Loading...</nav>;
+    }
+
     function handleClick() {
         setIsOpen(false);
     }
