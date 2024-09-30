@@ -8,7 +8,6 @@ export default function SignupPage() {
     const { data: session, status } = useSession();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -24,10 +23,6 @@ export default function SignupPage() {
 
     const handleCredentialsSignup = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
 
         try {
             const result = await signIn('credentials', {
@@ -71,14 +66,6 @@ export default function SignupPage() {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-3 py-2 mb-3 border rounded-md"
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
                         className="w-full px-3 py-2 mb-3 border rounded-md"
                         required
                     />
