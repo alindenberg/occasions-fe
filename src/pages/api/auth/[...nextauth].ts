@@ -111,7 +111,7 @@ export const authOptions: NextAuthOptions = {
           if (response.ok) {
             const userData = await response.json();
             session.user = {
-              ...session.user,
+              ...(session.user || {}),
               ...userData,
             };
           } else {

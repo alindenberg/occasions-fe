@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react';
 export default function VerifyEmailPage() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    console.log("session ", session)
     const [isVerifying, setIsVerifying] = useState(false);
     const [verificationStatus, setVerificationStatus] = useState<'success' | 'error' | 'resent' | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
