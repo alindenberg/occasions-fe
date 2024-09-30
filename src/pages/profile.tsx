@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import toast from 'react-hot-toast';
 
 export default function Profile() {
     const router = useRouter()
     const { data: session, status } = useSession()
-    const [message, setMessage] = useState('');
     const loading = status === "loading"
 
     useEffect(() => {
@@ -16,20 +16,16 @@ export default function Profile() {
 
     const resendVerificationEmail = async () => {
         try {
-            const response = await fetch('/api/resend-verification', {
-                method: 'POST',
-            });
-
+            const response = await fetch('/api/auth/resend-verification', { method: 'POST' });
             const data = await response.json();
-
             if (response.ok) {
-                setMessage('Verification email sent successfully');
+                toast.success('Verification email sent successfully');
             } else {
-                setMessage(data.message || 'Failed to send verification email');
+                toast.error(data.message || 'Failed to send verification email');
             }
         } catch (error) {
             console.error('Error resending verification email:', error);
-            setMessage('An error occurred while sending the verification email');
+            toast.error('An error occurred while sending the verification email');
         }
     };
 
@@ -74,7 +70,6 @@ export default function Profile() {
                         >
                             Resend Verification Email
                         </button>
-                        {message && <p className="mt-2 text-sm text-gray-600">{message}</p>}
                     </div>
                 )}
             </div>

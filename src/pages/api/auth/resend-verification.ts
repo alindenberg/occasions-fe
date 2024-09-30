@@ -1,28 +1,28 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
+import { getAccessToken } from '@/utils/auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
-    const session = await getSession({ req });
+    const accessToken = await getAccessToken(req);
 
-    if (!session) {
+    if (!accessToken) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
     try {
-        const response = await fetch(`${process.env.SERVER_URL}/resend-verification`, {
+        const response = await fetch(`${process.env.SERVER_URL}/send-email-verification`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.accessToken}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
         });
 
         if (response.ok) {
-            return res.status(200).json({ message: 'Verification email sent successfully' });
+            return res.status(200).json({ message: 'Verification email sent successfully' })
         } else {
             const error = await response.json();
             return res.status(response.status).json(error);

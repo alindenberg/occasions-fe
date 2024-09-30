@@ -108,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch occasions if user is authenticated
   let occasions: Occasion[] = []
   try {
-    const accessToken = await getAccessToken(context.req as NextApiRequest, context.res as NextApiResponse)
+    const accessToken = await getAccessToken(context.req as NextApiRequest)
     if (accessToken) {
       const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
       if (!response.ok) {

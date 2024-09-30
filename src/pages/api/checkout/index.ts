@@ -4,7 +4,7 @@ import { getAccessToken } from "../../../utils/auth";
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const accessToken = await getAccessToken(req, res);
+    const accessToken = await getAccessToken(req);
 
     if (!accessToken) {
         return res.status(401).json({ error: "Unauthorized" });

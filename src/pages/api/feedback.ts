@@ -8,7 +8,7 @@ export default async function handler(
     if (req.method === 'POST') {
         try {
             const { feedback } = req.body
-            const accessToken = await getAccessToken(req, res);
+            const accessToken = await getAccessToken(req);
 
             // Add Authorization header if session exists
             const headers: HeadersInit = { 'Content-Type': 'application/json' }

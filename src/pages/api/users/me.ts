@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAccessToken } from "../../../utils/auth";
+import { getAccessToken } from "@/utils/auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const accessToken = await getAccessToken(req, res);
+    const accessToken = await getAccessToken(req);
     const response = await fetch(`${process.env.SERVER_URL}/users/me`, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
