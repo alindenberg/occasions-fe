@@ -91,9 +91,8 @@ export const authOptions: NextAuthOptions = {
       try {
         if (token.provider === 'credentials') {
           return refreshAccessToken(token)
-        } else if (token.provider === 'google') {
-          return refreshGoogleAccessToken(token)
         }
+        return refreshGoogleAccessToken(token)
       } catch (error) {
         console.error('Error refreshing token:', error);
       }
