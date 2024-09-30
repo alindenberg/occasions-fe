@@ -15,7 +15,7 @@ import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
   const router = useRouter()
-  const { session, status, refreshSession } = useAuthSession()
+  const { session, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
 
   const [occasionsList, setOccasionsList] = useState(occasions);

@@ -7,6 +7,12 @@ declare module 'next-auth' {
             name?: string | null
             email?: string | null
             image?: string | null
+            is_email_verified: boolean | null
         }
+    }
+    interface User {
+        accessToken: string
+        accessTokenExpires: number
+        refreshToken: string
     }
 }

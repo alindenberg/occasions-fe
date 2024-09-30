@@ -91,7 +91,7 @@ export default function LoginPage() {
                     By logging in, you agree to our <Link href="/privacy-policy" className="text-blue-600 hover:underline">Privacy Policy</Link>.
                 </div>
                 <div className="mt-4 text-sm text-center text-gray-600">
-                    Don't have an account? <Link href="/signup" className="text-blue-600 hover:underline">Sign up</Link>
+                    Don&apos;t have an account? <Link href="/signup" className="text-blue-600 hover:underline">Sign up</Link>
                 </div>
             </div>
         </div>
