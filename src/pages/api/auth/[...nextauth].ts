@@ -126,6 +126,7 @@ export const authOptions: NextAuthOptions = {
     },
     async signIn({ user, account }) {
       if (account?.provider === 'google') {
+        console.log('signing in on google')
         try {
           const response = await fetch(`${process.env.SERVER_URL}/google-login`, {
             method: 'POST',
@@ -146,6 +147,7 @@ export const authOptions: NextAuthOptions = {
           console.error('Error notifying backend of sign-in:', error);
           return false;
         }
+        return true;
       } else if (account?.provider === 'credentials') {
         return true;
       }
