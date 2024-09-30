@@ -5,13 +5,12 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        const { password1, password2, hash } = req.body
+        const { password, hash } = req.body
         const response = await fetch(`${process.env.SERVER_URL}/reset-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                "new_password": password1,
-                "confirm_new_password": password2,
+                "new_password": password,
                 "reset_hash": hash
             }
             )

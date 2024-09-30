@@ -31,11 +31,11 @@ export default function PasswordResetPage() {
     };
 
     return (
-        <div className="dark:text-black flex flex-grow flex-col items-center justify-center">
+        <div className="dark:text-black flex flex-grow flex-col items-center justify-center text-center">
             {resetSent ? (
                 <div className="flex flex-col items-center justify-center md:w-1/2 w-2/3 bg-gray-100 border-2 border-orange-400 p-4">
                     <p className="text-lg">Check your email for a link to reset your password.</p>
-                    <Link href="/login" className="text-orange-500 hover:underline mt-4">Back to Login</Link>
+                    <Link href="/login" className="bg-orange-500 text-white hover:bg-orange-600 font-bold py-2 px-4 rounded mt-4">Back to Login</Link>
                 </div>
             ) : (
                 <div className="flex flex-col items-center justify-center md:w-1/2 w-2/3 bg-gray-100 border-2 border-orange-400">
