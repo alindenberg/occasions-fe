@@ -103,7 +103,9 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                 </div>
             </div>
             <div className="mb-4" onClick={() => document.getElementById('date')?.click()}>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mr-4">Date and Time</label>
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mr-4">
+                    Date and Time <span className="text-xs text-gray-500">(When you&apos;ll be sent the resulting message)</span>
+                </label>
                 <input
                     type="datetime-local"
                     id="date"
@@ -111,15 +113,17 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     onChange={(e) => setDate(e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 transform transition duration-500 ease-in-out hover:scale-105"
                 />
-                <p className="text-xs text-gray-500 mt-1">When you&apos;ll be sent the resulting message</p>
             </div>
             <div className="mb-4">
-                <label htmlFor="customInput" className="block text-sm font-medium text-gray-700">Custom Input</label>
+                <label htmlFor="customInput" className="block text-sm font-medium text-gray-700">
+                    Custom Input
+                    <span className="ml-2 text-xs text-gray-500">(Used for personalization)</span>
+                </label>
                 <textarea
                     id="customInput"
                     value={customInput}
                     onChange={(e) => setCustomInput(e.target.value)}
-                    placeholder="Lorem ipsum"
+                    placeholder="Enter custom details to personalize your message"
                     className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 pb-20"
                 />
             </div>
