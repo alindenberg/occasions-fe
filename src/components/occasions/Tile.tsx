@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Occasion } from "@/types/occasions";
 import { useSession } from "next-auth/react";
 
@@ -14,6 +14,24 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
     const [showFundModal, setShowFundModal] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const { data: session } = useSession();
+    const deleteModalRef = useRef<HTMLDivElement>(null);
+    const fundModalRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (deleteModalRef.current && !deleteModalRef.current.contains(event.target as Node)) {
+                setShowDeleteModal(false);
+            }
+            if (fundModalRef.current && !fundModalRef.current.contains(event.target as Node)) {
+                setShowFundModal(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const handleDelete = async () => {
         if (!deletionHandler) {
@@ -90,7 +108,7 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
             </div>
             {showDeleteModal && (
                 <div className="dark:text-black fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg mx-4">
+                    <div ref={deleteModalRef} className="bg-white p-6 rounded-lg mx-4">
                         <h2 className="mb-4 text-center text-xl font-bold">Delete {occasion.label}</h2>
                         <p className="mb-4 text-center px-2">Deleting this occasion will restore the 1 credit that was used to create it.</p>
                         <div className="flex justify-center">
@@ -102,9 +120,9 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
             )}
             {showFundModal && (
                 <div className="dark:text-black fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg mx-4">
+                    <div ref={fundModalRef} className="bg-white p-6 rounded-lg mx-4">
                         <h2 className="mb-4 text-center text-xl font-bold">Fund {occasion.label}</h2>
-                        <p className="mb-4 text-center px-2">Confirm you want to fund this Draft occasion? This will subtract 1 credit from your account and set it to active.</p>
+                        <p className="mb-4 text-center px-2">This will subtract 1 credit from your account and set it to active.</p>
                         <div className="flex justify-center">
                             <button onClick={() => setShowFundModal(false)} className="px-4 py-2 bg-gray-300 text-black rounded mr-2">Cancel</button>
                             <button onClick={handleFund} className="px-4 py-2 bg-orange-500 text-white rounded">Confirm</button>
