@@ -15,18 +15,20 @@ import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
-  console.log(occasions)
   const router = useRouter()
   const { session, status, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
 
-  const [occasionsList, setOccasionsList] = useState(occasions);
-  const [currentFilter, setCurrentFilter] = useState(OCCASION_FILTERS.UPCOMING);
+  const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
+  const [currentFilter, setCurrentFilter] = useState<string>('');
 
   useEffect(() => {
-    // todo: refactor api call for and separate list of occasions
-    Promise.any([filterOccasions(OCCASION_FILTERS.UPCOMING)])
-  }, [])
+    if (router.isReady) {
+      const filter = (router.query.filter as string) || OCCASION_FILTERS.UPCOMING;
+      setCurrentFilter(filter);
+      filterOccasions(filter, occasions);
+    }
+  }, [occasions, router, router.isReady]);
 
   if (status === 'loading') {
     return <div>Loading...</div>
@@ -46,22 +48,29 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
     router.push(`/occasions/${occasion_id}/modify`);
   }
 
-  async function filterOccasions(filter: string) {
+  function filterOccasions(filter: string, occasionsToFilter: Occasion[]) {
+    let filteredOccasions: Occasion[] = [];
+
     if (filter === OCCASION_FILTERS.UPCOMING) {
-      const filteredOccasions = occasions.filter(occasion => !occasion.is_draft && new Date(occasion.date) > new Date());
-      setOccasionsList(filteredOccasions);
-      setCurrentFilter(OCCASION_FILTERS.UPCOMING);
+      filteredOccasions = occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) > new Date());
+    } else if (filter === OCCASION_FILTERS.PAST) {
+      filteredOccasions = occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) < new Date());
+    } else if (filter === OCCASION_FILTERS.DRAFT) {
+      filteredOccasions = occasionsToFilter.filter(occasion => occasion.is_draft);
     }
-    if (filter === OCCASION_FILTERS.PAST) {
-      const filteredOccasions = occasions.filter(occasion => !occasion.is_draft && new Date(occasion.date) < new Date());
-      setOccasionsList(filteredOccasions);
-      setCurrentFilter(OCCASION_FILTERS.PAST);
-    }
-    if (filter === OCCASION_FILTERS.DRAFT) {
-      const filteredOccasions = occasions.filter(occasion => occasion.is_draft);
-      setOccasionsList(filteredOccasions);
-      setCurrentFilter(OCCASION_FILTERS.DRAFT);
-    }
+
+    setOccasionsList(filteredOccasions);
+  }
+
+  function handleFilterChange(filter: string) {
+    setCurrentFilter(filter);
+    filterOccasions(filter, occasions);
+
+    // Update URL without redirecting
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, filter: filter },
+    }, undefined, { shallow: true });
   }
 
   async function sortOccasions(sort: string) {
@@ -84,14 +93,14 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
           (
             <>
               <div className='flex flex-row justify-between'>
-                <OccasionsFilterDropdown onClick={filterOccasions} />
+                <OccasionsFilterDropdown onClick={handleFilterChange} currentFilter={currentFilter} />
                 <OccasionsSortDropdown onClick={sortOccasions} />
               </div>
-              {currentFilter == OCCASION_FILTERS.UPCOMING
+              {currentFilter === OCCASION_FILTERS.UPCOMING
                 && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
-              {currentFilter == OCCASION_FILTERS.PAST
+              {currentFilter === OCCASION_FILTERS.PAST
                 && <PastOccasionsList occasions={occasionsList} />}
-              {currentFilter == OCCASION_FILTERS.DRAFT
+              {currentFilter === OCCASION_FILTERS.DRAFT
                 && <DraftOccasionsList occasions={occasionsList} />}
             </>
           ) : (
