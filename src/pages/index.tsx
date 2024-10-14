@@ -111,14 +111,14 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
             <>
               <div className='flex flex-row justify-between'>
                 <OccasionsFilterDropdown onClick={handleFilterChange} currentFilter={currentFilter} />
-                <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
+                <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort as OCCASION_SORTS} />
               </div>
               {currentFilter === OCCASION_FILTERS.UPCOMING
                 && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
               {currentFilter === OCCASION_FILTERS.PAST
                 && <PastOccasionsList occasions={occasionsList} />}
               {currentFilter === OCCASION_FILTERS.DRAFT
-                && <DraftOccasionsList occasions={occasionsList} deletionHandler={deletionHandler} modifyHandler={modifyHandler} />}
+                && <DraftOccasionsList occasions={occasionsList} deletionHandler={deletionHandler} />}
             </>
           ) : (
             <div className="dark:text-black overflow-hidden justify-center items-center flex flex-grow">

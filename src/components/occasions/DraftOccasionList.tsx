@@ -7,10 +7,9 @@ import { useRouter } from 'next/router'
 interface Props {
     occasions: Occasion[]
     deletionHandler: (occasion_id: number) => void
-    modifyHandler: (occasion_id: number) => void
 }
 
-export default function DraftOccasionList({ occasions, deletionHandler, modifyHandler }: Props) {
+export default function DraftOccasionList({ occasions, deletionHandler }: Props) {
     const router = useRouter()
     const { data: session, status } = useSession()
 
@@ -54,7 +53,7 @@ export default function DraftOccasionList({ occasions, deletionHandler, modifyHa
             :
             <div className="py-4">
                 <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
-                    <p>You don't have any draft occasions yet.</p>
+                    <p>You don&apos;t have any draft occasions yet.</p>
                     <p>Start creating your next memorable event!</p>
                     <div className="flex justify-center pt-2">{renderButton()}</div>
                 </div>

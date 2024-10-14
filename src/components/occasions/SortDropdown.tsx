@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { OCCASION_SORTS } from "@/types/occasions";
 
-export default function OccasionsFilterDropdown({ onClick }: { onClick: Function }) {
-    const [sort, setSort] = useState(OCCASION_SORTS.DATE_DESCENDING);
+export default function OccasionsSortDropdown({ onClick, currentSort }: { onClick: Function, currentSort: OCCASION_SORTS }) {
+    const [sort, setSort] = useState(currentSort);
 
     const handleSelect = (option: OCCASION_SORTS) => {
         onClick(option);
