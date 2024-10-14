@@ -101,7 +101,7 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
               {currentFilter === OCCASION_FILTERS.PAST
                 && <PastOccasionsList occasions={occasionsList} />}
               {currentFilter === OCCASION_FILTERS.DRAFT
-                && <DraftOccasionsList occasions={occasionsList} />}
+                && <DraftOccasionsList occasions={occasionsList} deletionHandler={deletionHandler} modifyHandler={modifyHandler} />}
             </>
           ) : (
             <div className="dark:text-black overflow-hidden justify-center items-center flex flex-grow">
