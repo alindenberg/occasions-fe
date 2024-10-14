@@ -15,18 +15,24 @@ import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
+  console.log(occasions)
   const router = useRouter()
   const { session, status, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
 
   const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>('');
+  const [currentSort, setCurrentSort] = useState<string>('');
 
   useEffect(() => {
     if (router.isReady) {
       const filter = (router.query.filter as string) || OCCASION_FILTERS.UPCOMING;
+      const sort = (router.query.sort as string) || OCCASION_SORTS.ASC;
       setCurrentFilter(filter);
-      filterOccasions(filter, occasions);
+      setCurrentSort(sort);
+      const filteredOccasions = filterOccasions(filter, occasions);
+      const sortedOccasions = sortOccasions(sort, filteredOccasions);
+      setOccasionsList(sortedOccasions);
     }
   }, [occasions, router, router.isReady]);
 
@@ -48,23 +54,22 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
     router.push(`/occasions/${occasion_id}/modify`);
   }
 
-  function filterOccasions(filter: string, occasionsToFilter: Occasion[]) {
-    let filteredOccasions: Occasion[] = [];
-
+  function filterOccasions(filter: string, occasionsToFilter: Occasion[]): Occasion[] {
     if (filter === OCCASION_FILTERS.UPCOMING) {
-      filteredOccasions = occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) > new Date());
+      return occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) > new Date());
     } else if (filter === OCCASION_FILTERS.PAST) {
-      filteredOccasions = occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) < new Date());
+      return occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) < new Date());
     } else if (filter === OCCASION_FILTERS.DRAFT) {
-      filteredOccasions = occasionsToFilter.filter(occasion => occasion.is_draft);
+      return occasionsToFilter.filter(occasion => occasion.is_draft);
     }
-
-    setOccasionsList(filteredOccasions);
+    return occasionsToFilter;
   }
 
   function handleFilterChange(filter: string) {
     setCurrentFilter(filter);
-    filterOccasions(filter, occasions);
+    const filteredOccasions = filterOccasions(filter, occasions);
+    const sortedOccasions = sortOccasions(currentSort, filteredOccasions);
+    setOccasionsList(sortedOccasions);
 
     // Update URL without redirecting
     router.push({
@@ -73,15 +78,26 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
     }, undefined, { shallow: true });
   }
 
-  async function sortOccasions(sort: string) {
-    if (sort === OCCASION_SORTS.DATE_DESCENDING) {
-      const sortedOccasions = [...occasionsList].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-      setOccasionsList(sortedOccasions);
+  function sortOccasions(sort: string, occasionsToSort: Occasion[]): Occasion[] {
+    if (sort === OCCASION_SORTS.DESC) {
+      return [...occasionsToSort].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
-    if (sort === OCCASION_SORTS.DATE_ASCENDING) {
-      const sortedOccasions = [...occasionsList].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      setOccasionsList(sortedOccasions);
+    if (sort === OCCASION_SORTS.ASC) {
+      return [...occasionsToSort].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
+    return occasionsToSort;
+  }
+
+  function handleSortChange(sort: string) {
+    setCurrentSort(sort);
+    const sortedOccasions = sortOccasions(sort, occasionsList);
+    setOccasionsList(sortedOccasions);
+
+    // Update URL without redirecting
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, sort: sort },
+    }, undefined, { shallow: true });
   }
 
   return (
@@ -94,7 +110,7 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
             <>
               <div className='flex flex-row justify-between'>
                 <OccasionsFilterDropdown onClick={handleFilterChange} currentFilter={currentFilter} />
-                <OccasionsSortDropdown onClick={sortOccasions} />
+                <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
               </div>
               {currentFilter === OCCASION_FILTERS.UPCOMING
                 && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}

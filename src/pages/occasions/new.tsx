@@ -6,11 +6,11 @@ export default function NewOccasionPage() {
     const router = useRouter();
     const { refreshSession } = useAuthSession();
 
-    const createOccasionFunction = async ({ label, type, tone, date, customInput }: any) => {
+    const createOccasionFunction = async ({ label, type, tone, date, customInput, is_recurring }: any) => {
         const response = await fetch('/api/occasions/new', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ label, type, tone, date, customInput })
+            body: JSON.stringify({ label, type, tone, date, customInput, is_recurring })
         });
 
         if (!response.ok) {
