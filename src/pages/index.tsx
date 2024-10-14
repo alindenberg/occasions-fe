@@ -22,12 +22,12 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
 
   const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>('');
-  const [currentSort, setCurrentSort] = useState<string>('');
+  const [currentSort, setCurrentSort] = useState<string>(OCCASION_SORTS.DATE_DESCENDING);
 
   useEffect(() => {
     if (router.isReady) {
       const filter = (router.query.filter as string) || OCCASION_FILTERS.UPCOMING;
-      const sort = (router.query.sort as string) || OCCASION_SORTS.ASC;
+      const sort = (router.query.sort as string) || OCCASION_SORTS.DATE_DESCENDING;
       setCurrentFilter(filter);
       setCurrentSort(sort);
       const filteredOccasions = filterOccasions(filter, occasions);
@@ -79,16 +79,17 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
   }
 
   function sortOccasions(sort: string, occasionsToSort: Occasion[]): Occasion[] {
-    if (sort === OCCASION_SORTS.DESC) {
+    if (sort === OCCASION_SORTS.DATE_ASCENDING) {
       return [...occasionsToSort].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
-    if (sort === OCCASION_SORTS.ASC) {
+    if (sort === OCCASION_SORTS.DATE_DESCENDING) {
       return [...occasionsToSort].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
     return occasionsToSort;
   }
 
-  function handleSortChange(sort: string) {
+  function handleSortChange(sort: OCCASION_SORTS) {
+    console.log(sort)
     setCurrentSort(sort);
     const sortedOccasions = sortOccasions(sort, occasionsList);
     setOccasionsList(sortedOccasions);

@@ -4,7 +4,7 @@ import { OCCASION_SORTS } from "@/types/occasions";
 export default function OccasionsFilterDropdown({ onClick }: { onClick: Function }) {
     const [sort, setSort] = useState(OCCASION_SORTS.DATE_DESCENDING);
 
-    const handleSelect = (option: string) => {
+    const handleSelect = (option: OCCASION_SORTS) => {
         onClick(option);
         setSort(option);
     };
