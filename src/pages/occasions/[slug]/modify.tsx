@@ -27,13 +27,13 @@ export default function ModifyOccasionPage() {
         }
     }, [slug, router]);
 
-    function onModifyFormSubmit({ label, type, tone, date, customInput }: any) {
+    function onModifyFormSubmit({ label, type, tone, date, customInput, is_recurring }: any) {
         // Implement the function logic here
         const modifyOccasion = async () => {
             const response = await fetch(`/api/occasions/${slug}/modify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ label, type, tone, date, customInput })
+                body: JSON.stringify({ label, type, tone, date, customInput, is_recurring })
             });
             const json = await response.json();
             if (!response.ok) {

@@ -41,8 +41,9 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
                 <h2 className='text-gray-700'>Tone: {occasion.tone.charAt(0).toUpperCase() + occasion.tone.slice(1)}</h2>
                 <h2 className='text-gray-700'>Date: {new Date(occasion.date).toLocaleString()}</h2>
                 <br></br>
+                <h2 className='text-gray-700'>Recurring: {occasion.is_recurring ? '✅' : '❌'}</h2>
                 <div className='text-gray-700'>
-                    Notes: {occasion?.custom_input}
+                    Custom Input: {occasion?.custom_input}
                 </div>
                 {occasion.summary &&
                     <div className='text-gray-700'>

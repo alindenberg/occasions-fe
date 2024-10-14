@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Occasion } from "@/types/occasions";
 import { OCCASION_TONES, OCCASION_TYPES } from '@/utils/constants';
+import { Switch } from '@headlessui/react';
 
 import { getLocalizedDateInputValue } from '@/utils/utils';
 
@@ -25,6 +26,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
     const [tone, setTone] = useState(occasion?.tone || 'normal');
     const [error, setError] = useState<string | null>(null);
     const [customInput, setCustomInput] = useState(occasion?.custom_input || '');
+    const [isRecurring, setIsRecurring] = useState(occasion?.is_recurring || false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,7 +37,7 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
             return;
         }
         try {
-            await formSubmitFunction({ label, type, tone, date: selectedDate.toISOString(), customInput });
+            await formSubmitFunction({ label, type, tone, date: selectedDate.toISOString(), customInput, is_recurring: isRecurring });
         } catch (error: any) {
             setError(error.detail || 'Something went wrong.')
         }
@@ -126,6 +128,20 @@ export default function EditOccasionComponent({ occasion, formSubmitFunction }: 
                     placeholder="Enter custom details to personalize your message"
                     className="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2 pb-20"
                 />
+            </div>
+            <div className="mb-4 flex items-center">
+                <Switch
+                    checked={isRecurring}
+                    onChange={setIsRecurring}
+                    className={`${isRecurring ? 'bg-orange-600' : 'bg-gray-200'
+                        } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2`}
+                >
+                    <span
+                        className={`${isRecurring ? 'translate-x-6' : 'translate-x-1'
+                            } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                </Switch>
+                <span className="ml-3 text-sm font-medium text-gray-700">Recurring</span>
             </div>
             <button
                 type="submit"

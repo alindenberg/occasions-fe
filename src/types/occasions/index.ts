@@ -9,6 +9,7 @@ export interface Occasion {
     date: string;
     date_processed: string;
     tone: string;
+    is_recurring: boolean;
 }
 
 export enum OCCASION_FILTERS {

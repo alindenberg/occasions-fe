@@ -11,14 +11,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const { slug } = req.query;
-        const { label, type, tone, date, customInput } = req.body;
+        const { label, type, tone, date, customInput, is_recurring } = req.body;
         const response = await fetch(`${process.env.SERVER_URL}/occasions/${slug}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ label, type, tone, date, custom_input: customInput })
+            body: JSON.stringify({ label, type, tone, date, custom_input: customInput, is_recurring })
         });
         if (!response.ok) {
             throw new Error('Failed to modify occasion');

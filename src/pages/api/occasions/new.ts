@@ -21,7 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     type: req.body.type,
                     tone: req.body.tone,
                     date: req.body.date,
-                    custom_input: req.body.customInput
+                    custom_input: req.body.customInput,
+                    is_recurring: req.body.is_recurring
                 }),
             });
             if (!response.ok) {
