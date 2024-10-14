@@ -9,17 +9,19 @@ import Detail from '@/components/Detail';
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
+import DraftOccasionsList from '@/components/occasions/DraftOccasionList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
+  console.log(occasions)
   const router = useRouter()
   const { session, status, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
 
   const [occasionsList, setOccasionsList] = useState(occasions);
-  const [viewingUpcoming, setViewingUpcoming] = useState(true);
+  const [currentFilter, setCurrentFilter] = useState(OCCASION_FILTERS.UPCOMING);
 
   useEffect(() => {
     // todo: refactor api call for and separate list of occasions
@@ -46,14 +48,19 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
 
   async function filterOccasions(filter: string) {
     if (filter === OCCASION_FILTERS.UPCOMING) {
-      const filteredOccasions = occasions.filter(occasion => new Date(occasion.date) > new Date());
+      const filteredOccasions = occasions.filter(occasion => !occasion.is_draft && new Date(occasion.date) > new Date());
       setOccasionsList(filteredOccasions);
-      setViewingUpcoming(true);
+      setCurrentFilter(OCCASION_FILTERS.UPCOMING);
     }
     if (filter === OCCASION_FILTERS.PAST) {
-      const filteredOccasions = occasions.filter(occasion => new Date(occasion.date) < new Date());
+      const filteredOccasions = occasions.filter(occasion => !occasion.is_draft && new Date(occasion.date) < new Date());
       setOccasionsList(filteredOccasions);
-      setViewingUpcoming(false);
+      setCurrentFilter(OCCASION_FILTERS.PAST);
+    }
+    if (filter === OCCASION_FILTERS.DRAFT) {
+      const filteredOccasions = occasions.filter(occasion => occasion.is_draft);
+      setOccasionsList(filteredOccasions);
+      setCurrentFilter(OCCASION_FILTERS.DRAFT);
     }
   }
 
@@ -80,8 +87,12 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
                 <OccasionsFilterDropdown onClick={filterOccasions} />
                 <OccasionsSortDropdown onClick={sortOccasions} />
               </div>
-              {viewingUpcoming && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
-              {!viewingUpcoming && <PastOccasionsList occasions={occasionsList} />}
+              {currentFilter == OCCASION_FILTERS.UPCOMING
+                && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
+              {currentFilter == OCCASION_FILTERS.PAST
+                && <PastOccasionsList occasions={occasionsList} />}
+              {currentFilter == OCCASION_FILTERS.DRAFT
+                && <DraftOccasionsList occasions={occasionsList} />}
             </>
           ) : (
             <div className="dark:text-black overflow-hidden justify-center items-center flex flex-grow">

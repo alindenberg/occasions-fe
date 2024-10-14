@@ -10,11 +10,13 @@ export interface Occasion {
     date_processed: string;
     tone: string;
     is_recurring: boolean;
+    is_draft: boolean;
 }
 
 export enum OCCASION_FILTERS {
     UPCOMING = 'upcoming',
-    PAST = 'past'
+    PAST = 'past',
+    DRAFT = 'draft'
 }
 
 export enum OCCASION_SORTS {

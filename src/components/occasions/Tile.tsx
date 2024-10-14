@@ -40,11 +40,8 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
                 <h2 className='text-gray-700'>Type: {occasion.type.charAt(0).toUpperCase() + occasion.type.slice(1)}</h2>
                 <h2 className='text-gray-700'>Tone: {occasion.tone.charAt(0).toUpperCase() + occasion.tone.slice(1)}</h2>
                 <h2 className='text-gray-700'>Date: {new Date(occasion.date).toLocaleString()}</h2>
-                <br></br>
                 <h2 className='text-gray-700'>Recurring: {occasion.is_recurring ? '✅' : '❌'}</h2>
-                <div className='text-gray-700'>
-                    Custom Input: {occasion?.custom_input}
-                </div>
+                <div className='text-gray-700'>Custom Input: {occasion.custom_input}</div>
                 {occasion.summary &&
                     <div className='text-gray-700'>
                         <br></br>
@@ -68,6 +65,7 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
             <div className="flex flex-row items-center justify-center p-4 border-t border-gray-200">
                 {modifyHandler && <button onClick={handleModify} className="px-4 py-2 bg-orange-500 hover:bg-orange-700 m-1 text-white rounded">Modify</button>}
                 {deletionHandler && <button onClick={() => setShowDeleteModal(true)} className="px-4 py-2 bg-gray-400 m-1 text-white rounded hover:bg-red-700">Delete</button>}
+                {occasion.is_draft && <button onClick={() => setShowDeleteModal(true)} className="px-4 py-2 bg-gray-400 m-1 text-white rounded hover:bg-red-700">Fund</button>}
             </div>
             {showDeleteModal && (
                 <div className="dark:text-black fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

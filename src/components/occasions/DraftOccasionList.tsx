@@ -10,7 +10,7 @@ interface Props {
     modifyHandler: (occasion_id: number) => void
 }
 
-export default function UpcomingOccasionsList({ occasions, deletionHandler, modifyHandler }: Props) {
+export default function DraftOccasionList({ occasions, deletionHandler, modifyHandler }: Props) {
     const router = useRouter()
     const { data: session, status } = useSession()
 
@@ -22,7 +22,7 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
         return (
             <>
                 <CreateOccasionBtn
-                    disabled={session.user.credits <= 0}
+                    disabled={occasions?.length >= 5 || session.user.credits <= 0}
                     credits={session.user.credits}
                 />
                 {session.user.credits <= 0 && (
@@ -54,8 +54,8 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
             :
             <div className="py-4">
                 <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
-                    <p>Well that&apos;s bizarre. You have no upcoming occasions.</p>
-                    <p>Quick, add them before you forget!</p>
+                    <p>You don't have any draft occasions yet.</p>
+                    <p>Start creating your next memorable event!</p>
                     <div className="flex justify-center pt-2">{renderButton()}</div>
                 </div>
             </div>
