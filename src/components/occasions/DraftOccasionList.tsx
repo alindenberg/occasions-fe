@@ -7,9 +7,10 @@ import { useRouter } from 'next/router'
 interface Props {
     occasions: Occasion[]
     deletionHandler: (occasion_id: number) => void
+    fundHandler: (occasion_id: number) => void
 }
 
-export default function DraftOccasionList({ occasions, deletionHandler }: Props) {
+export default function DraftOccasionList({ occasions, deletionHandler, fundHandler }: Props) {
     const router = useRouter()
     const { data: session, status } = useSession()
 
@@ -37,26 +38,30 @@ export default function DraftOccasionList({ occasions, deletionHandler }: Props)
     }
 
     return (
-        occasions?.length ?
-            <div>
-                {occasions.map((occasion) => (
-                    <div className="pt-4" key={occasion.id}>
-                        <OccasionTile
-                            occasion={occasion}
-                            modifyHandler={modifyHandler}
-                            deletionHandler={deletionHandler}
-                        />
+        <div>
+            {occasions.length > 0 ? (
+                <>
+                    {occasions.map((occasion) => (
+                        <div className="pt-4" key={occasion.id}>
+                            <OccasionTile
+                                occasion={occasion}
+                                modifyHandler={null}
+                                deletionHandler={deletionHandler}
+                                fundHandler={fundHandler}
+                            />
+                        </div>
+                    ))}
+                    <div className="flex justify-center py-6">{renderButton()}</div>
+                </>
+            ) : (
+                <div className="py-4">
+                    <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
+                        <p>You don&apos;t have any draft occasions yet.</p>
+                        <p>Start creating your next memorable event!</p>
+                        <div className="flex justify-center pt-2">{renderButton()}</div>
                     </div>
-                ))}
-                <div className="flex justify-center py-6">{renderButton()}</div>
-            </div>
-            :
-            <div className="py-4">
-                <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
-                    <p>You don&apos;t have any draft occasions yet.</p>
-                    <p>Start creating your next memorable event!</p>
-                    <div className="flex justify-center pt-2">{renderButton()}</div>
                 </div>
-            </div>
-    )
+            )}
+        </div>
+    );
 }

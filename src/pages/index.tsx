@@ -53,6 +53,16 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
     router.push(`/occasions/${occasion_id}/modify`);
   }
 
+  async function fundHandler(occasion_id: number) {
+    const response = await fetch(`/api/occasions/${occasion_id}/fund`);
+    if (!response.ok) {
+      throw new Error('Failed to fund occasion');
+    }
+    const updatedOccasions = occasionsList.filter(occasion => occasion.id !== occasion_id);
+    setOccasionsList(updatedOccasions);
+    await refreshSession()
+  }
+
   function filterOccasions(filter: string, occasionsToFilter: Occasion[]): Occasion[] {
     if (filter === OCCASION_FILTERS.UPCOMING) {
       return occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) > new Date());
@@ -116,7 +126,7 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
               {currentFilter === OCCASION_FILTERS.PAST
                 && <PastOccasionsList occasions={occasionsList} />}
               {currentFilter === OCCASION_FILTERS.DRAFT
-                && <DraftOccasionsList occasions={occasionsList} deletionHandler={deletionHandler} />}
+                && <DraftOccasionsList occasions={occasionsList} deletionHandler={deletionHandler} fundHandler={fundHandler} />}
             </>
           ) : (
             <div className="dark:text-black overflow-hidden justify-center items-center flex flex-grow">

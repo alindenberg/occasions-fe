@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { Occasion } from "@/types/occasions";
+import { useSession } from "next-auth/react";
 
 interface OccasionTileProps {
     occasion: Occasion;
     modifyHandler: null | Function;
     deletionHandler: null | Function;
+    fundHandler: null | Function;
 }
 
-export default function OccasionTile({ occasion, modifyHandler, deletionHandler }: OccasionTileProps) {
+export default function OccasionTile({ occasion, modifyHandler, deletionHandler, fundHandler }: OccasionTileProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showFundModal, setShowFundModal] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
+    const { data: session } = useSession();
 
     const handleDelete = async () => {
         if (!deletionHandler) {
@@ -26,6 +30,15 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
         }
 
         await modifyHandler(occasion.id);
+    }
+
+    const handleFund = async () => {
+        if (!fundHandler) {
+            return;
+        }
+
+        await fundHandler(occasion.id);
+        setShowFundModal(false);
     }
 
     const handleExpandClick = () => {
@@ -65,7 +78,15 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
             <div className="flex flex-row items-center justify-center p-4 border-t border-gray-200">
                 {modifyHandler && <button onClick={handleModify} className="px-4 py-2 bg-orange-500 hover:bg-orange-700 m-1 text-white rounded">Modify</button>}
                 {deletionHandler && <button onClick={() => setShowDeleteModal(true)} className="px-4 py-2 bg-gray-400 m-1 text-white rounded hover:bg-red-700">Delete</button>}
-                {occasion.is_draft && <button onClick={() => setShowDeleteModal(true)} className="px-4 py-2 bg-gray-400 m-1 text-white rounded hover:bg-red-700">Fund</button>}
+                {occasion.is_draft && fundHandler && (
+                    <button
+                        onClick={() => session?.user.credits && session?.user.credits > 0 ? setShowFundModal(true) : null}
+                        className={`px-4 py-2 m-1 text-white rounded ${session?.user.credits && session?.user.credits > 0 ? 'bg-orange-500 hover:bg-orange-700' : 'bg-gray-400 cursor-not-allowed'}`}
+                        title={session?.user.credits && session?.user.credits > 0 ? '' : 'You must have credits to fund a draft occasion'}
+                    >
+                        Fund
+                    </button>
+                )}
             </div>
             {showDeleteModal && (
                 <div className="dark:text-black fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -75,6 +96,18 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler 
                         <div className="flex justify-center">
                             <button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 bg-gray-300 text-black rounded mr-2">Cancel</button>
                             <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showFundModal && (
+                <div className="dark:text-black fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg mx-4">
+                        <h2 className="mb-4 text-center text-xl font-bold">Fund {occasion.label}</h2>
+                        <p className="mb-4 text-center px-2">Confirm you want to fund this Draft occasion? This will subtract 1 credit from your account and set it to active.</p>
+                        <div className="flex justify-center">
+                            <button onClick={() => setShowFundModal(false)} className="px-4 py-2 bg-gray-300 text-black rounded mr-2">Cancel</button>
+                            <button onClick={handleFund} className="px-4 py-2 bg-orange-500 text-white rounded">Confirm</button>
                         </div>
                     </div>
                 </div>
