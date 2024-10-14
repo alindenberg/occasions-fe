@@ -15,7 +15,6 @@ import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
 export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
-  console.log(occasions)
   const router = useRouter()
   const { session, status, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
@@ -89,7 +88,6 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
   }
 
   function handleSortChange(sort: OCCASION_SORTS) {
-    console.log(sort)
     setCurrentSort(sort);
     const sortedOccasions = sortOccasions(sort, occasionsList);
     setOccasionsList(sortedOccasions);

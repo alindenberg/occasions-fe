@@ -126,7 +126,6 @@ export const authOptions: NextAuthOptions = {
     },
     async signIn({ user, account }) {
       if (account?.provider === 'google') {
-        console.log('signing in on google')
         try {
           const response = await fetch(`${process.env.SERVER_URL}/google-login`, {
             method: 'POST',
