@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OCCASION_FILTERS } from "@/types/occasions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
@@ -6,6 +6,10 @@ import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 export default function OccasionsFilterDropdown({ onClick, currentFilter }: { onClick: Function, currentFilter: string }) {
     const [filter, setFilter] = useState(currentFilter);
     const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        setFilter(currentFilter);
+    }, [currentFilter]);
 
     const handleOpenDropdown = () => {
         setIsOpen(true);
