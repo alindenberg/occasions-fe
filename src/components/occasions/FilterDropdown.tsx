@@ -3,7 +3,15 @@ import { OCCASION_FILTERS } from "@/types/occasions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 
-export default function OccasionsFilterDropdown({ onClick, currentFilter }: { onClick: Function, currentFilter: string }) {
+export default function OccasionsFilterDropdown({
+    onClick,
+    currentFilter,
+    hasDraftOccasions
+}: {
+    onClick: Function,
+    currentFilter: string,
+    hasDraftOccasions: boolean
+}) {
     const [filter, setFilter] = useState(currentFilter);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -63,18 +71,19 @@ export default function OccasionsFilterDropdown({ onClick, currentFilter }: { on
                         >
                             Past occasions
                         </button>
-                        <button
-                            onClick={() => handleSelect('draft')}
-                            className={`block w-full text-left px-4 py-2 text-gray-700 ${filter === OCCASION_FILTERS.DRAFT ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-100'
-                                }`}
-                            disabled={filter === OCCASION_FILTERS.DRAFT}
-                        >
-                            Draft occasions
-                        </button>
+                        {hasDraftOccasions && (
+                            <button
+                                onClick={() => handleSelect('draft')}
+                                className={`block w-full text-left px-4 py-2 text-gray-700 ${filter === OCCASION_FILTERS.DRAFT ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-100'
+                                    }`}
+                                disabled={filter === OCCASION_FILTERS.DRAFT}
+                            >
+                                Draft occasions
+                            </button>
+                        )}
                     </div>
-                )
-                }
+                )}
             </div>
-        </div >
+        </div>
     );
 }

@@ -23,6 +23,8 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
   const [currentFilter, setCurrentFilter] = useState<string>('');
   const [currentSort, setCurrentSort] = useState<string>(OCCASION_SORTS.DATE_DESCENDING);
 
+  const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
+
   useEffect(() => {
     if (router.isReady) {
       const filter = (router.query.filter as string) || OCCASION_FILTERS.UPCOMING;
@@ -118,7 +120,11 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
           (
             <>
               <div className='flex flex-row justify-between'>
-                <OccasionsFilterDropdown onClick={handleFilterChange} currentFilter={currentFilter} />
+                <OccasionsFilterDropdown
+                  onClick={handleFilterChange}
+                  currentFilter={currentFilter}
+                  hasDraftOccasions={hasDraftOccasions}
+                />
                 <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort as OCCASION_SORTS} />
               </div>
               {currentFilter === OCCASION_FILTERS.UPCOMING
