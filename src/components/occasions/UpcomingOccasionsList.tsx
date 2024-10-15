@@ -46,6 +46,7 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
                             occasion={occasion}
                             modifyHandler={modifyHandler}
                             deletionHandler={deletionHandler}
+                            fundHandler={null}
                         />
                     </div>
                 ))}

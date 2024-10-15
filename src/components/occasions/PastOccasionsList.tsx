@@ -11,7 +11,7 @@ export default function PastOccasionsList({ occasions }: Props) {
             <div>
                 {occasions.map((occasion, index) => (
                     <div className="py-4" key={occasion.id}>
-                        <OccasionTile occasion={occasion} modifyHandler={null} deletionHandler={null} />
+                        <OccasionTile occasion={occasion} modifyHandler={null} deletionHandler={null} fundHandler={null} />
                     </div>
                 ))}
             </div>
