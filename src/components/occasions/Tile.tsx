@@ -63,16 +63,27 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
         setIsSummaryExpanded(!isSummaryExpanded);
     };
 
+    const formatDate = (date: string) => {
+        return new Date(date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+    };
+
     return (
         <div className='bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden'>
             <div className='p-6'>
                 <h2 className='dark:text-black font-bold text-2xl mb-2'>{occasion?.label ?? 'Label'}</h2>
                 <hr className='border-gray-400 mb-4' />
-                <h2 className='text-gray-700'>Type: {occasion.type.charAt(0).toUpperCase() + occasion.type.slice(1)}</h2>
-                <h2 className='text-gray-700'>Tone: {occasion.tone.charAt(0).toUpperCase() + occasion.tone.slice(1)}</h2>
-                <h2 className='text-gray-700'>Date: {new Date(occasion.date).toLocaleString()}</h2>
+                <h2 className='text-gray-700'>Type: <strong>{occasion.type.charAt(0).toUpperCase() + occasion.type.slice(1)}</strong></h2>
+                <h2 className='text-gray-700'>Tone: <strong>{occasion.tone.charAt(0).toUpperCase() + occasion.tone.slice(1)}</strong></h2>
+                <h2 className='text-gray-700'>Date: <strong>{formatDate(occasion.date)}</strong></h2>
                 <h2 className='text-gray-700'>Recurring: {occasion.is_recurring ? '✅' : '❌'}</h2>
-                <div className='text-gray-700'>Custom Input: {occasion.custom_input}</div>
+                <div className='text-gray-700'>Occasion Notes: {occasion.custom_input}</div>
                 {occasion.summary &&
                     <div className='text-gray-700'>
                         <br></br>
