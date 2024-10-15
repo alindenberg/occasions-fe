@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router'
 import { OCCASION_SORTS, Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
@@ -14,16 +14,23 @@ import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList'
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
-export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) {
+export default function OccasionsPage({ initialOccasions }: { initialOccasions: Occasion[] }) {
   const router = useRouter()
   const { session, status, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
 
+  const [occasions, setOccasions] = useState<Occasion[]>(initialOccasions);
   const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>('');
   const [currentSort, setCurrentSort] = useState<string>(OCCASION_SORTS.DATE_DESCENDING);
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
+
+  const filterAndSortOccasions = useCallback(() => {
+    const filteredOccasions = filterOccasions(currentFilter, occasions);
+    const sortedOccasions = sortOccasions(currentSort, filteredOccasions);
+    setOccasionsList(sortedOccasions);
+  }, [occasions, currentFilter, currentSort]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -31,11 +38,9 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
       const sort = (router.query.sort as string) || OCCASION_SORTS.DATE_DESCENDING;
       setCurrentFilter(filter);
       setCurrentSort(sort);
-      const filteredOccasions = filterOccasions(filter, occasions);
-      const sortedOccasions = sortOccasions(sort, filteredOccasions);
-      setOccasionsList(sortedOccasions);
+      filterAndSortOccasions();
     }
-  }, [occasions, router, router.isReady]);
+  }, [router.isReady, router.query, occasions, filterAndSortOccasions]);
 
   if (status === 'loading') {
     return <div>Loading...</div>
@@ -56,13 +61,37 @@ export default function OccasionsPage({ occasions }: { occasions: Occasion[] }) 
   }
 
   async function fundHandler(occasion_id: number) {
-    const response = await fetch(`/api/occasions/${occasion_id}/fund`);
-    if (!response.ok) {
-      throw new Error('Failed to fund occasion');
+    try {
+      const response = await fetch(`/api/occasions/${occasion_id}/fund`);
+      if (!response.ok) {
+        throw new Error('Failed to fund occasion');
+      }
+
+      // Refresh the session to get updated user data
+      await refreshSession();
+
+      // Re-fetch occasions from the server
+      const occasionsResponse = await fetch('/api/occasions');
+      if (!occasionsResponse.ok) {
+        throw new Error(`HTTP error! status: ${occasionsResponse.status}`);
+      }
+      const updatedOccasions = await occasionsResponse.json();
+
+      // Update the occasions state
+      setOccasions(updatedOccasions);
+
+      // Reset filter to Upcoming
+      setCurrentFilter(OCCASION_FILTERS.UPCOMING);
+
+      // Update URL without the filter query parameter
+      router.push({
+        pathname: router.pathname,
+        query: { sort: currentSort },
+      }, undefined, { shallow: true });
+    } catch (error) {
+      console.error("Error funding occasion:", error);
+      // You might want to show an error message to the user here
     }
-    const updatedOccasions = occasionsList.filter(occasion => occasion.id !== occasion_id);
-    setOccasionsList(updatedOccasions);
-    await refreshSession()
   }
 
   function filterOccasions(filter: string, occasionsToFilter: Occasion[]): Occasion[] {
@@ -174,7 +203,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      occasions,
+      initialOccasions: occasions,
     },
   }
 }
