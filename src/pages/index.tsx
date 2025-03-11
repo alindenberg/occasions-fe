@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router'
 import { OCCASION_SORTS, Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
@@ -26,6 +26,8 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [currentFilter, setCurrentFilter] = useState<string>('');
   const [currentSort, setCurrentSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
   const [activeView, setActiveView] = useState<'list' | 'calendar'>('list');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
 
@@ -42,6 +44,19 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       filterAndSortOccasions();
     }
   }, [router.isReady, router.query, occasions, filterAndSortOccasions]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setIsFilterOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (status === 'loading') {
     return (
@@ -219,11 +234,50 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
               </div>
 
               <div className="flex items-center space-x-4">
-                <button className="p-2 bg-white rounded-md shadow-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                  </svg>
-                </button>
+                <div className="relative" ref={filterRef}>
+                  <button
+                    className="p-2 bg-white rounded-md shadow-sm hover:bg-gray-50"
+                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                  </button>
+
+                  {isFilterOpen && (
+                    <div className="absolute z-10 mt-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setCurrentFilter('all');
+                            setIsFilterOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          All Occasions
+                        </button>
+                        <button
+                          onClick={() => {
+                            setCurrentFilter('upcoming');
+                            setIsFilterOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Upcoming Occasions
+                        </button>
+                        <button
+                          onClick={() => {
+                            setCurrentFilter('past');
+                            setIsFilterOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Past Occasions
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
               </div>
             </div>
