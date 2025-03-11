@@ -13,6 +13,8 @@ import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import DraftOccasionsList from '@/components/occasions/DraftOccasionList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 import CreateModal from '@/components/occasions/CreateModal';
+import CalendarView from '@/components/occasions/CalendarView';
+import OccasionDetailsModal from '@/components/occasions/OccasionDetailsModal';
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
@@ -30,6 +32,8 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
 
@@ -322,6 +326,12 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
   const commonType = getCommonOccasionType();
 
+  // Handle occasion click in calendar view
+  const handleOccasionClick = (occasion: Occasion) => {
+    setSelectedOccasion(occasion);
+    setIsDetailsModalOpen(true);
+  };
+
   return (
     <>
       <Head>
@@ -564,9 +574,10 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                 />
               </div>
             ) : (
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <p className="text-center text-gray-500">Calendar view coming soon!</p>
-              </div>
+              <CalendarView
+                occasions={occasionsList}
+                onOccasionClick={handleOccasionClick}
+              />
             )}
           </div>
         </main>
@@ -575,6 +586,15 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+      />
+
+      <OccasionDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+        occasion={selectedOccasion}
+        onDelete={deletionHandler}
+        onModify={modifyHandler}
+        onFund={fundHandler}
       />
     </>
   );
