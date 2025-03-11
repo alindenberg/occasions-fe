@@ -109,6 +109,26 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
         }
     };
 
+    // Get status badge (Upcoming or Processed)
+    const getStatusBadge = () => {
+        const today = new Date();
+        const occasionDate = new Date(occasion.date);
+
+        if (occasionDate >= today) {
+            return (
+                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-800 mr-2">
+                    Upcoming
+                </span>
+            );
+        } else {
+            return (
+                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-green-100 text-green-800 mr-2">
+                    Processed
+                </span>
+            );
+        }
+    };
+
     // Calculate days from now
     const getDaysFromNow = (dateString: string) => {
         const today = new Date();
@@ -133,9 +153,12 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
                         <span className="text-2xl mr-3">{getTypeIcon()}</span>
                         <h2 className='font-bold text-xl text-gray-800'>{occasion?.label ?? 'Label'}</h2>
                     </div>
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${getToneBadgeColor()}`}>
-                        {occasion.tone.charAt(0).toUpperCase() + occasion.tone.slice(1)}
-                    </span>
+                    <div className="flex items-center">
+                        {!occasion.is_draft && getStatusBadge()}
+                        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${getToneBadgeColor()}`}>
+                            {occasion.tone.charAt(0).toUpperCase() + occasion.tone.slice(1)}
+                        </span>
+                    </div>
                 </div>
 
                 <div className="mb-4">
@@ -219,8 +242,8 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
                     <button
                         onClick={() => session?.user.credits && session?.user.credits > 0 ? setShowFundModal(true) : null}
                         className={`flex items-center justify-center px-3 py-1.5 text-sm rounded-lg transition-colors ${session?.user.credits && session?.user.credits > 0
-                                ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
                         title={session?.user.credits && session?.user.credits > 0 ? '' : 'You must have credits to fund a draft occasion'}
                     >
