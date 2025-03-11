@@ -99,6 +99,34 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     return () => window.removeEventListener('resize', handleResize);
   }, [isMobileSidebarOpen]);
 
+  // Check if backend server is running
+  useEffect(() => {
+    const checkBackendStatus = async () => {
+      try {
+        console.log("Checking backend server status...");
+        const response = await fetch(`${process.env.SERVER_URL}/`);
+        console.log("Backend server response status:", response.status);
+        if (!response.ok) {
+          console.error("Backend server is not responding correctly. Status:", response.status);
+        } else {
+          console.log("Backend server is running correctly");
+        }
+      } catch (error) {
+        console.error("Error connecting to backend server:", error);
+      }
+    };
+
+    checkBackendStatus();
+  }, []);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (status !== 'loading' && !isAuthenticated) {
+      console.log('User not authenticated, redirecting to login...');
+      router.push('/login');
+    }
+  }, [status, isAuthenticated, router]);
+
   if (status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -323,13 +351,13 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
               </button>
-              <h1 className="text-xl font-bold text-gray-800">Occasion Harmony</h1>
+              <h1 className="text-xl font-bold text-gray-800">Occasion Alerts</h1>
             </div>
 
             {/* Desktop header with title and search */}
             <div className="hidden md:flex items-center justify-between mb-8">
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Occasion Harmony</h1>
+                <h1 className="text-2xl font-bold text-gray-800">Occasion Alerts</h1>
                 <p className="text-gray-600">Manage all your important occasions in one place</p>
               </div>
 
