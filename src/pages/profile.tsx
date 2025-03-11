@@ -83,28 +83,36 @@ export default function Profile() {
                             <p className="text-gray-600">Manage your account settings</p>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-sm p-6 max-w-2xl mx-auto">
-                            <div className="mb-6">
-                                <h2 className="text-xl font-semibold mb-4">Account Information</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
+                        <div className="bg-white rounded-xl shadow-sm p-8 max-w-5xl mx-auto">
+                            <div className="mb-8">
+                                <h2 className="text-xl font-semibold mb-6">Account Information</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="border border-gray-200 p-4 rounded-lg">
                                         <p className="text-gray-500 text-sm mb-1">Name</p>
-                                        <p className="font-medium">{session.user?.name}</p>
+                                        <p className="font-medium text-gray-800">{session.user?.name}</p>
                                     </div>
-                                    <div>
+                                    <div className="border border-gray-200 p-4 rounded-lg">
                                         <p className="text-gray-500 text-sm mb-1">Email</p>
-                                        <p className="font-medium">{session.user?.email}</p>
+                                        <p className="font-medium text-gray-800">{session.user?.email}</p>
                                     </div>
-                                    <div>
+                                    <div className="border border-gray-200 p-4 rounded-lg">
                                         <p className="text-gray-500 text-sm mb-1">Credits</p>
-                                        <p className="font-medium">{session.user?.credits ?? 'N/A'}</p>
+                                        <p className="font-medium text-gray-800">{session.user?.credits ?? 'N/A'}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            {!session.user.is_email_verified && (
+                                <div className="mb-8 p-5 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <p className="text-yellow-700 font-medium">
+                                        Your email is not verified. Please check your inbox or click the button below to resend the verification email.
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
                                 <button
-                                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                                    className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md hover:scale-105 duration-200 ease-in-out text-lg"
                                     onClick={() => router.push('/credits')}
                                 >
                                     Purchase More Credits
@@ -113,20 +121,16 @@ export default function Profile() {
                                 {!session.user.is_email_verified && (
                                     <button
                                         onClick={resendVerificationEmail}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                                        className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md hover:scale-105 duration-200 ease-in-out text-lg"
                                     >
                                         Resend Verification Email
                                     </button>
                                 )}
                             </div>
+                        </div>
 
-                            {!session.user.is_email_verified && (
-                                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                    <p className="text-yellow-700 font-medium">
-                                        Your email is not verified. Please check your inbox or click the button above to resend the verification email.
-                                    </p>
-                                </div>
-                            )}
+                        <div className="text-center text-gray-500 text-sm mt-8">
+                            © 2023 Occasion Alerts. All rights reserved.
                         </div>
                     </div>
                 </main>
