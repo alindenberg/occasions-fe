@@ -38,7 +38,7 @@ export default function Complete() {
                         If you have any questions, please email <Link className="text-blue-500 underline" href="mailto:support@mg.occasionalert.me">support@mg.occasionalert.me</Link>
                     </p>
                     <p>
-                        <Link className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 inline-block" href="/occasions/new">Create an Occasion now</Link>
+                        <Link className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 inline-block" href="/?openCreateModal=true">Create an Occasion now</Link>
                     </p>
                 </div>
             </div>

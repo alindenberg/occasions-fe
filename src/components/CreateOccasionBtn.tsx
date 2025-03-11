@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 interface CreateOccasionBtnProps {
     disabled: boolean;
     credits: number | null;
+    openCreateModal?: () => void;
 }
 
-export default function CreateOccasionBtn({ disabled, credits }: CreateOccasionBtnProps) {
+export default function CreateOccasionBtn({ disabled, credits, openCreateModal }: CreateOccasionBtnProps) {
     const router = useRouter();
 
     const getTitle = () => {
@@ -16,7 +17,11 @@ export default function CreateOccasionBtn({ disabled, credits }: CreateOccasionB
     }
 
     const handleCreateOccasion = () => {
-        router.push('/occasions/new');
+        if (openCreateModal) {
+            openCreateModal();
+        } else {
+            router.push('/occasions/new');
+        }
     };
 
     return (

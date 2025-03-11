@@ -5,9 +5,10 @@ import { useState } from 'react';
 interface SidebarProps {
     activeFilter: string;
     onFilterChange: (filter: string) => void;
+    openCreateModal?: () => void;
 }
 
-export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) {
+export default function Sidebar({ activeFilter, onFilterChange, openCreateModal }: SidebarProps) {
     const router = useRouter();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -19,8 +20,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
         <aside className={`bg-white border-r border-gray-200 h-screen fixed top-0 left-0 pt-20 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
             <div className="flex flex-col h-full">
                 <div className="px-4 py-6">
-                    <Link
-                        href="/create"
+                    <button
+                        onClick={openCreateModal}
                         className="flex items-center justify-center w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
                     >
                         {isCollapsed ? (
@@ -35,7 +36,7 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                                 <span className="font-medium">Create Occasion</span>
                             </div>
                         )}
-                    </Link>
+                    </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto">
@@ -49,8 +50,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <Link
                             href="/"
                             className={`flex items-center px-3 py-3 rounded-lg transition-colors ${router.pathname === '/' && !router.query.filter
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,8 +71,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('all')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'all'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -83,8 +84,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('upcoming')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'upcoming'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -97,8 +98,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('this-week')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'this-week'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,8 +111,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('this-month')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'this-month'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,8 +124,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('past')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'past'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -144,8 +145,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('type-all')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'type-all'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,8 +158,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('type-birthday')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'type-birthday'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <span className="text-xl mr-3">🎂</span>
@@ -168,8 +169,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('type-anniversary')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'type-anniversary'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <span className="text-xl mr-3">💍</span>
@@ -179,8 +180,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('type-holiday')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'type-holiday'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <span className="text-xl mr-3">🎄</span>
@@ -190,8 +191,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('type-graduation')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'type-graduation'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <span className="text-xl mr-3">🎓</span>
@@ -201,8 +202,8 @@ export default function Sidebar({ activeFilter, onFilterChange }: SidebarProps) 
                         <button
                             onClick={() => handleFilterClick('type-wedding')}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors ${activeFilter === 'type-wedding'
-                                    ? 'bg-orange-50 text-orange-600'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                                ? 'bg-orange-50 text-orange-600'
+                                : 'text-gray-700 hover:bg-gray-100'
                                 }`}
                         >
                             <span className="text-xl mr-3">👰</span>

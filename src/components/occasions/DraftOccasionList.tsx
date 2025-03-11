@@ -8,9 +8,10 @@ interface Props {
     occasions: Occasion[]
     deletionHandler: (occasion_id: number) => void
     fundHandler: (occasion_id: number) => void
+    openCreateModal?: () => void
 }
 
-export default function DraftOccasionList({ occasions, deletionHandler, fundHandler }: Props) {
+export default function DraftOccasionList({ occasions, deletionHandler, fundHandler, openCreateModal }: Props) {
     const router = useRouter()
     const { data: session, status } = useSession()
 
@@ -24,6 +25,7 @@ export default function DraftOccasionList({ occasions, deletionHandler, fundHand
                 <CreateOccasionBtn
                     disabled={occasions?.length >= 5 || session.user.credits <= 0}
                     credits={session.user.credits}
+                    openCreateModal={openCreateModal}
                 />
                 {session.user.credits <= 0 && (
                     <button
@@ -55,10 +57,8 @@ export default function DraftOccasionList({ occasions, deletionHandler, fundHand
                 </>
             ) : (
                 <div className="py-4">
-                    <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
-                        <p>You don&apos;t have any draft occasions yet.</p>
-                        <p>Start creating your next memorable event!</p>
-                        <div className="flex justify-center pt-2">{renderButton()}</div>
+                    <div className="dark:text-black text-center py-4 bg-gray-100 rounded-lg overflow-hidden">
+                        <p>No draft occasions found.</p>
                     </div>
                 </div>
             )}

@@ -13,6 +13,7 @@ import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import DraftOccasionsList from '@/components/occasions/DraftOccasionList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
+import CreateOccasionModal from '@/components/occasions/CreateOccasionModal';
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
@@ -27,6 +28,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [currentSort, setCurrentSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
   const [activeView, setActiveView] = useState<'list' | 'calendar'>('list');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
@@ -41,6 +43,18 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     if (router.isReady) {
       const sort = (router.query.sort as string) || OCCASION_SORTS.DATE_DESCENDING;
       setCurrentSort(sort as OCCASION_SORTS);
+
+      // Check if openCreateModal query parameter is present
+      if (router.query.openCreateModal === 'true') {
+        setIsCreateModalOpen(true);
+        // Remove the query parameter to avoid reopening the modal on refresh
+        const { openCreateModal, ...restQuery } = router.query;
+        router.replace({
+          pathname: router.pathname,
+          query: restQuery
+        }, undefined, { shallow: true });
+      }
+
       filterAndSortOccasions();
     }
   }, [router.isReady, router.query, occasions, filterAndSortOccasions]);
@@ -183,7 +197,11 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       <Navbar />
 
       <div className="flex w-full overflow-x-hidden">
-        <Sidebar activeFilter={currentFilter} onFilterChange={setCurrentFilter} />
+        <Sidebar
+          activeFilter={currentFilter}
+          onFilterChange={setCurrentFilter}
+          openCreateModal={() => setIsCreateModalOpen(true)}
+        />
 
         <main className="flex-1 ml-64 pt-20 bg-gray-50 min-h-screen overflow-x-hidden">
           <div className="w-full px-6 py-8">
@@ -206,7 +224,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                 </div>
 
                 <button
-                  onClick={() => router.push('/create')}
+                  onClick={() => setIsCreateModalOpen(true)}
                   className="flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -329,6 +347,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   occasions={occasionsList.filter(o => new Date(o.date) >= new Date() && !o.is_draft)}
                   deletionHandler={deletionHandler}
                   modifyHandler={modifyHandler}
+                  openCreateModal={() => setIsCreateModalOpen(true)}
                 />
 
                 {hasDraftOccasions && (
@@ -336,6 +355,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                     occasions={occasionsList.filter(o => o.is_draft)}
                     deletionHandler={deletionHandler}
                     fundHandler={fundHandler}
+                    openCreateModal={() => setIsCreateModalOpen(true)}
                   />
                 )}
 
@@ -351,6 +371,11 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
           </div>
         </main>
       </div>
+
+      <CreateOccasionModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
     </>
   );
 }

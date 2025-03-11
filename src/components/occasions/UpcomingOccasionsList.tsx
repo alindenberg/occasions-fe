@@ -8,9 +8,10 @@ interface Props {
     occasions: Occasion[]
     deletionHandler: (occasion_id: number) => void
     modifyHandler: (occasion_id: number) => void
+    openCreateModal?: () => void
 }
 
-export default function UpcomingOccasionsList({ occasions, deletionHandler, modifyHandler }: Props) {
+export default function UpcomingOccasionsList({ occasions, deletionHandler, modifyHandler, openCreateModal }: Props) {
     const router = useRouter()
     const { data: session, status } = useSession()
 
@@ -21,10 +22,14 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
 
         return (
             <>
-                <CreateOccasionBtn
+                <button
+                    onClick={openCreateModal}
                     disabled={session.user.credits <= 0}
-                    credits={session.user.credits}
-                />
+                    className={`mt-4 px-4 py-2 rounded ${session.user.credits <= 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-700'} text-white`}
+                    title={session.user.credits <= 0 ? 'You need to purchase more credits' : undefined}
+                >
+                    Create Occasion
+                </button>
                 {session.user.credits <= 0 && (
                     <button
                         onClick={() => router.push('/credits')}
@@ -54,10 +59,8 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
             </div>
             :
             <div className="py-4">
-                <div className="dark:text-black text-center py-4 bg-gray-100 border border-orange-400 shadow-xl rounded-lg overflow-hidden">
-                    <p>Well that&apos;s bizarre. You have no upcoming occasions.</p>
-                    <p>Quick, add them before you forget!</p>
-                    <div className="flex justify-center pt-2">{renderButton()}</div>
+                <div className="dark:text-black text-center py-4 bg-gray-100 rounded-lg overflow-hidden">
+                    <p>No upcoming occasions found.</p>
                 </div>
             </div>
     )
