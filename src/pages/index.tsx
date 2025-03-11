@@ -325,7 +325,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   return (
     <>
       <Head>
-        <title>OccasionAlert | Your Occasions Dashboard</title>
+        <title>Occasion Alerts | Your Occasions Dashboard</title>
         <meta name="description" content="Manage all your important occasions in one place" />
       </Head>
 

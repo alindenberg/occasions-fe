@@ -48,7 +48,7 @@ export default function Profile() {
     return (
         <>
             <Head>
-                <title>OccasionAlert | Profile</title>
+                <title>Occasion Alerts | Profile</title>
                 <meta name="description" content="Manage your profile and account settings" />
             </Head>
 

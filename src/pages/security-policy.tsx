@@ -4,8 +4,8 @@ export default function SecurityPolicy() {
     return (
         <>
             <Head>
-                <title>Security Policy | OccasionAlert</title>
-                <meta name="description" content="Security policy for OccasionAlert" />
+                <title>Security Policy | Occasion Alerts</title>
+                <meta name="description" content="Security policy for Occasion Alerts" />
             </Head>
             <main className="container mx-auto px-4 py-8 max-w-4xl">
                 <h1 className="text-3xl font-bold mb-6">Security Policy</h1>

@@ -15,8 +15,8 @@ export default function HowItWorks() {
     return (
         <>
             <Head>
-                <title>OccasionAlert | How It Works</title>
-                <meta name="description" content="Learn how OccasionAlert helps you manage your important occasions" />
+                <title>Occasion Alerts | How It Works</title>
+                <meta name="description" content="Learn how Occasion Alerts helps you manage your important occasions" />
             </Head>
 
             <div className="flex w-full overflow-x-hidden">
@@ -43,17 +43,24 @@ export default function HowItWorks() {
                             </button>
                             <h1 className="text-xl font-bold text-gray-800">How It Works</h1>
                         </div>
+
+                        {/* Desktop header */}
+                        <div className="hidden md:block mb-8">
+                            <h1 className="text-2xl font-bold text-gray-800">How It Works</h1>
+                            <p className="text-gray-600">Learn how Occasion Alerts helps you manage your occasions</p>
+                        </div>
+
                         <div className="bg-white rounded-xl shadow-sm p-8 max-w-5xl mx-auto">
                             <Detail />
 
                             <div className="mt-10 flex justify-center">
                                 {isAuthenticated ? (
                                     <button
-                                        className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md flex items-center"
+                                        className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md hover:scale-105 duration-200 ease-in-out text-lg flex items-center"
                                         onClick={() => router.push('/')}
                                     >
-                                        View My Occasions
-                                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <span>View My Occasions</span>
+                                        <svg className="w-5 h-5 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                                         </svg>
                                     </button>
