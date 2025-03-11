@@ -83,7 +83,7 @@ const Detail: React.FC = () => {
             </div>
             {/* Testimonial */}
             <div className="bg-gray-50 p-8 rounded-lg w-full max-w-3xl mt-8 text-center italic">
-                <p className="text-lg mb-4 text-gray-700">"This app has transformed how I manage important dates. I never miss a birthday now!"</p>
+                <p className="text-lg mb-4 text-gray-700">&ldquo;This app has transformed how I manage important dates. I never miss a birthday now!&ldquo;</p>
                 <p className="font-medium text-gray-800">— Sarah J.</p>
             </div>
         </div>
