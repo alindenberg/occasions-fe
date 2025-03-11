@@ -6,7 +6,6 @@ import { NextApiRequest } from 'next';
 import Head from 'next/head';
 
 import { OCCASION_FILTERS } from '@/types/occasions'
-import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import DashboardCard from '@/components/occasions/DashboardCard';
 import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
@@ -302,8 +301,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
         <meta name="description" content="Manage all your important occasions in one place" />
       </Head>
 
-      <Navbar onToggleMobileSidebar={toggleMobileSidebar} />
-
       <div className="flex w-full overflow-x-hidden">
         <Sidebar
           activeFilter={currentFilter}
@@ -314,8 +311,21 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
           onMobileClose={() => setIsMobileSidebarOpen(false)}
         />
 
-        <main className={`flex-1 ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'} pt-20 bg-gray-50 min-h-screen overflow-x-hidden transition-all duration-300`}>
+        <main className={`flex-1 ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'} bg-gray-50 min-h-screen overflow-x-hidden transition-all duration-300`}>
           <div className="w-full px-6 py-8">
+            {/* Mobile menu toggle */}
+            <div className="md:hidden flex items-center mb-6">
+              <button
+                onClick={toggleMobileSidebar}
+                className="text-gray-800 focus:outline-none mr-4"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </button>
+              <h1 className="text-xl font-bold text-gray-800">Occasion Harmony</h1>
+            </div>
+
             {/* Desktop header with title and search */}
             <div className="hidden md:flex items-center justify-between mb-8">
               <div>
