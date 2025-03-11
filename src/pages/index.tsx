@@ -13,7 +13,7 @@ import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import DraftOccasionsList from '@/components/occasions/DraftOccasionList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
-import CreateOccasionModal from '@/components/occasions/CreateOccasionModal';
+import CreateModal from '@/components/occasions/CreateModal';
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 
@@ -372,7 +372,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
         </main>
       </div>
 
-      <CreateOccasionModal
+      <CreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
       />
