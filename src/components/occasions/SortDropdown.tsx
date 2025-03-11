@@ -76,25 +76,28 @@ export default function OccasionsSortDropdown({ onClick, currentSort }: { onClic
     };
 
     return (
-        <div className="flex items-center">
-            <div className="relative" ref={dropdownRef}>
+        <div className="flex items-center w-full justify-between">
+            <div className="relative flex-1" ref={dropdownRef}>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="py-2 px-4 bg-white rounded-md shadow-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent flex items-center"
+                    className="w-full py-2 px-4 rounded-md font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent flex items-center justify-between"
                 >
-                    <span className="font-medium">{getSortLabel()}</span>
+                    <div className="flex items-center">
+                        <span className="mr-1 text-gray-500">Sort by:</span>
+                        <span className="font-medium">{getSortLabel()}</span>
+                    </div>
                     <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
 
                 {isOpen && (
-                    <div className="absolute z-10 mt-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                    <div className="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                         <div className="py-1">
                             <button
                                 onClick={() => handleSelect(sort === OCCASION_SORTS.DATE_ASCENDING ? OCCASION_SORTS.DATE_DESCENDING : OCCASION_SORTS.DATE_ASCENDING)}
                                 className={`block w-full text-left px-4 py-2 text-sm ${sort === OCCASION_SORTS.DATE_ASCENDING || sort === OCCASION_SORTS.DATE_DESCENDING
-                                    ? "bg-gray-100 text-gray-900"
+                                    ? "bg-orange-50 text-orange-600"
                                     : "text-gray-700 hover:bg-gray-100"
                                     }`}
                             >
@@ -123,7 +126,7 @@ export default function OccasionsSortDropdown({ onClick, currentSort }: { onClic
                             <button
                                 onClick={() => handleSelect(sort === OCCASION_SORTS.TITLE_ASCENDING ? OCCASION_SORTS.TITLE_DESCENDING : OCCASION_SORTS.TITLE_ASCENDING)}
                                 className={`block w-full text-left px-4 py-2 text-sm ${sort === OCCASION_SORTS.TITLE_ASCENDING || sort === OCCASION_SORTS.TITLE_DESCENDING
-                                    ? "bg-gray-100 text-gray-900"
+                                    ? "bg-orange-50 text-orange-600"
                                     : "text-gray-700 hover:bg-gray-100"
                                     }`}
                             >
@@ -152,7 +155,7 @@ export default function OccasionsSortDropdown({ onClick, currentSort }: { onClic
                             <button
                                 onClick={() => handleSelect(sort === OCCASION_SORTS.TYPE_ASCENDING ? OCCASION_SORTS.TYPE_DESCENDING : OCCASION_SORTS.TYPE_ASCENDING)}
                                 className={`block w-full text-left px-4 py-2 text-sm ${sort === OCCASION_SORTS.TYPE_ASCENDING || sort === OCCASION_SORTS.TYPE_DESCENDING
-                                    ? "bg-gray-100 text-gray-900"
+                                    ? "bg-orange-50 text-orange-600"
                                     : "text-gray-700 hover:bg-gray-100"
                                     }`}
                             >
@@ -185,12 +188,18 @@ export default function OccasionsSortDropdown({ onClick, currentSort }: { onClic
 
             <button
                 onClick={handleToggleSortDirection}
-                className="ml-2 p-2 bg-white rounded-md shadow-sm hover:bg-gray-50"
+                className="ml-2 p-2 rounded-md hover:bg-gray-50"
+                aria-label={isCurrentSortAscending() ? "Sort descending" : "Sort ascending"}
             >
-                {/* Simple text-based indicator that will definitely change */}
-                <span className="text-gray-500 font-bold">
-                    {isCurrentSortAscending() ? '↑' : '↓'}
-                </span>
+                {isCurrentSortAscending() ? (
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                ) : (
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                )}
             </button>
         </div>
     );

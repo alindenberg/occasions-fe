@@ -30,6 +30,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
 
@@ -86,6 +87,18 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   useEffect(() => {
     filterAndSortOccasions();
   }, [currentFilter, currentSort, occasions, searchQuery, filterAndSortOccasions]);
+
+  // Close mobile sidebar when window is resized to desktop size
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isMobileSidebarOpen) {
+        setIsMobileSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMobileSidebarOpen]);
 
   if (status === 'loading') {
     return (
@@ -236,6 +249,10 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     }, undefined, { shallow: true });
   }
 
+  function toggleMobileSidebar() {
+    setIsMobileSidebarOpen(!isMobileSidebarOpen);
+  }
+
   // Count upcoming occasions in the next 7 days
   const upcomingThisWeek = occasions.filter(occasion => {
     const occasionDate = new Date(occasion.date);
@@ -285,7 +302,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
         <meta name="description" content="Manage all your important occasions in one place" />
       </Head>
 
-      <Navbar />
+      <Navbar onToggleMobileSidebar={toggleMobileSidebar} />
 
       <div className="flex w-full overflow-x-hidden">
         <Sidebar
@@ -293,11 +310,14 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
           onFilterChange={handleFilterChange}
           openCreateModal={() => setIsCreateModalOpen(true)}
           onToggleCollapse={(collapsed) => setIsSidebarCollapsed(collapsed)}
+          isMobileOpen={isMobileSidebarOpen}
+          onMobileClose={() => setIsMobileSidebarOpen(false)}
         />
 
-        <main className={`flex-1 ${isSidebarCollapsed ? 'ml-20' : 'ml-64'} pt-20 bg-gray-50 min-h-screen overflow-x-hidden transition-all duration-300`}>
+        <main className={`flex-1 ${isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'} pt-20 bg-gray-50 min-h-screen overflow-x-hidden transition-all duration-300`}>
           <div className="w-full px-6 py-8">
-            <div className="flex items-center justify-between mb-8">
+            {/* Desktop header with title and search */}
+            <div className="hidden md:flex items-center justify-between mb-8">
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">Occasion Harmony</h1>
                 <p className="text-gray-600">Manage all your important occasions in one place</p>
@@ -329,7 +349,35 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
               </div>
             </div>
 
-            <div className="flex items-center mb-6">
+            {/* Mobile-friendly layout */}
+            <div className="md:hidden mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex-1 mr-2 relative">
+                  <input
+                    type="text"
+                    placeholder="Search occasions..."
+                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="flex-shrink-0 flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="sr-only">New</span>
+                </button>
+              </div>
+            </div>
+
+            {/* View controls - different for desktop and mobile */}
+            <div className="md:flex md:items-center md:mb-6 hidden">
               <div className="flex space-x-2 mr-auto">
                 <button
                   onClick={() => setActiveView('list')}
@@ -350,45 +398,109 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 w-full">
-              <DashboardCard
-                title="This Week"
-                subtitle={`Upcoming occasions in 7 days`}
-                value={upcomingThisWeek}
-                icon={
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                }
-                onClick={() => setCurrentFilter('this-week')}
-              />
+            {/* Mobile view controls */}
+            <div className="flex flex-col space-y-4 mb-6 md:hidden">
+              <div className="w-full flex items-center justify-between bg-white rounded-lg shadow-sm p-2">
+                <div className="flex-1 flex justify-start">
+                  <button
+                    onClick={() => setActiveView('list')}
+                    className={`flex-1 px-4 py-2 rounded-lg transition-colors ${activeView === 'list' ? 'bg-orange-50 text-orange-600 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+                  >
+                    List View
+                  </button>
+                  <button
+                    onClick={() => setActiveView('calendar')}
+                    className={`flex-1 px-4 py-2 rounded-lg transition-colors ${activeView === 'calendar' ? 'bg-orange-50 text-orange-600 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+                  >
+                    Calendar View
+                  </button>
+                </div>
+              </div>
 
-              <DashboardCard
-                title="This Month"
-                subtitle={`Upcoming occasions in 30 days`}
-                value={upcomingThisMonth}
-                icon={
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                }
-                accentColor="bg-blue-500"
-                onClick={() => setCurrentFilter('this-month')}
-              />
+              <div className="w-full bg-white rounded-lg shadow-sm p-2">
+                <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
+              </div>
+            </div>
 
-              <DashboardCard
-                title="Most Common"
-                subtitle={`Most frequent occasion type`}
-                value={commonType.type ? commonType.type.charAt(0).toUpperCase() + commonType.type.slice(1) : 'None'}
-                icon={
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                  </svg>
-                }
-                accentColor="bg-pink-500"
-                onClick={() => setCurrentFilter(`type-${commonType.type}`)}
-              />
+            {/* Stats cards - hidden on mobile, horizontally scrollable on desktop */}
+            <div className="hidden md:block overflow-x-auto pb-4 mb-8 -mx-6 px-6">
+              <div className="flex space-x-4" style={{ minWidth: 'max-content' }}>
+                <DashboardCard
+                  title="This Week"
+                  subtitle={`Upcoming occasions in 7 days`}
+                  value={upcomingThisWeek}
+                  icon={
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  }
+                  onClick={() => setCurrentFilter('this-week')}
+                  className="w-60 flex-shrink-0"
+                />
+
+                <DashboardCard
+                  title="This Month"
+                  subtitle={`Upcoming occasions in 30 days`}
+                  value={upcomingThisMonth}
+                  icon={
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  }
+                  accentColor="bg-blue-500"
+                  onClick={() => setCurrentFilter('this-month')}
+                  className="w-60 flex-shrink-0"
+                />
+
+                <DashboardCard
+                  title="Most Common"
+                  subtitle={commonType.type ? `${commonType.type.charAt(0).toUpperCase() + commonType.type.slice(1)}` : 'None'}
+                  value={commonType.count}
+                  icon={
+                    commonType.type === 'birthday' ? (
+                      <span className="text-xl">🎂</span>
+                    ) : commonType.type === 'anniversary' ? (
+                      <span className="text-xl">💍</span>
+                    ) : commonType.type === 'holiday' ? (
+                      <span className="text-xl">🎄</span>
+                    ) : commonType.type === 'graduation' ? (
+                      <span className="text-xl">🎓</span>
+                    ) : commonType.type === 'wedding' ? (
+                      <span className="text-xl">👰</span>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                      </svg>
+                    )
+                  }
+                  accentColor={
+                    commonType.type === 'birthday' ? 'bg-yellow-500' :
+                      commonType.type === 'anniversary' ? 'bg-pink-500' :
+                        commonType.type === 'holiday' ? 'bg-green-500' :
+                          commonType.type === 'graduation' ? 'bg-blue-500' :
+                            commonType.type === 'wedding' ? 'bg-purple-500' :
+                              'bg-orange-500'
+                  }
+                  onClick={() => commonType.type && setCurrentFilter(`type-${commonType.type}`)}
+                  className="w-60 flex-shrink-0"
+                />
+
+                {/* Total Occasions card */}
+                <DashboardCard
+                  title="Total Occasions"
+                  subtitle="All active occasions"
+                  value={occasions.filter(o => !o.is_draft).length}
+                  icon={
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  }
+                  accentColor="bg-purple-500"
+                  onClick={() => setCurrentFilter('all')}
+                  className="w-60 flex-shrink-0"
+                />
+              </div>
             </div>
 
             {activeView === 'list' ? (

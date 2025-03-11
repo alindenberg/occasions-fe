@@ -7,6 +7,7 @@ interface DashboardCardProps {
     icon?: React.ReactNode;
     accentColor?: string;
     onClick?: () => void;
+    className?: string;
 }
 
 export default function DashboardCard({
@@ -15,11 +16,12 @@ export default function DashboardCard({
     value,
     icon,
     accentColor = 'bg-orange-500',
-    onClick
+    onClick,
+    className = ''
 }: DashboardCardProps) {
     return (
         <div
-            className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${onClick ? 'cursor-pointer' : ''}`}
+            className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${onClick ? 'cursor-pointer' : ''} ${className}`}
             onClick={onClick}
         >
             <div className="p-6">
