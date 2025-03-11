@@ -44,6 +44,12 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       const sort = (router.query.sort as string) || OCCASION_SORTS.DATE_DESCENDING;
       setCurrentSort(sort as OCCASION_SORTS);
 
+      // Set the filter from URL query if available
+      const filter = (router.query.filter as string) || '';
+      if (filter) {
+        setCurrentFilter(filter);
+      }
+
       // Check if openCreateModal query parameter is present
       if (router.query.openCreateModal === 'true') {
         setIsCreateModalOpen(true);
@@ -71,6 +77,10 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    filterAndSortOccasions();
+  }, [currentFilter, currentSort, occasions, filterAndSortOccasions]);
 
   if (status === 'loading') {
     return (
@@ -108,6 +118,57 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   }
 
   function filterOccasions(filter: string, occasionsToFilter: Occasion[]): Occasion[] {
+    const today = new Date();
+
+    // Handle timeframe filters
+    if (filter === 'all' || filter === '') {
+      return occasionsToFilter;
+    }
+
+    if (filter === 'upcoming') {
+      return occasionsToFilter.filter(occasion => {
+        const occasionDate = new Date(occasion.date);
+        return occasionDate >= today && !occasion.is_draft;
+      });
+    }
+
+    if (filter === 'this-week') {
+      const nextWeek = new Date();
+      nextWeek.setDate(today.getDate() + 7);
+      return occasionsToFilter.filter(occasion => {
+        const occasionDate = new Date(occasion.date);
+        return occasionDate >= today && occasionDate <= nextWeek && !occasion.is_draft;
+      });
+    }
+
+    if (filter === 'this-month') {
+      const nextMonth = new Date();
+      nextMonth.setDate(today.getDate() + 30);
+      return occasionsToFilter.filter(occasion => {
+        const occasionDate = new Date(occasion.date);
+        return occasionDate >= today && occasionDate <= nextMonth && !occasion.is_draft;
+      });
+    }
+
+    if (filter === 'past') {
+      return occasionsToFilter.filter(occasion => {
+        const occasionDate = new Date(occasion.date);
+        return occasionDate < today && !occasion.is_draft;
+      });
+    }
+
+    // Handle occasion type filters
+    if (filter === 'type-all') {
+      return occasionsToFilter;
+    }
+
+    if (filter.startsWith('type-')) {
+      const type = filter.replace('type-', '');
+      return occasionsToFilter.filter(occasion =>
+        occasion.type.toLowerCase() === type.toLowerCase()
+      );
+    }
+
     return occasionsToFilter;
   }
 
@@ -143,6 +204,21 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       pathname: router.pathname,
       query: { ...router.query, sort: sort },
     }, undefined, { shallow: true });
+  }
+
+  function handleFilterChange(filter: string) {
+    setCurrentFilter(filter);
+
+    // Update URL without redirecting
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, filter: filter },
+    }, undefined, { shallow: true });
+
+    // Apply the filter
+    const filteredOccasions = filterOccasions(filter, occasions);
+    const sortedOccasions = sortOccasions(currentSort, filteredOccasions);
+    setOccasionsList(sortedOccasions);
   }
 
   // Count upcoming occasions in the next 7 days
@@ -199,7 +275,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       <div className="flex w-full overflow-x-hidden">
         <Sidebar
           activeFilter={currentFilter}
-          onFilterChange={setCurrentFilter}
+          onFilterChange={handleFilterChange}
           openCreateModal={() => setIsCreateModalOpen(true)}
         />
 

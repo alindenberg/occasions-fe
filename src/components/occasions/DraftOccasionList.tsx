@@ -41,27 +41,17 @@ export default function DraftOccasionList({ occasions, deletionHandler, fundHand
 
     return (
         <div>
-            {occasions.length > 0 ? (
-                <>
-                    {occasions.map((occasion) => (
-                        <div className="pt-4" key={occasion.id}>
-                            <OccasionTile
-                                occasion={occasion}
-                                modifyHandler={null}
-                                deletionHandler={deletionHandler}
-                                fundHandler={fundHandler}
-                            />
-                        </div>
-                    ))}
-                    <div className="flex justify-center py-6">{renderButton()}</div>
-                </>
-            ) : (
-                <div className="py-4">
-                    <div className="dark:text-black text-center py-4 bg-gray-100 rounded-lg overflow-hidden">
-                        <p>No draft occasions found.</p>
-                    </div>
+            {occasions.map((occasion) => (
+                <div className="pt-4" key={occasion.id}>
+                    <OccasionTile
+                        occasion={occasion}
+                        modifyHandler={null}
+                        deletionHandler={deletionHandler}
+                        fundHandler={fundHandler}
+                    />
                 </div>
-            )}
+            ))}
+            <div className="flex justify-center py-6">{renderButton()}</div>
         </div>
     );
 }

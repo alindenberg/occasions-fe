@@ -15,24 +15,17 @@ export default function UpcomingOccasionsList({ occasions, deletionHandler, modi
     const { data: session, status } = useSession()
 
     return (
-        occasions?.length ?
-            <div>
-                {occasions.map((occasion) => (
-                    <div className="pt-4" key={occasion.id}>
-                        <OccasionTile
-                            occasion={occasion}
-                            modifyHandler={modifyHandler}
-                            deletionHandler={deletionHandler}
-                            fundHandler={null}
-                        />
-                    </div>
-                ))}
-            </div>
-            :
-            <div className="py-4">
-                <div className="dark:text-black text-center py-4 bg-gray-100 rounded-lg overflow-hidden">
-                    <p>No upcoming occasions found.</p>
+        <div>
+            {occasions.map((occasion) => (
+                <div className="pt-4" key={occasion.id}>
+                    <OccasionTile
+                        occasion={occasion}
+                        modifyHandler={modifyHandler}
+                        deletionHandler={deletionHandler}
+                        fundHandler={null}
+                    />
                 </div>
-            </div>
+            ))}
+        </div>
     )
 }
