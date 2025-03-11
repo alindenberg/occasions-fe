@@ -2,10 +2,13 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router'
 import { OCCASION_SORTS, Occasion } from "@/types/occasions"
 import { GetServerSideProps } from 'next'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest } from 'next';
+import Head from 'next/head';
 
 import { OCCASION_FILTERS } from '@/types/occasions'
-import Detail from '@/components/Detail';
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
+import DashboardCard from '@/components/occasions/DashboardCard';
 import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
@@ -22,7 +25,8 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [occasions, setOccasions] = useState<Occasion[]>(initialOccasions);
   const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>('');
-  const [currentSort, setCurrentSort] = useState<string>(OCCASION_SORTS.DATE_DESCENDING);
+  const [currentSort, setCurrentSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
+  const [activeView, setActiveView] = useState<'list' | 'calendar'>('list');
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
 
@@ -37,72 +41,57 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       const filter = (router.query.filter as string) || OCCASION_FILTERS.UPCOMING;
       const sort = (router.query.sort as string) || OCCASION_SORTS.DATE_DESCENDING;
       setCurrentFilter(filter);
-      setCurrentSort(sort);
+      setCurrentSort(sort as OCCASION_SORTS);
       filterAndSortOccasions();
     }
   }, [router.isReady, router.query, occasions, filterAndSortOccasions]);
 
   if (status === 'loading') {
-    return <div>Loading...</div>
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      </div>
+    );
   }
 
   async function deletionHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/delete`);
-    if (!response.ok) {
-      throw new Error('Failed to delete occasion');
+    if (response.ok) {
+      const data = await response.json();
+      refreshSession();
+      setOccasions(occasions.filter(occasion => occasion.id !== occasion_id));
     }
-    const updatedOccasions = occasionsList.filter(occasion => occasion.id !== occasion_id);
-    setOccasionsList(updatedOccasions);
-    await refreshSession()
   }
 
   async function modifyHandler(occasion_id: number) {
-    router.push(`/occasions/${occasion_id}/modify`);
+    router.push(`/occasions/${occasion_id}/edit`);
   }
 
   async function fundHandler(occasion_id: number) {
-    try {
-      const response = await fetch(`/api/occasions/${occasion_id}/fund`);
-      if (!response.ok) {
-        throw new Error('Failed to fund occasion');
-      }
-
-      // Refresh the session to get updated user data
-      await refreshSession();
-
-      // Re-fetch occasions from the server
-      const occasionsResponse = await fetch('/api/occasions');
-      if (!occasionsResponse.ok) {
-        throw new Error(`HTTP error! status: ${occasionsResponse.status}`);
-      }
-      const updatedOccasions = await occasionsResponse.json();
-
-      // Update the occasions state
-      setOccasions(updatedOccasions);
-
-      // Reset filter to Upcoming
-      setCurrentFilter(OCCASION_FILTERS.UPCOMING);
-
-      // Update URL without the filter query parameter
-      router.push({
-        pathname: router.pathname,
-        query: { sort: currentSort },
-      }, undefined, { shallow: true });
-    } catch (error) {
-      console.error("Error funding occasion:", error);
-      // You might want to show an error message to the user here
+    const response = await fetch(`/api/occasions/${occasion_id}/fund`);
+    if (response.ok) {
+      const data = await response.json();
+      refreshSession();
+      setOccasions(occasions.map(occasion => {
+        if (occasion.id === occasion_id) {
+          return { ...occasion, is_draft: false };
+        }
+        return occasion;
+      }));
     }
   }
 
   function filterOccasions(filter: string, occasionsToFilter: Occasion[]): Occasion[] {
     if (filter === OCCASION_FILTERS.UPCOMING) {
-      return occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) > new Date());
-    } else if (filter === OCCASION_FILTERS.PAST) {
-      return occasionsToFilter.filter(occasion => !occasion.is_draft && new Date(occasion.date) < new Date());
-    } else if (filter === OCCASION_FILTERS.DRAFT) {
+      return occasionsToFilter.filter(occasion => new Date(occasion.date) >= new Date() && !occasion.is_draft);
+    }
+    if (filter === OCCASION_FILTERS.PAST) {
+      return occasionsToFilter.filter(occasion => new Date(occasion.date) < new Date() && !occasion.is_draft);
+    }
+    if (filter === OCCASION_FILTERS.DRAFT) {
       return occasionsToFilter.filter(occasion => occasion.is_draft);
     }
-    return occasionsToFilter;
+    return occasionsToFilter.filter(occasion => !occasion.is_draft);
   }
 
   function handleFilterChange(filter: string) {
@@ -118,7 +107,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     }, undefined, { shallow: true });
   }
 
-  function sortOccasions(sort: string, occasionsToSort: Occasion[]): Occasion[] {
+  function sortOccasions(sort: OCCASION_SORTS, occasionsToSort: Occasion[]): Occasion[] {
     if (sort === OCCASION_SORTS.DATE_ASCENDING) {
       return [...occasionsToSort].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
@@ -140,50 +129,230 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     }, undefined, { shallow: true });
   }
 
+  // Count upcoming occasions in the next 7 days
+  const upcomingThisWeek = occasions.filter(occasion => {
+    const occasionDate = new Date(occasion.date);
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+    return occasionDate >= today && occasionDate <= nextWeek && !occasion.is_draft;
+  }).length;
+
+  // Count upcoming occasions in the next 30 days
+  const upcomingThisMonth = occasions.filter(occasion => {
+    const occasionDate = new Date(occasion.date);
+    const today = new Date();
+    const nextMonth = new Date();
+    nextMonth.setDate(today.getDate() + 30);
+    return occasionDate >= today && occasionDate <= nextMonth && !occasion.is_draft;
+  }).length;
+
+  // Get most common occasion type
+  const getCommonOccasionType = () => {
+    const typeCounts = occasions.reduce((acc, occasion) => {
+      if (!occasion.is_draft) {
+        acc[occasion.type] = (acc[occasion.type] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    let maxType = '';
+    let maxCount = 0;
+
+    Object.entries(typeCounts).forEach(([type, count]) => {
+      if (count > maxCount) {
+        maxType = type;
+        maxCount = count;
+      }
+    });
+
+    return { type: maxType, count: maxCount };
+  };
+
+  const commonType = getCommonOccasionType();
+
   return (
-    <main
-      className="flex flex-grow flex-col items-center justify-center"
-    >
-      <div className="flex flex-col flex-grow w-full md:w-3/4 lg:w-1/2 p-2">
-        {isAuthenticated ?
-          (
-            <>
-              <div className='flex flex-row justify-between'>
-                <OccasionsFilterDropdown
-                  onClick={handleFilterChange}
-                  currentFilter={currentFilter}
-                  hasDraftOccasions={hasDraftOccasions}
-                />
-                <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort as OCCASION_SORTS} />
+    <>
+      <Head>
+        <title>OccasionAlert | Your Occasions Dashboard</title>
+        <meta name="description" content="Manage all your important occasions in one place" />
+      </Head>
+
+      <Navbar />
+
+      <div className="flex">
+        <Sidebar activeFilter={currentFilter} onFilterChange={handleFilterChange} />
+
+        <main className="flex-1 ml-64 pt-20 bg-gray-50 min-h-screen w-full">
+          <div className="w-full px-6 py-8">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">Occasion Harmony</h1>
+                <p className="text-gray-600">Manage all your important occasions in one place</p>
               </div>
-              {currentFilter === OCCASION_FILTERS.UPCOMING
-                && <UpcomingOccasionsList occasions={occasionsList} modifyHandler={modifyHandler} deletionHandler={deletionHandler} />}
-              {currentFilter === OCCASION_FILTERS.PAST
-                && <PastOccasionsList occasions={occasionsList} />}
-              {currentFilter === OCCASION_FILTERS.DRAFT
-                && <DraftOccasionsList occasions={occasionsList} deletionHandler={deletionHandler} fundHandler={fundHandler} />}
-            </>
-          ) : (
-            <div className="dark:text-black overflow-hidden justify-center items-center flex flex-grow">
-              <div className="flex flex-col items-center">
-                <Detail />
-                <div className="mt-6">
-                  <button
-                    className="w-48 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition duration-200 ease-in-out hover:scale-105 text-lg"
-                    onClick={() => router.push('/login')}
-                  >
-                    Log In
-                  </button>
+
+              <div className="flex items-center">
+                <div className="relative mr-4">
+                  <input
+                    type="text"
+                    placeholder="Search occasions..."
+                    className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+
+                <button
+                  onClick={() => router.push('/create')}
+                  className="flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>New</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center mb-6">
+              <div className="flex space-x-2 mr-auto">
+                <button
+                  onClick={() => setActiveView('list')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${activeView === 'list' ? 'bg-white shadow-sm text-gray-800' : 'bg-transparent text-gray-600'}`}
+                >
+                  List View
+                </button>
+                <button
+                  onClick={() => setActiveView('calendar')}
+                  className={`px-4 py-2 rounded-lg transition-colors ${activeView === 'calendar' ? 'bg-white shadow-sm text-gray-800' : 'bg-transparent text-gray-600'}`}
+                >
+                  Calendar View
+                </button>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  <OccasionsFilterDropdown
+                    onClick={handleFilterChange}
+                    currentFilter={currentFilter}
+                    hasDraftOccasions={hasDraftOccasions}
+                  />
+                </div>
+
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  </svg>
+                  <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
                 </div>
               </div>
             </div>
-          )}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 w-full">
+              <DashboardCard
+                title="This Week"
+                subtitle={`Upcoming occasions in 7 days`}
+                value={upcomingThisWeek}
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                }
+                onClick={() => handleFilterChange('this-week')}
+              />
+
+              <DashboardCard
+                title="This Month"
+                subtitle={`Upcoming occasions in 30 days`}
+                value={upcomingThisMonth}
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                }
+                accentColor="bg-blue-500"
+                onClick={() => handleFilterChange('this-month')}
+              />
+
+              <DashboardCard
+                title="Most Common"
+                subtitle={`Most frequent occasion type`}
+                value={commonType.type ? commonType.type.charAt(0).toUpperCase() + commonType.type.slice(1) : 'None'}
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                  </svg>
+                }
+                accentColor="bg-pink-500"
+                onClick={() => handleFilterChange(`type-${commonType.type}`)}
+              />
+            </div>
+
+            {activeView === 'list' ? (
+              <div className="space-y-8">
+                {currentFilter === OCCASION_FILTERS.UPCOMING && (
+                  <UpcomingOccasionsList
+                    occasions={occasionsList}
+                    deletionHandler={deletionHandler}
+                    modifyHandler={modifyHandler}
+                  />
+                )}
+
+                {currentFilter === OCCASION_FILTERS.PAST && (
+                  <PastOccasionsList
+                    occasions={occasionsList}
+                  />
+                )}
+
+                {currentFilter === OCCASION_FILTERS.DRAFT && (
+                  <DraftOccasionsList
+                    occasions={occasionsList}
+                    deletionHandler={deletionHandler}
+                    fundHandler={fundHandler}
+                  />
+                )}
+
+                {currentFilter !== OCCASION_FILTERS.UPCOMING &&
+                  currentFilter !== OCCASION_FILTERS.PAST &&
+                  currentFilter !== OCCASION_FILTERS.DRAFT && (
+                    <div className="space-y-8">
+                      <UpcomingOccasionsList
+                        occasions={occasionsList.filter(o => new Date(o.date) >= new Date() && !o.is_draft)}
+                        deletionHandler={deletionHandler}
+                        modifyHandler={modifyHandler}
+                      />
+
+                      {hasDraftOccasions && (
+                        <DraftOccasionsList
+                          occasions={occasionsList.filter(o => o.is_draft)}
+                          deletionHandler={deletionHandler}
+                          fundHandler={fundHandler}
+                        />
+                      )}
+
+                      <PastOccasionsList
+                        occasions={occasionsList.filter(o => new Date(o.date) < new Date() && !o.is_draft)}
+                      />
+                    </div>
+                  )}
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <p className="text-center text-gray-500">Calendar view coming soon!</p>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
-    </main >
-  )
+    </>
+  );
 }
 
-// This gets called on every request
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // Fetch occasions if user is authenticated
   let occasions: Occasion[] = []
