@@ -180,10 +180,10 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
       <Navbar />
 
-      <div className="flex">
+      <div className="flex w-full overflow-x-hidden">
         <Sidebar activeFilter={currentFilter} onFilterChange={handleFilterChange} />
 
-        <main className="flex-1 ml-64 pt-20 bg-gray-50 min-h-screen w-full">
+        <main className="flex-1 ml-64 pt-20 bg-gray-50 min-h-screen overflow-x-hidden">
           <div className="w-full px-6 py-8">
             <div className="flex items-center justify-between mb-8">
               <div>
