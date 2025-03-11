@@ -13,7 +13,7 @@ export default function SecurityPolicy() {
                 <section className="mb-8">
                     <h2 className="text-2xl font-semibold mb-4">Reporting Security Issues</h2>
                     <p className="mb-4">
-                        We take the security of our website seriously. If you believe you've found a security vulnerability,
+                        We take the security of our website seriously. If you believe you&apos;ve found a security vulnerability,
                         please email us at <a href="mailto:support@mg.occasionalert.me" className="text-blue-600 hover:underline">support@mg.occasionalert.me</a>.
                     </p>
                     <p>

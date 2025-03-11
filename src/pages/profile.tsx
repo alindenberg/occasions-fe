@@ -76,3 +76,10 @@ export default function Profile() {
         </div>
     )
 }
+
+// Add empty getStaticProps to prevent 404 errors for data fetching
+export async function getStaticProps() {
+    return {
+        props: {}
+    }
+}
