@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 interface SidebarProps {
     activeFilter: string;
@@ -21,6 +21,8 @@ export default function Sidebar({
     onMobileClose
 }: SidebarProps) {
     const router = useRouter();
+    const { data: session } = useSession();
+    const isAuthenticated = !!session;
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const handleFilterClick = (filter: string) => {
@@ -58,9 +60,13 @@ export default function Sidebar({
         };
     }, [isMobileOpen, onMobileClose]);
 
-    async function handleLogout() {
-        await signOut({ redirect: false });
-        router.push('/');
+    async function handleAuthAction() {
+        if (isAuthenticated) {
+            await signOut({ redirect: false });
+            router.push('/');
+        } else {
+            router.push('/login');
+        }
     }
 
     return (
@@ -309,13 +315,13 @@ export default function Sidebar({
 
                     <div className="p-4 border-t border-gray-200">
                         <button
-                            onClick={handleLogout}
+                            onClick={handleAuthAction}
                             className={`flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors text-gray-700 hover:bg-gray-100 mb-4`}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
-                            {!isCollapsed && <span>Logout</span>}
+                            {!isCollapsed && <span>{isAuthenticated ? 'Logout' : 'Log In'}</span>}
                         </button>
 
                         <button
@@ -433,13 +439,13 @@ export default function Sidebar({
 
                         <nav className="space-y-1 px-2">
                             <button
-                                onClick={handleLogout}
+                                onClick={handleAuthAction}
                                 className="flex items-center w-full text-left px-3 py-3 rounded-lg transition-colors text-gray-700 hover:bg-gray-100"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                 </svg>
-                                <span>Logout</span>
+                                <span>{isAuthenticated ? 'Logout' : 'Log In'}</span>
                             </button>
                         </nav>
                     </div>
