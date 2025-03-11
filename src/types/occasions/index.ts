@@ -20,6 +20,10 @@ export enum OCCASION_FILTERS {
 }
 
 export enum OCCASION_SORTS {
-    DATE_DESCENDING = 'desc',
-    DATE_ASCENDING = 'asc'
+    DATE_DESCENDING = 'date_desc',
+    DATE_ASCENDING = 'date_asc',
+    TITLE_ASCENDING = 'title_asc',
+    TITLE_DESCENDING = 'title_desc',
+    TYPE_ASCENDING = 'type_asc',
+    TYPE_DESCENDING = 'type_desc'
 }
