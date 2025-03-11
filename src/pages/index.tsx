@@ -29,6 +29,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [activeView, setActiveView] = useState<'list' | 'calendar'>('list');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
 
@@ -291,9 +292,10 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
           activeFilter={currentFilter}
           onFilterChange={handleFilterChange}
           openCreateModal={() => setIsCreateModalOpen(true)}
+          onToggleCollapse={(collapsed) => setIsSidebarCollapsed(collapsed)}
         />
 
-        <main className="flex-1 ml-64 pt-20 bg-gray-50 min-h-screen overflow-x-hidden">
+        <main className={`flex-1 ${isSidebarCollapsed ? 'ml-20' : 'ml-64'} pt-20 bg-gray-50 min-h-screen overflow-x-hidden transition-all duration-300`}>
           <div className="w-full px-6 py-8">
             <div className="flex items-center justify-between mb-8">
               <div>

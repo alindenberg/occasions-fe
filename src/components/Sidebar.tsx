@@ -1,20 +1,28 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface SidebarProps {
     activeFilter: string;
     onFilterChange: (filter: string) => void;
     openCreateModal?: () => void;
+    onToggleCollapse?: (collapsed: boolean) => void;
 }
 
-export default function Sidebar({ activeFilter, onFilterChange, openCreateModal }: SidebarProps) {
+export default function Sidebar({ activeFilter, onFilterChange, openCreateModal, onToggleCollapse }: SidebarProps) {
     const router = useRouter();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const handleFilterClick = (filter: string) => {
         onFilterChange(filter);
     };
+
+    // Call onToggleCollapse when isCollapsed changes
+    useEffect(() => {
+        if (onToggleCollapse) {
+            onToggleCollapse(isCollapsed);
+        }
+    }, [isCollapsed, onToggleCollapse]);
 
     return (
         <aside className={`bg-white border-r border-gray-200 h-screen fixed top-0 left-0 pt-20 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
