@@ -9,7 +9,6 @@ import { OCCASION_FILTERS } from '@/types/occasions'
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import DashboardCard from '@/components/occasions/DashboardCard';
-import OccasionsFilterDropdown from '@/components/occasions/FilterDropdown';
 import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
 import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import DraftOccasionsList from '@/components/occasions/DraftOccasionList';
@@ -38,9 +37,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
   useEffect(() => {
     if (router.isReady) {
-      const filter = (router.query.filter as string) || OCCASION_FILTERS.UPCOMING;
       const sort = (router.query.sort as string) || OCCASION_SORTS.DATE_DESCENDING;
-      setCurrentFilter(filter);
       setCurrentSort(sort as OCCASION_SORTS);
       filterAndSortOccasions();
     }
@@ -82,29 +79,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   }
 
   function filterOccasions(filter: string, occasionsToFilter: Occasion[]): Occasion[] {
-    if (filter === OCCASION_FILTERS.UPCOMING) {
-      return occasionsToFilter.filter(occasion => new Date(occasion.date) >= new Date() && !occasion.is_draft);
-    }
-    if (filter === OCCASION_FILTERS.PAST) {
-      return occasionsToFilter.filter(occasion => new Date(occasion.date) < new Date() && !occasion.is_draft);
-    }
-    if (filter === OCCASION_FILTERS.DRAFT) {
-      return occasionsToFilter.filter(occasion => occasion.is_draft);
-    }
-    return occasionsToFilter.filter(occasion => !occasion.is_draft);
-  }
-
-  function handleFilterChange(filter: string) {
-    setCurrentFilter(filter);
-    const filteredOccasions = filterOccasions(filter, occasions);
-    const sortedOccasions = sortOccasions(currentSort, filteredOccasions);
-    setOccasionsList(sortedOccasions);
-
-    // Update URL without redirecting
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, filter: filter },
-    }, undefined, { shallow: true });
+    return occasionsToFilter;
   }
 
   function sortOccasions(sort: OCCASION_SORTS, occasionsToSort: Occasion[]): Occasion[] {
@@ -181,7 +156,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       <Navbar />
 
       <div className="flex w-full overflow-x-hidden">
-        <Sidebar activeFilter={currentFilter} onFilterChange={handleFilterChange} />
+        <Sidebar activeFilter={currentFilter} onFilterChange={setCurrentFilter} />
 
         <main className="flex-1 ml-64 pt-20 bg-gray-50 min-h-screen overflow-x-hidden">
           <div className="w-full px-6 py-8">
@@ -234,17 +209,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
               <div className="flex items-center space-x-4">
                 <div className="flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                  </svg>
-                  <OccasionsFilterDropdown
-                    onClick={handleFilterChange}
-                    currentFilter={currentFilter}
-                    hasDraftOccasions={hasDraftOccasions}
-                  />
-                </div>
-
-                <div className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
                   </svg>
                   <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
@@ -262,7 +226,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 }
-                onClick={() => handleFilterChange('this-week')}
+                onClick={() => setCurrentFilter('this-week')}
               />
 
               <DashboardCard
@@ -275,7 +239,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   </svg>
                 }
                 accentColor="bg-blue-500"
-                onClick={() => handleFilterChange('this-month')}
+                onClick={() => setCurrentFilter('this-month')}
               />
 
               <DashboardCard
@@ -289,57 +253,29 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   </svg>
                 }
                 accentColor="bg-pink-500"
-                onClick={() => handleFilterChange(`type-${commonType.type}`)}
+                onClick={() => setCurrentFilter(`type-${commonType.type}`)}
               />
             </div>
 
             {activeView === 'list' ? (
               <div className="space-y-8">
-                {currentFilter === OCCASION_FILTERS.UPCOMING && (
-                  <UpcomingOccasionsList
-                    occasions={occasionsList}
-                    deletionHandler={deletionHandler}
-                    modifyHandler={modifyHandler}
-                  />
-                )}
+                <UpcomingOccasionsList
+                  occasions={occasionsList.filter(o => new Date(o.date) >= new Date() && !o.is_draft)}
+                  deletionHandler={deletionHandler}
+                  modifyHandler={modifyHandler}
+                />
 
-                {currentFilter === OCCASION_FILTERS.PAST && (
-                  <PastOccasionsList
-                    occasions={occasionsList}
-                  />
-                )}
-
-                {currentFilter === OCCASION_FILTERS.DRAFT && (
+                {hasDraftOccasions && (
                   <DraftOccasionsList
-                    occasions={occasionsList}
+                    occasions={occasionsList.filter(o => o.is_draft)}
                     deletionHandler={deletionHandler}
                     fundHandler={fundHandler}
                   />
                 )}
 
-                {currentFilter !== OCCASION_FILTERS.UPCOMING &&
-                  currentFilter !== OCCASION_FILTERS.PAST &&
-                  currentFilter !== OCCASION_FILTERS.DRAFT && (
-                    <div className="space-y-8">
-                      <UpcomingOccasionsList
-                        occasions={occasionsList.filter(o => new Date(o.date) >= new Date() && !o.is_draft)}
-                        deletionHandler={deletionHandler}
-                        modifyHandler={modifyHandler}
-                      />
-
-                      {hasDraftOccasions && (
-                        <DraftOccasionsList
-                          occasions={occasionsList.filter(o => o.is_draft)}
-                          deletionHandler={deletionHandler}
-                          fundHandler={fundHandler}
-                        />
-                      )}
-
-                      <PastOccasionsList
-                        occasions={occasionsList.filter(o => new Date(o.date) < new Date() && !o.is_draft)}
-                      />
-                    </div>
-                  )}
+                <PastOccasionsList
+                  occasions={occasionsList.filter(o => new Date(o.date) < new Date() && !o.is_draft)}
+                />
               </div>
             ) : (
               <div className="bg-white rounded-xl shadow-sm p-6">
