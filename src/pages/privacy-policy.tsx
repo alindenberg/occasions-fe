@@ -49,7 +49,7 @@ export default function PrivacyPolicy() {
 
                 <section>
                     <h2 className="text-2xl font-semibold mb-3">7. Contact Us</h2>
-                    <p>If you have any questions about this Privacy Policy, please contact us at <Link className="text-blue-500 underline" href="mailto:support@mg.occasionalert.me">support@mg.occasionalert.me</Link></p>
+                    <p>If you have any questions about this Privacy Policy, please contact us at <Link className="text-blue-500 underline" href="mailto:support@mg.occasionalerts.com">support@mg.occasionalerts.com</Link></p>
                 </section>
             </div>
         </div>

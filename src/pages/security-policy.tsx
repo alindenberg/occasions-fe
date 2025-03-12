@@ -14,7 +14,7 @@ export default function SecurityPolicy() {
                     <h2 className="text-2xl font-semibold mb-4">Reporting Security Issues</h2>
                     <p className="mb-4">
                         We take the security of our website seriously. If you believe you&apos;ve found a security vulnerability,
-                        please email us at <a href="mailto:support@mg.occasionalert.me" className="text-blue-600 hover:underline">support@mg.occasionalert.me</a>.
+                        please email us at <a href="mailto:support@mg.occasionalerts.com" className="text-blue-600 hover:underline">support@mg.occasionalerts.com</a>.
                     </p>
                     <p>
                         We appreciate your efforts to responsibly disclose your findings and will make every effort to acknowledge

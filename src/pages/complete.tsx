@@ -35,7 +35,7 @@ export default function Complete() {
                         We appreciate your business! A confirmation email will be sent to {customerEmail}.
                     </p>
                     <p className="mb-4">
-                        If you have any questions, please email <Link className="text-blue-500 underline" href="mailto:support@mg.occasionalert.me">support@mg.occasionalert.me</Link>
+                        If you have any questions, please email <Link className="text-blue-500 underline" href="mailto:support@mg.occasionalerts.com">support@mg.occasionalerts.com</Link>
                     </p>
                     <p>
                         <Link className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 inline-block" href="/?openCreateModal=true">Create an Occasion now</Link>
