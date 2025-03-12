@@ -136,26 +136,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     return () => window.removeEventListener('resize', handleResize);
   }, [isMobileSidebarOpen]);
 
-  // Check if backend server is running
-  useEffect(() => {
-    const checkBackendStatus = async () => {
-      try {
-        console.log("Checking backend server status...");
-        const response = await fetch(`${process.env.SERVER_URL}/`);
-        console.log("Backend server response status:", response.status);
-        if (!response.ok) {
-          console.error("Backend server is not responding correctly. Status:", response.status);
-        } else {
-          console.log("Backend server is running correctly");
-        }
-      } catch (error) {
-        console.error("Error connecting to backend server:", error);
-      }
-    };
-
-    checkBackendStatus();
-  }, []);
-
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status !== 'loading' && !isAuthenticated) {
