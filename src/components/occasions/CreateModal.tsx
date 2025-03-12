@@ -6,9 +6,10 @@ import { useAuthSession } from '@/hooks/useAuthSession'
 interface CreateModalProps {
     isOpen: boolean
     onClose: () => void
+    onSuccess?: () => void
 }
 
-export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
+export default function CreateModal({ isOpen, onClose, onSuccess }: CreateModalProps) {
     const modalRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
     const { refreshSession } = useAuthSession()
@@ -45,8 +46,13 @@ export default function CreateModal({ isOpen, onClose }: CreateModalProps) {
         }
 
         await refreshSession()
+
+        // Call onSuccess callback if provided
+        if (onSuccess) {
+            onSuccess()
+        }
+
         onClose()
-        router.push('/')
     }
 
     if (!isOpen) return null

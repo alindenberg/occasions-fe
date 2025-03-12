@@ -13,6 +13,7 @@ import PastOccasionsList from '@/components/occasions/PastOccasionsList';
 import DraftOccasionsList from '@/components/occasions/DraftOccasionList';
 import UpcomingOccasionsList from '@/components/occasions/UpcomingOccasionsList';
 import CreateModal from '@/components/occasions/CreateModal';
+import ModifyModal from '@/components/occasions/ModifyModal';
 import CalendarView from '@/components/occasions/CalendarView';
 import OccasionDetailsModal from '@/components/occasions/OccasionDetailsModal';
 import { getAccessToken } from '@/utils/auth';
@@ -29,6 +30,8 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [currentSort, setCurrentSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
   const [activeView, setActiveView] = useState<'list' | 'calendar'>('list');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [selectedOccasionId, setSelectedOccasionId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -36,6 +39,21 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
+
+  // Function to refresh occasions list
+  const refreshOccasions = useCallback(() => {
+    fetch('/api/occasions')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch occasions');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setOccasions(data);
+      })
+      .catch(error => console.error('Error refreshing occasions:', error));
+  }, []);
 
   const filterAndSortOccasions = useCallback(() => {
     let filteredOccasions = filterOccasions(currentFilter, occasions);
@@ -81,6 +99,21 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
           pathname: router.pathname,
           query: restQuery
         }, undefined, { shallow: true });
+      }
+
+      // Check if openModifyModal query parameter is present
+      if (router.query.openModifyModal === 'true' && router.query.occasionId) {
+        const occasionId = parseInt(router.query.occasionId as string, 10);
+        if (!isNaN(occasionId)) {
+          setSelectedOccasionId(occasionId);
+          setIsModifyModalOpen(true);
+          // Remove the query parameters to avoid reopening the modal on refresh
+          const { openModifyModal, occasionId: id, ...restQuery } = router.query;
+          router.replace({
+            pathname: router.pathname,
+            query: restQuery
+          }, undefined, { shallow: true });
+        }
       }
 
       filterAndSortOccasions();
@@ -142,27 +175,21 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   async function deletionHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/delete`);
     if (response.ok) {
-      const data = await response.json();
       refreshSession();
-      setOccasions(occasions.filter(occasion => occasion.id !== occasion_id));
+      refreshOccasions();
     }
   }
 
   async function modifyHandler(occasion_id: number) {
-    router.push(`/occasions/${occasion_id}/edit`);
+    setSelectedOccasionId(occasion_id);
+    setIsModifyModalOpen(true);
   }
 
   async function fundHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/fund`);
     if (response.ok) {
-      const data = await response.json();
       refreshSession();
-      setOccasions(occasions.map(occasion => {
-        if (occasion.id === occasion_id) {
-          return { ...occasion, is_draft: false };
-        }
-        return occasion;
-      }));
+      refreshOccasions();
     }
   }
 
@@ -586,6 +613,14 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={refreshOccasions}
+      />
+
+      <ModifyModal
+        isOpen={isModifyModalOpen}
+        onClose={() => setIsModifyModalOpen(false)}
+        occasionId={selectedOccasionId}
+        onSuccess={refreshOccasions}
       />
 
       <OccasionDetailsModal
