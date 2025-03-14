@@ -26,7 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }),
             });
             if (!response.ok) {
-                throw new Error('Failed to create new occasion');
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Failed to create new occasion');
             }
             const data = await response.json();
             res.status(201).json(data);
