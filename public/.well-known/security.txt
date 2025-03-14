@@ -1,5 +1,5 @@
-Contact: mailto:support@mg.occasionalert.me
+Contact: mailto:support@mg.occasionalerts.com
 Expires: 2024-12-31T23:59:59.000Z
 Preferred-Languages: en
-Canonical: https://occasionalert.me/.well-known/security.txt
-Policy: https://occasionalert.me/security-policy
+Canonical: https://occasionalerts.com/.well-known/security.txt
+Policy: https://occasionalerts.com/security-policy
