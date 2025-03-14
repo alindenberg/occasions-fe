@@ -50,6 +50,9 @@ export default function CheckoutPage() {
         return null;
     }
 
+    const currentCredits = session.user?.credits || 0;
+    const isOutOfCredits = currentCredits === 0;
+
     return (
         <>
             <Head>
@@ -89,9 +92,48 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="bg-white rounded-xl shadow-sm p-8 max-w-5xl mx-auto">
+                            {/* Credit balance display */}
+                            <div className="flex justify-between items-center mb-6 border-b pb-6">
+                                <h2 className="text-xl font-semibold">Your Credit Balance</h2>
+                                <div className={`px-4 py-2 rounded-full ${isOutOfCredits ? 'bg-red-100' : 'bg-green-100'}`}>
+                                    <span className={`font-bold text-lg ${isOutOfCredits ? 'text-red-600' : 'text-green-600'}`}>
+                                        {currentCredits}
+                                    </span>
+                                    <span className="text-gray-600 ml-1">credits</span>
+                                </div>
+                            </div>
+
+                            {/* Credit explanation */}
+                            <div className="mb-8 bg-blue-50 rounded-lg p-5 border border-blue-100">
+                                <h3 className="text-lg font-medium text-blue-800 mb-2">How Credits Work</h3>
+                                <ul className="list-disc pl-5 space-y-2 text-blue-700">
+                                    <li>Each credit allows you to create one occasion</li>
+                                    <li>Credits are used when you create a new occasion</li>
+                                    <li>Credits never expire</li>
+                                    <li>You can purchase credits anytime</li>
+                                </ul>
+                            </div>
+
+                            {/* Out of credits warning */}
+                            {isOutOfCredits && (
+                                <div className="mb-8 bg-orange-50 border-l-4 border-orange-500 p-4">
+                                    <div className="flex">
+                                        <div className="flex-shrink-0">
+                                            <svg className="h-5 w-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div className="ml-3">
+                                            <p className="text-sm text-orange-800">
+                                                You're out of credits! Purchase more to continue creating occasions.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {!isCheckingOut ? (
                                 <div className="mb-8">
-                                    <h2 className="text-xl font-semibold mb-6">Select Credit Amount</h2>
                                     <div className="max-w-md mx-auto">
                                         <div className="mb-6">
                                             <label htmlFor="quantity" className="block text-gray-700 font-medium mb-2">Quantity:</label>

@@ -4,6 +4,7 @@ import { Occasion, OCCASION_SORTS } from '@/types/occasions'
 import { GetServerSideProps } from 'next'
 import { NextApiRequest } from 'next';
 import Head from 'next/head';
+import toast from 'react-hot-toast';
 
 import { OCCASION_FILTERS } from '@/types/occasions'
 import Sidebar from '@/components/Sidebar';
@@ -24,6 +25,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const router = useRouter()
   const { session, status } = useAuthSession()
   const isAuthenticated = !!session
+  const hasCredits = (session?.user?.credits ?? 0) > 0;
 
   // Use our new hook for fetching occasions data
   const { occasions: fetchedOccasions, isLoading, refetch: refreshOccasionsQuery } = useOccasions();
@@ -61,6 +63,25 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     // Use the refetch function from our hook
     refreshOccasionsQuery();
   }, [refreshOccasionsQuery]);
+
+  // Function to handle opening the create modal with credit check
+  const handleOpenCreateModal = useCallback(() => {
+    if (hasCredits) {
+      setIsCreateModalOpen(true);
+    } else {
+      toast.error(
+        <div className="flex flex-col">
+          <span>You need credits to create occasions.</span>
+          <button
+            className="text-orange-500 font-medium underline mt-1 text-sm"
+            onClick={() => router.push('/credits')}
+          >
+            Purchase credits
+          </button>
+        </div>
+      );
+    }
+  }, [hasCredits, router]);
 
   const filterAndSortOccasions = useCallback(() => {
     let filteredOccasions = filterOccasions(currentFilter, occasions);
@@ -379,7 +400,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
         <Sidebar
           activeFilter={currentFilter}
           onFilterChange={handleFilterChange}
-          openCreateModal={() => setIsCreateModalOpen(true)}
+          openCreateModal={handleOpenCreateModal}
           onToggleCollapse={(collapsed) => setIsSidebarCollapsed(collapsed)}
           isMobileOpen={isMobileSidebarOpen}
           onMobileClose={() => setIsMobileSidebarOpen(false)}
@@ -399,6 +420,30 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
               </button>
               <h1 className="text-xl font-bold text-gray-800">Occasion Alerts</h1>
             </div>
+
+            {/* Zero-credit banner */}
+            {isAuthenticated && session?.user?.credits === 0 && (
+              <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mb-6">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-orange-800">
+                      You're out of credits! You need credits to create new occasions.{' '}
+                      <button
+                        onClick={() => router.push('/credits')}
+                        className="font-medium underline text-orange-800 hover:text-orange-900"
+                      >
+                        Purchase more credits
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Desktop header with title and search */}
             <div className="hidden md:flex items-center justify-between mb-8">
@@ -422,8 +467,13 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                 </div>
 
                 <button
-                  onClick={() => setIsCreateModalOpen(true)}
-                  className="flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
+                  onClick={handleOpenCreateModal}
+                  disabled={!hasCredits}
+                  className={`flex items-center px-4 py-2 ${hasCredits
+                    ? "bg-orange-500 hover:bg-orange-600"
+                    : "bg-gray-300 cursor-not-allowed"
+                    } text-white rounded-lg transition-colors shadow-sm`}
+                  title={!hasCredits ? "You need credits to create occasions" : ""}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -449,8 +499,13 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   </svg>
                 </div>
                 <button
-                  onClick={() => setIsCreateModalOpen(true)}
-                  className="flex-shrink-0 flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
+                  onClick={handleOpenCreateModal}
+                  disabled={!hasCredits}
+                  className={`flex-shrink-0 flex items-center px-4 py-2 ${hasCredits
+                    ? "bg-orange-500 hover:bg-orange-600"
+                    : "bg-gray-300 cursor-not-allowed"
+                    } text-white rounded-lg transition-colors shadow-sm`}
+                  title={!hasCredits ? "You need credits to create occasions" : ""}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />

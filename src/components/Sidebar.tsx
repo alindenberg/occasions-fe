@@ -24,6 +24,7 @@ export default function Sidebar({
     const { data: session } = useSession();
     const isAuthenticated = !!session;
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const hasCredits = (session?.user?.credits ?? 0) > 0;
 
     const handleFilterClick = (filter: string) => {
         onFilterChange(filter);
@@ -94,9 +95,33 @@ export default function Sidebar({
                             </svg>
                             {!isCollapsed && <span className="text-gray-800 font-semibold text-xl">Occasion Alerts</span>}
                         </div>
+
+                        {/* Credit indicator */}
+                        {isAuthenticated && (
+                            <div className={`flex ${isCollapsed ? 'justify-center' : 'justify-between'} items-center mb-4 p-2 bg-gray-50 rounded-lg`}>
+                                {!isCollapsed ? (
+                                    <>
+                                        <span className="text-gray-600 text-sm">Credits Available:</span>
+                                        <div className={`font-bold text-sm ${hasCredits ? 'text-green-600' : 'text-red-600'}`}>
+                                            {session?.user?.credits || 0}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className={`font-bold text-sm ${hasCredits ? 'text-green-600' : 'text-red-600'}`} title="Available Credits">
+                                        {session?.user?.credits || 0}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         <button
                             onClick={openCreateModal}
-                            className="flex items-center justify-center w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
+                            disabled={isAuthenticated && !hasCredits}
+                            className={`flex items-center justify-center w-full px-4 py-3 ${isAuthenticated && !hasCredits
+                                ? 'bg-gray-300 cursor-not-allowed'
+                                : 'bg-orange-500 hover:bg-orange-600'
+                                } text-white rounded-lg transition-colors shadow-sm`}
+                            title={isAuthenticated && !hasCredits ? "You need credits to create occasions" : ""}
                         >
                             {isCollapsed ? (
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,6 +136,14 @@ export default function Sidebar({
                                 </div>
                             )}
                         </button>
+
+                        {isAuthenticated && !hasCredits && !isCollapsed && (
+                            <div className="mt-2 text-xs text-red-600 text-center">
+                                <Link href="/credits" className="hover:underline">
+                                    Purchase credits to create occasions
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex-1 overflow-y-auto">
@@ -145,6 +178,19 @@ export default function Sidebar({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                                 {!isCollapsed && <span>Profile</span>}
+                            </Link>
+
+                            <Link
+                                href="/credits"
+                                className={`flex items-center px-3 py-3 rounded-lg transition-colors ${router.pathname === '/credits'
+                                    ? 'bg-orange-50 text-orange-600'
+                                    : 'text-gray-700 hover:bg-gray-100'
+                                    }`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {!isCollapsed && <span>Credits</span>}
                             </Link>
 
                             <Link
@@ -414,6 +460,20 @@ export default function Sidebar({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                                 <span>Profile</span>
+                            </Link>
+
+                            <Link
+                                href="/credits"
+                                className={`flex items-center px-3 py-3 rounded-lg transition-colors ${router.pathname === '/credits'
+                                    ? 'bg-orange-50 text-orange-600'
+                                    : 'text-gray-700 hover:bg-gray-100'
+                                    }`}
+                                onClick={() => onMobileClose && onMobileClose()}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>Credits</span>
                             </Link>
 
                             <Link
