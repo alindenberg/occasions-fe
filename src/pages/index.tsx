@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router'
-import { OCCASION_SORTS, Occasion } from "@/types/occasions"
+import { Occasion, OCCASION_SORTS } from '@/types/occasions'
 import { GetServerSideProps } from 'next'
 import { NextApiRequest } from 'next';
 import Head from 'next/head';
@@ -18,12 +18,17 @@ import CalendarView from '@/components/occasions/CalendarView';
 import OccasionDetailsModal from '@/components/occasions/OccasionDetailsModal';
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
+import { useOccasions } from '@/hooks/useOccasions';
 
 export default function OccasionsPage({ initialOccasions }: { initialOccasions: Occasion[] }) {
   const router = useRouter()
-  const { session, status, refreshSession } = useAuthSession()
+  const { session, status } = useAuthSession()
   const isAuthenticated = !!session
 
+  // Use our new hook for fetching occasions data
+  const { occasions: fetchedOccasions, isLoading, refetch: refreshOccasionsQuery } = useOccasions();
+
+  // Combine initial occasions with fetched occasions, preferring fetched ones when available
   const [occasions, setOccasions] = useState<Occasion[]>(initialOccasions);
   const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>('');
@@ -38,22 +43,20 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
+  // Update occasions state when fetchedOccasions changes
+  useEffect(() => {
+    if (fetchedOccasions && fetchedOccasions.length > 0) {
+      setOccasions(fetchedOccasions);
+    }
+  }, [fetchedOccasions]);
+
   const hasDraftOccasions = occasions.some(occasion => occasion.is_draft);
 
   // Function to refresh occasions list
   const refreshOccasions = useCallback(() => {
-    fetch('/api/occasions')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch occasions');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setOccasions(data);
-      })
-      .catch(error => console.error('Error refreshing occasions:', error));
-  }, []);
+    // Use the refetch function from our hook
+    refreshOccasionsQuery();
+  }, [refreshOccasionsQuery]);
 
   const filterAndSortOccasions = useCallback(() => {
     let filteredOccasions = filterOccasions(currentFilter, occasions);
@@ -155,7 +158,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   async function deletionHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/delete`);
     if (response.ok) {
-      refreshSession();
       refreshOccasions();
     }
   }
@@ -168,7 +170,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   async function fundHandler(occasion_id: number) {
     const response = await fetch(`/api/occasions/${occasion_id}/fund`);
     if (response.ok) {
-      refreshSession();
       refreshOccasions();
     }
   }

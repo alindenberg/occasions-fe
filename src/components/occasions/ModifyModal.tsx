@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import EditOccasionComponent from './Edit'
 import { useRouter } from 'next/router'
-import { useAuthSession } from '@/hooks/useAuthSession'
 import { Occasion } from '@/types/occasions'
 
 interface ModifyModalProps {
@@ -14,7 +13,6 @@ interface ModifyModalProps {
 export default function ModifyModal({ isOpen, onClose, occasionId, onSuccess }: ModifyModalProps) {
     const modalRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
-    const { refreshSession } = useAuthSession()
     const [occasion, setOccasion] = useState<Occasion | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -74,8 +72,6 @@ export default function ModifyModal({ isOpen, onClose, occasionId, onSuccess }: 
             if (!response.ok) {
                 throw { type: 'OccasionModifyError', detail: json.error }
             }
-
-            await refreshSession()
 
             // Call onSuccess callback if provided
             if (onSuccess) {

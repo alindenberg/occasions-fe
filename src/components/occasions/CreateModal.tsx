@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react'
 import EditOccasionComponent from './Edit'
 import { useRouter } from 'next/router'
-import { useAuthSession } from '@/hooks/useAuthSession'
 
 interface CreateModalProps {
     isOpen: boolean
@@ -12,7 +11,6 @@ interface CreateModalProps {
 export default function CreateModal({ isOpen, onClose, onSuccess }: CreateModalProps) {
     const modalRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
-    const { refreshSession } = useAuthSession()
 
     // Add a click event listener to handle clicks outside the modal
     useEffect(() => {
@@ -44,8 +42,6 @@ export default function CreateModal({ isOpen, onClose, onSuccess }: CreateModalP
             const json = await response.json()
             throw { type: 'OccasionCreateError', detail: json.error }
         }
-
-        await refreshSession()
 
         // Call onSuccess callback if provided
         if (onSuccess) {
