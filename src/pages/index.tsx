@@ -432,7 +432,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   </div>
                   <div className="ml-3">
                     <p className="text-sm text-orange-800">
-                      You're out of credits! You need credits to create new occasions.{' '}
+                      You&apos;re out of credits! You need credits to create new occasions.{' '}
                       <button
                         onClick={() => router.push('/credits')}
                         className="font-medium underline text-orange-800 hover:text-orange-900"

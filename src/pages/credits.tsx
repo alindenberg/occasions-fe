@@ -125,7 +125,7 @@ export default function CheckoutPage() {
                                         </div>
                                         <div className="ml-3">
                                             <p className="text-sm text-orange-800">
-                                                You're out of credits! Purchase more to continue creating occasions.
+                                                You&apos;re out of credits! Purchase more to continue creating occasions.
                                             </p>
                                         </div>
                                     </div>
