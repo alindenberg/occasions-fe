@@ -18,7 +18,8 @@ export default function LoginPage() {
     }, [status, router]);
 
     const handleGoogleLogin = async () => {
-        await signIn('google', { callbackUrl: router.query.redirect ? String(router.query.redirect) : '/' });
+        // The redirect will be handled by the NextAuth redirect callback
+        await signIn('google');
     };
 
     const handleCredentialsLogin = async (e: React.FormEvent) => {

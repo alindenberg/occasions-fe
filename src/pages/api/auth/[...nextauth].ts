@@ -60,6 +60,13 @@ export const authOptions: NextAuthOptions = {
       },
     })
   ],
+  pages: {
+    signIn: '/login',
+    // Redirect to auth-callback page after sign in to clean up URL
+    newUser: '/auth-callback',
+    // This will be used for all callbacks
+    signOut: '/auth-callback',
+  },
   callbacks: {
     async jwt({ token, account, user }) {
       if (account && user) {
@@ -151,6 +158,18 @@ export const authOptions: NextAuthOptions = {
         return true;
       }
       return false;
+    },
+    async redirect({ url, baseUrl }) {
+      // Customize redirect behavior
+      // If the URL is an internal URL, redirect to auth-callback with the original destination
+      if (url.startsWith(baseUrl)) {
+        const destination = url.substring(baseUrl.length) || '/';
+        if (destination !== '/auth-callback') {
+          return `${baseUrl}/auth-callback?destination=${encodeURIComponent(destination)}`;
+        }
+      }
+      // For external URLs, redirect directly
+      return url;
     }
   }
 }
