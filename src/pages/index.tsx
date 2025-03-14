@@ -31,8 +31,12 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   // Combine initial occasions with fetched occasions, preferring fetched ones when available
   const [occasions, setOccasions] = useState<Occasion[]>(initialOccasions);
   const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
+
+  // Separate sort states for upcoming and past occasions
+  const [upcomingSort, setUpcomingSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_ASCENDING);
+  const [pastSort, setPastSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
+
   const [currentFilter, setCurrentFilter] = useState<string>('');
-  const [currentSort, setCurrentSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
   const [activeView, setActiveView] = useState<'list' | 'calendar'>('list');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
@@ -72,15 +76,12 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       );
     }
 
-    const sortedOccasions = sortOccasions(currentSort, filteredOccasions);
-    setOccasionsList(sortedOccasions);
-  }, [occasions, currentFilter, currentSort, searchQuery]);
+    // We no longer sort here since we'll sort separately for each section
+    setOccasionsList(filteredOccasions);
+  }, [occasions, currentFilter, searchQuery]);
 
   useEffect(() => {
     if (router.isReady) {
-      const sort = (router.query.sort as string) || OCCASION_SORTS.DATE_DESCENDING;
-      setCurrentSort(sort as OCCASION_SORTS);
-
       // Set the filter from URL query if available
       const filter = (router.query.filter as string) || '';
       if (filter) {
@@ -92,6 +93,12 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       if (search) {
         setSearchQuery(search);
       }
+
+      // Set the sort from URL query if available
+      const upcomingSort = (router.query.upcomingSort as string) || OCCASION_SORTS.DATE_ASCENDING;
+      const pastSort = (router.query.pastSort as string) || OCCASION_SORTS.DATE_DESCENDING;
+      setUpcomingSort(upcomingSort as OCCASION_SORTS);
+      setPastSort(pastSort as OCCASION_SORTS);
 
       // Check if openCreateModal query parameter is present
       if (router.query.openCreateModal === 'true') {
@@ -125,7 +132,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
   useEffect(() => {
     filterAndSortOccasions();
-  }, [currentFilter, currentSort, occasions, searchQuery, filterAndSortOccasions]);
+  }, [currentFilter, occasions, searchQuery, filterAndSortOccasions]);
 
   // Close mobile sidebar when window is resized to desktop size
   useEffect(() => {
@@ -251,15 +258,23 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     return occasionsToSort;
   }
 
-  function handleSortChange(sort: OCCASION_SORTS) {
-    setCurrentSort(sort);
-    const sortedOccasions = sortOccasions(sort, occasionsList);
-    setOccasionsList(sortedOccasions);
+  function handleUpcomingSortChange(sort: OCCASION_SORTS) {
+    setUpcomingSort(sort);
 
     // Update URL without redirecting
     router.push({
       pathname: router.pathname,
-      query: { ...router.query, sort: sort },
+      query: { ...router.query, upcomingSort: sort },
+    }, undefined, { shallow: true });
+  }
+
+  function handlePastSortChange(sort: OCCASION_SORTS) {
+    setPastSort(sort);
+
+    // Update URL without redirecting
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, pastSort: sort },
     }, undefined, { shallow: true });
   }
 
@@ -274,8 +289,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
     // Apply the filter
     const filteredOccasions = filterOccasions(filter, occasions);
-    const sortedOccasions = sortOccasions(currentSort, filteredOccasions);
-    setOccasionsList(sortedOccasions);
+    setOccasionsList(filteredOccasions);
   }
 
   function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -339,6 +353,20 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     setSelectedOccasion(occasion);
     setIsDetailsModalOpen(true);
   };
+
+  // Get upcoming and past occasions with their respective sorts
+  const today = new Date();
+  const upcomingOccasions = sortOccasions(
+    upcomingSort,
+    occasionsList.filter(o => new Date(o.date) >= today && !o.is_draft)
+  );
+
+  const pastOccasions = sortOccasions(
+    pastSort,
+    occasionsList.filter(o => new Date(o.date) < today && !o.is_draft)
+  );
+
+  const draftOccasions = occasionsList.filter(o => o.is_draft);
 
   return (
     <>
@@ -448,10 +476,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   Calendar View
                 </button>
               </div>
-
-              <div className="flex items-center space-x-4">
-                <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
-              </div>
             </div>
 
             {/* Mobile view controls */}
@@ -471,10 +495,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                     Calendar View
                   </button>
                 </div>
-              </div>
-
-              <div className="w-full bg-white rounded-lg shadow-sm p-2">
-                <OccasionsSortDropdown onClick={handleSortChange} currentSort={currentSort} />
               </div>
             </div>
 
@@ -561,25 +581,43 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
             {activeView === 'list' ? (
               <div className="space-y-8">
-                <UpcomingOccasionsList
-                  occasions={occasionsList.filter(o => new Date(o.date) >= new Date() && !o.is_draft)}
-                  deletionHandler={deletionHandler}
-                  modifyHandler={modifyHandler}
-                  openCreateModal={() => setIsCreateModalOpen(true)}
-                />
-
-                {hasDraftOccasions && (
-                  <DraftOccasionsList
-                    occasions={occasionsList.filter(o => o.is_draft)}
+                {/* Upcoming Occasions Section with its own sort control */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-gray-800">Upcoming Occasions</h2>
+                    <OccasionsSortDropdown onClick={handleUpcomingSortChange} currentSort={upcomingSort} />
+                  </div>
+                  <UpcomingOccasionsList
+                    occasions={upcomingOccasions}
                     deletionHandler={deletionHandler}
-                    fundHandler={fundHandler}
+                    modifyHandler={modifyHandler}
                     openCreateModal={() => setIsCreateModalOpen(true)}
                   />
+                </div>
+
+                {/* Draft Occasions Section */}
+                {hasDraftOccasions && (
+                  <div className="bg-white rounded-lg shadow-sm p-6">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Draft Occasions</h2>
+                    <DraftOccasionsList
+                      occasions={draftOccasions}
+                      deletionHandler={deletionHandler}
+                      fundHandler={fundHandler}
+                      openCreateModal={() => setIsCreateModalOpen(true)}
+                    />
+                  </div>
                 )}
 
-                <PastOccasionsList
-                  occasions={occasionsList.filter(o => new Date(o.date) < new Date() && !o.is_draft)}
-                />
+                {/* Past Occasions Section with its own sort control */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-gray-800">Past Occasions</h2>
+                    <OccasionsSortDropdown onClick={handlePastSortChange} currentSort={pastSort} />
+                  </div>
+                  <PastOccasionsList
+                    occasions={pastOccasions}
+                  />
+                </div>
               </div>
             ) : (
               <CalendarView
