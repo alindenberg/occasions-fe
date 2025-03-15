@@ -35,7 +35,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
   const [occasionsList, setOccasionsList] = useState<Occasion[]>([]);
 
   // Separate sort states for upcoming and past occasions
-  const [upcomingSort, setUpcomingSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
+  const [upcomingSort, setUpcomingSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_ASCENDING);
   const [pastSort, setPastSort] = useState<OCCASION_SORTS>(OCCASION_SORTS.DATE_DESCENDING);
 
   const [currentFilter, setCurrentFilter] = useState<string>('');
@@ -116,7 +116,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       }
 
       // Set the sort from URL query if available
-      const upcomingSort = (router.query.upcomingSort as string) || OCCASION_SORTS.DATE_DESCENDING;
+      const upcomingSort = (router.query.upcomingSort as string) || OCCASION_SORTS.DATE_ASCENDING;
       const pastSort = (router.query.pastSort as string) || OCCASION_SORTS.DATE_DESCENDING;
       setUpcomingSort(upcomingSort as OCCASION_SORTS);
       setPastSort(pastSort as OCCASION_SORTS);
