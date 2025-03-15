@@ -413,9 +413,25 @@ export default function Sidebar({
                                 </svg>
                             </button>
                         </div>
+
+                        {/* Credit indicator for mobile */}
+                        {isAuthenticated && (
+                            <div className="flex justify-between items-center mb-4 p-2 bg-gray-50 rounded-lg">
+                                <span className="text-gray-600 text-sm">Credits Available:</span>
+                                <div className={`font-bold text-sm ${hasCredits ? 'text-green-600' : 'text-red-600'}`}>
+                                    {session?.user?.credits || 0}
+                                </div>
+                            </div>
+                        )}
+
                         <button
                             onClick={openCreateModal}
-                            className="flex items-center justify-center w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors shadow-sm"
+                            disabled={isAuthenticated && !hasCredits}
+                            className={`flex items-center justify-center w-full px-4 py-3 ${isAuthenticated && !hasCredits
+                                ? 'bg-gray-300 cursor-not-allowed'
+                                : 'bg-orange-500 hover:bg-orange-600'
+                                } text-white rounded-lg transition-colors shadow-sm`}
+                            title={isAuthenticated && !hasCredits ? "You need credits to create occasions" : ""}
                         >
                             <div className="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -424,6 +440,14 @@ export default function Sidebar({
                                 <span className="font-medium">Create Occasion</span>
                             </div>
                         </button>
+
+                        {isAuthenticated && !hasCredits && (
+                            <div className="mt-2 text-xs text-red-600 text-center">
+                                <Link href="/credits" className="hover:underline" onClick={() => onMobileClose && onMobileClose()}>
+                                    Purchase credits to create occasions
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex-1 overflow-y-auto">
