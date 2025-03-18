@@ -261,16 +261,16 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                 </div>
                 <div className="mt-12 relative lg:mt-0 lg:flex lg:items-center">
                   <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-xl">
-                    <div className="relative block w-full bg-white rounded-lg overflow-hidden">
+                    <div className="relative block w-full bg-white rounded-lg overflow-hidden group">
                       <img
                         src="/dashboard-preview.png"
                         alt="Dashboard preview"
-                        className="w-full"
+                        className="w-full transition-transform duration-300 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gray-900 bg-opacity-30 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-gray-900 bg-opacity-0 group-hover:bg-opacity-30 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
                         <button
                           onClick={() => router.push('/signup')}
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 animate-bounce"
                         >
                           Try it now
                         </button>
