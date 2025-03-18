@@ -23,7 +23,7 @@ import { useOccasions } from '@/hooks/useOccasions';
 
 export default function OccasionsPage({ initialOccasions }: { initialOccasions: Occasion[] }) {
   const router = useRouter()
-  const { session, status } = useAuthSession()
+  const { session, status, refreshSession } = useAuthSession()
   const isAuthenticated = !!session
   const hasCredits = (session?.user?.credits ?? 0) > 0;
 
@@ -63,6 +63,16 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     // Use the refetch function from our hook
     refreshOccasionsQuery();
   }, [refreshOccasionsQuery]);
+
+  // Refresh user credits in the background without affecting the UI
+  const refreshUserCredits = useCallback(() => {
+    // Use setTimeout to ensure this runs after the current render cycle
+    setTimeout(() => {
+      refreshSession().catch(err => {
+        console.error('Error refreshing session:', err);
+      });
+    }, 100);
+  }, [refreshSession]);
 
   // Function to handle opening the create modal with credit check
   const handleOpenCreateModal = useCallback(() => {
@@ -187,6 +197,8 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     const response = await fetch(`/api/occasions/${occasion_id}/delete`);
     if (response.ok) {
       refreshOccasions();
+      // Refresh credits in the background
+      refreshUserCredits();
     }
   }
 
@@ -199,6 +211,8 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     const response = await fetch(`/api/occasions/${occasion_id}/fund`);
     if (response.ok) {
       refreshOccasions();
+      // Refresh credits in the background since funding affects credits
+      refreshUserCredits();
     }
   }
 
@@ -687,7 +701,11 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={refreshOccasions}
+        onSuccess={() => {
+          refreshOccasions();
+          // After creating an occasion, refresh the credits in the background
+          refreshUserCredits();
+        }}
       />
 
       <ModifyModal
