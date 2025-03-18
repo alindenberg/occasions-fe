@@ -182,7 +182,7 @@ export default function LoginPage() {
 
                             <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 text-center">
                                 <p className="text-sm text-gray-600">
-                                    Don't have an account? <Link href="/signup" className="font-medium text-orange-500 hover:text-orange-600">Sign up now</Link>
+                                    Don&apos;t have an account? <Link href="/signup" className="font-medium text-orange-500 hover:text-orange-600">Sign up now</Link>
                                 </p>
                             </div>
                         </div>

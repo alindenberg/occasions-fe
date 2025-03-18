@@ -20,6 +20,8 @@ import OccasionDetailsModal from '@/components/occasions/OccasionDetailsModal';
 import { getAccessToken } from '@/utils/auth';
 import { useAuthSession } from '@/hooks/useAuthSession';
 import { useOccasions } from '@/hooks/useOccasions';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function OccasionsPage({ initialOccasions }: { initialOccasions: Occasion[] }) {
   const router = useRouter()
@@ -236,7 +238,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                     <span className="block">Again</span>
                   </h1>
                   <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                    Get timely reminders for birthdays, anniversaries, holidays, and more. Occasion Alerts makes sure you're always prepared for life's special moments.
+                    Get timely reminders for birthdays, anniversaries, holidays, and more. Occasion Alerts makes sure you&apos;re always prepared for life&apos;s special moments.
                   </p>
                   <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
                     <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
@@ -262,10 +264,12 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                 <div className="mt-12 relative lg:mt-0 lg:flex lg:items-center">
                   <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-xl">
                     <div className="relative block w-full bg-white rounded-lg overflow-hidden group">
-                      <img
+                      <Image
                         src="/dashboard-preview.png"
                         alt="Dashboard preview"
                         className="w-full transition-transform duration-300 group-hover:scale-105"
+                        width={600}
+                        height={400}
                       />
                       <div className="absolute inset-0 bg-gray-900 bg-opacity-0 group-hover:bg-opacity-30 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
                         <button
@@ -331,7 +335,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 text-center">Get Reminders</h3>
                   <p className="mt-4 text-gray-600 text-center">
-                    Receive timely notifications before important dates so you're always prepared.
+                    Receive timely notifications before important dates so you&apos;re always prepared.
                   </p>
                 </div>
 
@@ -382,8 +386,8 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   <span className="text-gray-500 text-sm">© 2025 OccasionAlerts.com</span>
                 </div>
                 <div className="flex space-x-6">
-                  <a href="/privacy-policy" className="text-gray-500 hover:text-orange-500 text-sm">Privacy Policy</a>
-                  <a href="mailto:support@mg.occasionalerts.com" className="text-gray-500 hover:text-orange-500 text-sm">Contact</a>
+                  <Link href="/privacy-policy" className="text-gray-500 hover:text-orange-500 text-sm">Privacy Policy</Link>
+                  <Link href="mailto:support@mg.occasionalerts.com" className="text-gray-500 hover:text-orange-500 text-sm">Contact</Link>
                 </div>
               </div>
             </div>

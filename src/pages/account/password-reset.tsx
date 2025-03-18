@@ -65,7 +65,7 @@ export default function PasswordResetPage() {
                                         </div>
                                     </div>
                                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h2>
-                                    <p className="text-gray-600 mb-6">We've sent password reset instructions to your email address.</p>
+                                    <p className="text-gray-600 mb-6">We&apos;ve sent password reset instructions to your email address.</p>
                                     <Link href="/login" className="w-full inline-block py-2 px-4 border border-transparent rounded-md font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-center">
                                         Back to Login
                                     </Link>
@@ -80,7 +80,7 @@ export default function PasswordResetPage() {
                                         </div>
                                     </div>
                                     <h2 className="text-2xl font-bold text-center text-gray-900 mb-1">Reset your password</h2>
-                                    <p className="text-gray-600 text-center mb-4">Enter your email and we'll send you a link to reset your password.</p>
+                                    <p className="text-gray-600 text-center mb-4">Enter your email and we&apos;ll send you a link to reset your password.</p>
 
                                     <form onSubmit={handleSubmit}>
                                         <div className="mb-4">
