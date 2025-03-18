@@ -24,13 +24,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <Head>
           <title>Occasion Alerts</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="description" content="Never miss an important occasion - Occasion Alerts helps you remember and celebrate the important moments in life." />
+          <meta name="description" content="Create and track important occasions (birthdays, anniversaries, graduations, etc.) Receive timely reminders for upcoming events via AI-generated messages tailored to each occasion. Save time and show you care with personalized greetings." />
 
           {/* Standard favicon */}
           <link rel="icon" href="/favicon.ico" />
 
           {/* Google Search Console Verification - add your verification code here */}
-          <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
+          <meta name="google-site-verification" content="40h-D0jjdNS54zeCUIDZCjrQtg6-y4dWXY-iaHNEBNw" />
 
           {/* Web Manifest */}
           <link rel="manifest" href="/manifest.json" />
@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
           {/* Open Graph */}
           <meta property="og:title" content="Occasion Alerts" />
-          <meta property="og:description" content="Never miss an important occasion - Occasion Alerts helps you remember and celebrate the important moments in life." />
+          <meta property="og:description" content="Create and track important occasions (birthdays, anniversaries, graduations, etc.) Receive timely reminders for upcoming events via AI-generated messages tailored to each occasion. Save time and show you care with personalized greetings." />
           <meta property="og:type" content="website" />
           <meta property="og:url" content="https://occasionalerts.com" />
           <meta property="og:image" content="https://occasionalerts.com/og-image.png" />
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           {/* Twitter Card */}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="Occasion Alerts" />
-          <meta name="twitter:description" content="Never miss an important occasion - Occasion Alerts helps you remember and celebrate the important moments in life." />
+          <meta name="twitter:description" content="Create and track important occasions (birthdays, anniversaries, graduations, etc.) Receive timely reminders for upcoming events via AI-generated messages tailored to each occasion. Save time and show you care with personalized greetings." />
           <meta name="twitter:image" content="https://occasionalerts.com/twitter-image.png" />
         </Head>
         <div className="flex flex-col min-h-screen">
