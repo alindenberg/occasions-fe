@@ -177,19 +177,216 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
     return () => window.removeEventListener('resize', handleResize);
   }, [isMobileSidebarOpen]);
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (status !== 'loading' && !isAuthenticated) {
-      console.log('User not authenticated, redirecting to login...');
-      router.push('/login');
-    }
-  }, [status, isAuthenticated, router]);
-
   if (status === 'loading') {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
       </div>
+    );
+  }
+
+  // Show landing page if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Head>
+          <title>Occasion Alerts | Never Miss an Important Occasion</title>
+          <meta name="description" content="Occasion Alerts helps you remember and prepare for all your important occasions. Never miss a birthday, anniversary, or special event again." />
+        </Head>
+
+        <div className="min-h-screen bg-white">
+          {/* Navbar */}
+          <nav className="w-full bg-white shadow-sm">
+            <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto">
+              <div className="flex justify-between h-16">
+                <div className="flex">
+                  <div className="flex-shrink-0 flex items-center">
+                    <span className="text-2xl font-bold text-orange-500">Occasion Alerts</span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => router.push('/login')}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                  >
+                    Log in
+                  </button>
+                  <button
+                    onClick={() => router.push('/signup')}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                  >
+                    Sign up
+                  </button>
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          {/* Hero Section */}
+          <div className="w-full relative overflow-hidden bg-gradient-to-b from-gray-50 to-gray-100 py-16">
+            <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto">
+              <div className="lg:grid lg:grid-cols-2 lg:gap-12">
+                <div className="lg:max-w-2xl">
+                  <h1 className="mt-4 text-4xl tracking-tight font-extrabold text-gray-900 sm:mt-5 sm:text-5xl lg:mt-6 xl:text-6xl">
+                    <span className="block">Never Miss a</span>
+                    <span className="block text-orange-500">Special Occasion</span>
+                    <span className="block">Again</span>
+                  </h1>
+                  <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
+                    Get timely reminders for birthdays, anniversaries, holidays, and more. Occasion Alerts makes sure you're always prepared for life's special moments.
+                  </p>
+                  <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
+                    <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                      <div className="rounded-md shadow">
+                        <button
+                          onClick={() => router.push('/signup')}
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 md:py-4 md:text-lg md:px-10"
+                        >
+                          Get started
+                        </button>
+                      </div>
+                      <div className="mt-3 sm:mt-0 sm:ml-3">
+                        <button
+                          onClick={() => router.push('/login')}
+                          className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 md:py-4 md:text-lg md:px-10"
+                        >
+                          Log in
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-12 relative lg:mt-0 lg:flex lg:items-center">
+                  <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-xl">
+                    <div className="relative block w-full bg-white rounded-lg overflow-hidden">
+                      <img
+                        src="/dashboard-preview.png"
+                        alt="Dashboard preview"
+                        className="w-full"
+                      />
+                      <div className="absolute inset-0 bg-gray-900 bg-opacity-30 flex items-center justify-center">
+                        <button
+                          onClick={() => router.push('/signup')}
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                        >
+                          Try it now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Splash Section with gradient */}
+          <div className="w-full py-16 bg-gradient-to-r from-orange-50 via-orange-100 to-orange-50">
+            <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto text-center">
+              <h2 className="text-3xl font-bold text-gray-900">
+                Join thousands already using Occasion Alerts
+              </h2>
+              <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+                The smart way to remember important dates and celebrate special moments
+              </p>
+            </div>
+          </div>
+
+          {/* How It Works Section */}
+          <div className="w-full py-16 bg-white">
+            <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">How It Works</h2>
+                <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                  Keep track of all your important dates and never forget a special moment
+                </p>
+              </div>
+
+              <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Track Occasions Card */}
+                <div className="bg-white rounded-lg shadow-sm p-8">
+                  <div className="flex justify-center">
+                    <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                      <svg className="h-8 w-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 text-center">Track Occasions</h3>
+                  <p className="mt-4 text-gray-600 text-center">
+                    Easily add birthdays, anniversaries, and other special dates to your calendar.
+                  </p>
+                </div>
+
+                {/* Get Reminders Card */}
+                <div className="bg-white rounded-lg shadow-sm p-8">
+                  <div className="flex justify-center">
+                    <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                      <svg className="h-8 w-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 text-center">Get Reminders</h3>
+                  <p className="mt-4 text-gray-600 text-center">
+                    Receive timely notifications before important dates so you're always prepared.
+                  </p>
+                </div>
+
+                {/* AI Messages Card */}
+                <div className="bg-white rounded-lg shadow-sm p-8">
+                  <div className="flex justify-center">
+                    <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                      <svg className="h-8 w-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 text-center">AI Messages</h3>
+                  <p className="mt-4 text-gray-600 text-center">
+                    Send personalized, AI-generated messages for every occasion without the stress.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Orange CTA Section */}
+          <div className="w-full py-16 bg-orange-500 text-white">
+            <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto text-center">
+              <h2 className="text-3xl font-bold sm:text-4xl mb-6">
+                Ready to Never Miss an Occasion?
+              </h2>
+              <p className="text-xl text-white max-w-3xl mx-auto mb-8">
+                Join thousands of people who use OccasionAlerts to stay connected with their loved ones.
+              </p>
+              <button
+                onClick={() => router.push('/signup')}
+                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-orange-600 bg-white hover:bg-orange-50 shadow-sm"
+              >
+                Get Started for Free
+              </button>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <footer className="w-full bg-white py-8">
+            <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="flex items-center mb-4 md:mb-0">
+                  <svg className="h-5 w-5 text-orange-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-gray-500 text-sm">© 2025 OccasionAlerts.com</span>
+                </div>
+                <div className="flex space-x-6">
+                  <a href="/privacy-policy" className="text-gray-500 hover:text-orange-500 text-sm">Privacy Policy</a>
+                  <a href="mailto:support@mg.occasionalerts.com" className="text-gray-500 hover:text-orange-500 text-sm">Contact</a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </>
     );
   }
 
