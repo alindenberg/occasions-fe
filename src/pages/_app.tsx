@@ -24,6 +24,33 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         <Head>
           <title>Occasion Alerts</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="description" content="Never miss an important occasion - Occasion Alerts helps you remember and celebrate the important moments in life." />
+
+          {/* Standard favicon */}
+          <link rel="icon" href="/favicon.ico" />
+
+          {/* Google Search Console Verification - add your verification code here */}
+          <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
+
+          {/* Web Manifest */}
+          <link rel="manifest" href="/manifest.json" />
+
+          {/* Theme and Colors */}
+          <meta name="theme-color" content="#F97316" />
+          <meta name="msapplication-TileColor" content="#F97316" />
+
+          {/* Open Graph */}
+          <meta property="og:title" content="Occasion Alerts" />
+          <meta property="og:description" content="Never miss an important occasion - Occasion Alerts helps you remember and celebrate the important moments in life." />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://occasionalerts.com" />
+          <meta property="og:image" content="https://occasionalerts.com/og-image.png" />
+
+          {/* Twitter Card */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="Occasion Alerts" />
+          <meta name="twitter:description" content="Never miss an important occasion - Occasion Alerts helps you remember and celebrate the important moments in life." />
+          <meta name="twitter:image" content="https://occasionalerts.com/twitter-image.png" />
         </Head>
         <div className="flex flex-col min-h-screen">
           <main className="flex-grow flex w-full">
