@@ -51,6 +51,7 @@ export default function LoginPage() {
             <Head>
                 <title>Login | Occasion Alerts</title>
                 <meta name="description" content="Log in to your Occasion Alerts account" />
+                <link rel="canonical" href="https://occasionalerts.com/login" />
             </Head>
 
             <div className="min-h-screen bg-gray-50 flex flex-col w-full">
