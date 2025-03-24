@@ -292,7 +292,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">How It Works</h2>
                 <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-                  Keep track of all your important dates and never forget a special moment
+                  Track your important dates and receive perfectly-timed, AI-generated messages that you can forward to your loved ones
                 </p>
               </div>
 
