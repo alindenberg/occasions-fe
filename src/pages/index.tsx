@@ -238,7 +238,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                     <span className="block">Again</span>
                   </h1>
                   <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                    Get timely reminders for birthdays, anniversaries, holidays, and more. Occasion Alerts makes sure you&apos;re always prepared for life&apos;s special moments.
+                    Track all your important occasions and receive perfectly-timed, AI-generated messages ready to share. Never forget a special moment or struggle for the right words again.
                   </p>
                   <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
                     <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
@@ -286,18 +286,6 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
             </div>
           </div>
 
-          {/* Splash Section with gradient */}
-          <div className="w-full py-16 bg-gradient-to-r from-orange-50 via-orange-100 to-orange-50">
-            <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto text-center">
-              <h2 className="text-3xl font-bold text-gray-900">
-                Join thousands already using Occasion Alerts
-              </h2>
-              <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-                The smart way to remember important dates and celebrate special moments
-              </p>
-            </div>
-          </div>
-
           {/* How It Works Section */}
           <div className="w-full py-16 bg-white">
             <div className="w-full px-6 sm:px-10 lg:px-16 mx-auto">
@@ -308,7 +296,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                 </p>
               </div>
 
-              <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Track Occasions Card */}
                 <div className="bg-white rounded-lg shadow-sm p-8">
                   <div className="flex justify-center">
@@ -324,7 +312,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                   </p>
                 </div>
 
-                {/* Get Reminders Card */}
+                {/* Smart Reminders & AI Messages Card */}
                 <div className="bg-white rounded-lg shadow-sm p-8">
                   <div className="flex justify-center">
                     <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
@@ -333,24 +321,9 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
                       </svg>
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 text-center">Get Reminders</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 text-center">Smart Reminders & Messages</h3>
                   <p className="mt-4 text-gray-600 text-center">
-                    Receive timely notifications before important dates so you&apos;re always prepared.
-                  </p>
-                </div>
-
-                {/* AI Messages Card */}
-                <div className="bg-white rounded-lg shadow-sm p-8">
-                  <div className="flex justify-center">
-                    <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                      <svg className="h-8 w-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 text-center">AI Messages</h3>
-                  <p className="mt-4 text-gray-600 text-center">
-                    Send personalized, AI-generated messages for every occasion without the stress.
+                    Get timely reminders with personalized, AI-generated messages ready to share with your loved ones.
                   </p>
                 </div>
               </div>
