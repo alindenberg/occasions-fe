@@ -104,6 +104,8 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
                 return 'bg-pink-100 text-pink-800';
             case 'humorous':
                 return 'bg-yellow-100 text-yellow-800';
+            case 'sympathetic':
+                return 'bg-blue-100 text-blue-800';
             default:
                 return 'bg-blue-100 text-blue-800';
         }
@@ -116,13 +118,13 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
 
         if (occasionDate >= today) {
             return (
-                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-800 mr-2">
+                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-800">
                     Upcoming
                 </span>
             );
         } else {
             return (
-                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-green-100 text-green-800 mr-2">
+                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-green-100 text-green-800">
                     Processed
                 </span>
             );
@@ -153,7 +155,7 @@ export default function OccasionTile({ occasion, modifyHandler, deletionHandler,
                         <span className="text-2xl mr-3">{getTypeIcon()}</span>
                         <h2 className='font-bold text-xl text-gray-800'>{occasion?.label ?? 'Label'}</h2>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex flex-col items-end space-y-2">
                         {!occasion.is_draft && getStatusBadge()}
                         <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${getToneBadgeColor()}`}>
                             {occasion.tone.charAt(0).toUpperCase() + occasion.tone.slice(1)}
