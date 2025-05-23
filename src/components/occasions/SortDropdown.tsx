@@ -80,14 +80,14 @@ export default function OccasionsSortDropdown({ onClick, currentSort }: { onClic
             <div className="relative" ref={dropdownRef}>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="py-2 px-4 rounded-md font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent flex items-center"
+                    className="py-2 px-4 rounded-md font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent flex items-center min-w-[150px] w-full sm:w-auto"
                 >
-                    <span className="text-gray-500 mr-1">Sort by:</span>
+                    <span className="text-gray-500 mr-6">Sort by:</span>
                     <span className="font-medium">{getSortLabel()}</span>
                 </button>
 
                 {isOpen && (
-                    <div className="absolute z-10 mt-1 w-56 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                    <div className="absolute z-10 mt-1 w-full min-w-[180px] bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                         <div className="py-1">
                             <button
                                 onClick={() => handleSelect(sort === OCCASION_SORTS.DATE_ASCENDING ? OCCASION_SORTS.DATE_DESCENDING : OCCASION_SORTS.DATE_ASCENDING)}
