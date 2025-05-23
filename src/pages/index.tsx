@@ -22,6 +22,8 @@ import { useAuthSession } from '@/hooks/useAuthSession';
 import { useOccasions } from '@/hooks/useOccasions';
 import Link from 'next/link';
 import Image from 'next/image';
+import CollapsibleSection from '@/components/occasions/CollapsibleSection';
+import CollapsibleSectionSimple from '@/components/occasions/CollapsibleSectionSimple';
 
 export default function OccasionsPage({ initialOccasions }: { initialOccasions: Occasion[] }) {
   const router = useRouter()
@@ -827,43 +829,40 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
             {activeView === 'list' ? (
               <div className="space-y-8">
-                {/* Upcoming Occasions Section with its own sort control */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold text-gray-800">Upcoming Occasions</h2>
-                    <OccasionsSortDropdown onClick={handleUpcomingSortChange} currentSort={upcomingSort} />
-                  </div>
+                {/* Upcoming Occasions Section with collapsible functionality */}
+                <CollapsibleSection
+                  title="Upcoming Occasions"
+                  currentSort={upcomingSort}
+                  onSortChange={handleUpcomingSortChange}
+                >
                   <UpcomingOccasionsList
                     occasions={upcomingOccasions}
                     deletionHandler={deletionHandler}
                     modifyHandler={modifyHandler}
                     openCreateModal={() => setIsCreateModalOpen(true)}
                   />
-                </div>
+                </CollapsibleSection>
 
                 {/* Draft Occasions Section */}
                 {hasDraftOccasions && (
-                  <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Draft Occasions</h2>
+                  <CollapsibleSectionSimple title="Draft Occasions">
                     <DraftOccasionsList
                       occasions={draftOccasions}
                       deletionHandler={deletionHandler}
                       fundHandler={fundHandler}
                       openCreateModal={() => setIsCreateModalOpen(true)}
                     />
-                  </div>
+                  </CollapsibleSectionSimple>
                 )}
 
-                {/* Past Occasions Section with its own sort control */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold text-gray-800">Past Occasions</h2>
-                    <OccasionsSortDropdown onClick={handlePastSortChange} currentSort={pastSort} />
-                  </div>
-                  <PastOccasionsList
-                    occasions={pastOccasions}
-                  />
-                </div>
+                {/* Past Occasions Section with collapsible functionality */}
+                <CollapsibleSection
+                  title="Past Occasions"
+                  currentSort={pastSort}
+                  onSortChange={handlePastSortChange}
+                >
+                  <PastOccasionsList occasions={pastOccasions} />
+                </CollapsibleSection>
               </div>
             ) : (
               <CalendarView

@@ -1,0 +1,50 @@
+import { useState, ReactNode } from 'react';
+import { OCCASION_SORTS } from '@/types/occasions';
+import OccasionsSortDropdown from '@/components/occasions/SortDropdown';
+
+interface Props {
+    title: string;
+    children: ReactNode;
+    currentSort: OCCASION_SORTS;
+    onSortChange: (sort: OCCASION_SORTS) => void;
+}
+
+export default function CollapsibleSection({ title, children, currentSort, onSortChange }: Props) {
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
+    const toggleCollapse = () => {
+        setIsCollapsed(!isCollapsed);
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center">
+                    <h2 className="text-xl font-semibold text-gray-800 mr-4">{title}</h2>
+                    <OccasionsSortDropdown onClick={onSortChange} currentSort={currentSort} />
+                </div>
+                <button
+                    className="p-1 rounded-md hover:bg-gray-50 cursor-pointer"
+                    aria-label={isCollapsed ? "Expand section" : "Collapse section"}
+                    onClick={toggleCollapse}
+                >
+                    {isCollapsed ? (
+                        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    ) : (
+                        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    )}
+                </button>
+            </div>
+
+            {!isCollapsed && (
+                <div className="transition-all duration-300 ease-in-out">
+                    {children}
+                </div>
+            )}
+        </div>
+    );
+}
