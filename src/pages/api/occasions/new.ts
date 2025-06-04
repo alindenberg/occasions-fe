@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (req.method === "POST") {
         try {
-            const response = await fetch(`${process.env.SERVER_URL}/occasions`, {
+            const response = await fetch(`${process.env.SERVER_URL}/occasions/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

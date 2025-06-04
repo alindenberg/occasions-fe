@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (req.method) {
         case "GET":
             try {
-                const response = await fetch(`${process.env.SERVER_URL}/occasions`, {
+                const response = await fetch(`${process.env.SERVER_URL}/occasions/`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                     },

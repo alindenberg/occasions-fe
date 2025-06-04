@@ -909,7 +909,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const accessToken = await getAccessToken(context.req as NextApiRequest)
     if (accessToken) {
-      const response = await fetch(`${process.env.SERVER_URL}/occasions`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
+      const response = await fetch(`${process.env.SERVER_URL}/occasions/`, { headers: { 'Authorization': `Bearer ${accessToken}` } })
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
