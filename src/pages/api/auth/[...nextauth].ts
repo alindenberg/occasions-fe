@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
         isSignUp: { label: "Is Sign Up", type: "boolean" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials) {
           return null;
         }
@@ -37,7 +37,12 @@ export const authOptions: NextAuthOptions = {
         try {
           const response = await fetch(apiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': req?.headers?.['user-agent'] || 'Unknown',
+              'X-Forwarded-For': req?.headers?.['x-forwarded-for'] || 'Unknown',
+              'X-Real-IP': req?.headers?.['x-real-ip'] || 'Unknown'
+            },
             body: JSON.stringify({ email, password }),
           });
 
