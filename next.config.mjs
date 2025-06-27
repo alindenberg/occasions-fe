@@ -38,7 +38,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleapis.com https://js.stripe.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://*.googleapis.com https://*.gstatic.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://api.stripe.com https://*.clarity.ms; frame-src 'self' https://accounts.google.com https://js.stripe.com; object-src 'none'; base-uri 'self';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.googleapis.com https://js.stripe.com https://*.clarity.ms https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://*.googleapis.com https://*.gstatic.com https://www.facebook.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.googleapis.com https://api.stripe.com https://*.clarity.ms https://www.facebook.com; frame-src 'self' https://accounts.google.com https://js.stripe.com; object-src 'none'; base-uri 'self';",
           },
         ],
       },
