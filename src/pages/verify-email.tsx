@@ -9,32 +9,32 @@ export default function VerifyEmailPage() {
     const [verificationStatus, setVerificationStatus] = useState<'success' | 'error' | 'resent' | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const verifyEmail = async (token: string) => {
-        try {
-            const response = await fetch('/api/auth/verify-email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token }),
-            });
-            const data = await response.json();
-            if (data.success) {
-                setVerificationStatus('success');
-                setTimeout(() => {
-                    router.push('/');
-                }, 3000);
-            } else {
-                setVerificationStatus('error');
-                setErrorMessage(data.error || 'Failed to verify email');
-            }
-        } catch (error) {
-            setVerificationStatus('error');
-            setErrorMessage('An unexpected error occurred');
-        } finally {
-            setIsVerifying(false);
-        }
-    }
-
     useEffect(() => {
+        const verifyEmail = async (token: string) => {
+            try {
+                const response = await fetch('/api/auth/verify-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token }),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    setVerificationStatus('success');
+                    setTimeout(() => {
+                        router.push('/');
+                    }, 3000);
+                } else {
+                    setVerificationStatus('error');
+                    setErrorMessage(data.error || 'Failed to verify email');
+                }
+            } catch (error) {
+                setVerificationStatus('error');
+                setErrorMessage('An unexpected error occurred');
+            } finally {
+                setIsVerifying(false);
+            }
+        }
+
         if (router.isReady) {
             const { token } = router.query;
             if (token && typeof token === 'string') {
@@ -45,7 +45,7 @@ export default function VerifyEmailPage() {
                 setErrorMessage('Invalid verification token');
             }
         }
-    }, [router, router.isReady]);
+    }, [router, router.isReady, router.query]);
 
     const handleResendVerification = async () => {
         try {

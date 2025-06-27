@@ -163,7 +163,7 @@ export default function OccasionsPage({ initialOccasions }: { initialOccasions: 
 
       filterAndSortOccasions();
     }
-  }, [router.isReady, router.query, occasions, filterAndSortOccasions]);
+  }, [router, router.isReady, router.query, occasions, filterAndSortOccasions]);
 
   useEffect(() => {
     filterAndSortOccasions();

@@ -25,6 +25,7 @@ export default function MetaPixel() {
                     width="1"
                     style={{ display: 'none' }}
                     src="https://www.facebook.com/tr?id=1000208945436103&ev=PageView&noscript=1"
+                    alt=""
                 />
             </noscript>
         </Fragment>
