@@ -51,6 +51,20 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           <meta name="twitter:title" content="Occasion Alerts" />
           <meta name="twitter:description" content="Create and track important occasions (birthdays, anniversaries, graduations, etc.) Receive timely reminders for upcoming events via AI-generated messages tailored to each occasion. Save time and show you care with personalized greetings." />
           <meta name="twitter:image" content="https://occasionalerts.com/twitter-image.png" />
+
+          {/* Microsoft Clarity */}
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "s642x7ou1p");
+              `,
+            }}
+          />
         </Head>
         <div className="flex flex-col min-h-screen">
           <main className="flex-grow flex w-full">
