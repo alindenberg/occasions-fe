@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="Occasion Alerts" />
           <meta name="twitter:description" content="Create and track important occasions (birthdays, anniversaries, graduations, etc.) Receive timely reminders for upcoming events via AI-generated messages tailored to each occasion. Save time and show you care with personalized greetings." />
-          <meta name="twitter:image" content="https://occasionalerts.com/twitter-image.png" />
+          <meta name="twitter:image" content="https://occasionalerts.com/og-image.png" />
 
           {/* Microsoft Clarity */}
           <script
